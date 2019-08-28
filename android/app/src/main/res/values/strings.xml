@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">mokirim</string>
+    <string name="facebook_app_id">933399857014395</string>
+    <string name="fb_login_protocol_scheme">fb933399857014395</string>
+</resources>
