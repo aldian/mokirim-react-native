@@ -2,6 +2,8 @@ import {combineReducers} from 'redux';
 import ActionCodes from './ActionCodes';
 
 const appReducerInitialState = {
+  statesLoadedFromDb: false,
+  loadingStatesFromDb: false,
   errorMessage: '',
   loggedIn: false,
   loggedInVia: null,
@@ -12,6 +14,10 @@ const appReducerInitialState = {
 
 function appReducer(state = appReducerInitialState, action = {}) {
   switch (action.type) {
+    case ActionCodes.UPDATE_APP_STATES:
+      return {
+        ...state, ...action.states
+      };
     case ActionCodes.SET_ERROR_MESSAGE:
       return {
         ...state, errorMessage: action.message,

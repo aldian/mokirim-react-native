@@ -6,7 +6,7 @@ import { translate } from "./utils/i18n";
 import Actions from './Actions';
 import { MokirimScreen } from './MokirimScreen';
 
-class _HomeScreen extends MokirimScreen {
+class _HomeScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
     title: navigation.getParam('title', translate('headerWelcome'))
   });
@@ -18,6 +18,7 @@ class _HomeScreen extends MokirimScreen {
     const {navigate} = this.props.navigation;
 
     return (
+      <MokirimScreen onL10nChange={() => this.setNavigationHeader()}>
       <View>
         {this.props.errorMessage ? <Text>{this.props.errorMessage}</Text> : null}
         <Button
@@ -34,6 +35,7 @@ class _HomeScreen extends MokirimScreen {
           null
         }
       </View>
+      </MokirimScreen>
     );
   }
 }

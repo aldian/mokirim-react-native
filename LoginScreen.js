@@ -6,7 +6,7 @@ import Actions from './Actions';
 import { MokirimScreen } from './MokirimScreen';
 import { translate } from "./utils/i18n";
 
-class _LoginScreen extends MokirimScreen {
+class _LoginScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
     title: navigation.getParam('title', translate('headerLogin'))
   });
@@ -16,7 +16,8 @@ class _LoginScreen extends MokirimScreen {
 
   render() {
     const {navigate, goBack} = this.props.navigation;
-    return <View>
+    return <MokirimScreen onL10nChange={() => this.setNavigationHeader()}>
+    <View>
       {this.props.errorMessage ? <Text>{this.props.errorMessage}</Text> : null}
       <LoginButton
         onLoginFinished={
@@ -40,8 +41,9 @@ class _LoginScreen extends MokirimScreen {
             }
           }
         }
-        onLogoutFinished={() => console.log("logout.")}/>
+      />
     </View>
+    </MokirimScreen>
   }
 }
 

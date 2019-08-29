@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import { MokirimScreen } from './MokirimScreen';
 import { translate } from "./utils/i18n";
 
-class _ProfileScreen extends MokirimScreen {
+class _ProfileScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
     title: navigation.getParam('title', translate('headerProfile'))
   });
@@ -13,7 +13,10 @@ class _ProfileScreen extends MokirimScreen {
 
   render() {
     const {navigate} = this.props.navigation;
-    return null;
+    return (
+      <MokirimScreen onL10nChange={() => this.setNavigationHeader()}>
+      </MokirimScreen>
+    );
   }
 }
 
