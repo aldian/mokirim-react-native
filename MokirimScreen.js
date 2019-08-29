@@ -1,20 +1,20 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import * as RNLocalize from "react-native-localize";
 import { setI18nConfig } from "./utils/i18n";
+import Actions from './Actions';
 
 
-export class MokirimScreen extends React.Component {
+class _MokirimScreen extends React.Component {
   constructor(props) {
     super(props);
     setI18nConfig();
   }
 
-  setNavigationHeader() {
-  }
-
   componentDidMount() {
     RNLocalize.addEventListener("change", this.handleLocalizationChange);
-    this.setNavigationHeader();
+    this.props.onL10nChange();
+    this.loadStates();
   }
 
   componentWillUnmount() {
@@ -23,7 +23,36 @@ export class MokirimScreen extends React.Component {
 
   handleLocalizationChange = () => {
     setI18nConfig();
-    this.setNavigationHeader();
+    this.props.onL10nChange();
     this.forceUpdate();
   };
+
+  render() {
+    return <React.Fragment>{this.props.children}</React.Fragment>
+  }
+
+  loadStates() {
+    if (this.props.statesLoadedFromDb) {
+      return;
+    }
+    if (this.props.loadingStatesFromDb) {
+      return;
+    }
+    this.props.loadStatesFromDb();
+  }
 }
+
+const mapStateToProps = state => {
+  return {
+    statesLoadedFromDb: state.appReducer.statesLoadedFromDb,
+    loadingStatesFromDb: state.appReducer.loadingStatesFromDb,
+  }
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    loadStatesFromDb: () => dispatch(Actions.loadStatesFromDb()),
+  }
+};
+
+export const MokirimScreen = connect(mapStateToProps, mapDispatchToProps)(_MokirimScreen);
