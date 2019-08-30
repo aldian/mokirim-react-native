@@ -1,22 +1,23 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { View, Text } from 'react-native';
+import { HeaderTitle } from 'react-navigation-stack';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
-import Actions from './Actions';
-import { MokirimScreen } from './MokirimScreen';
-import { translate } from "./utils/i18n";
+import { translate } from "../utils/i18n";
+import Actions from '../state/Actions';
+import { NavigationL10nText } from '../components/NavigationL10nText';
+import { NavigationHeader } from '../components/NavigationHeader';
+import { ScreenContainer } from '../components/ScreenContainer';
 
 class _LoginScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
-    title: navigation.getParam('title', translate('headerLogin'))
+    header: props => <NavigationHeader {...props}/>,
+    headerTitle: <HeaderTitle><NavigationL10nText textKey="headerLogin"/></HeaderTitle>
   });
-  setNavigationHeader() {
-   this.props.navigation.setParams({title: translate('headerLogin')});
-  }
 
   render() {
     const {navigate, goBack} = this.props.navigation;
-    return <MokirimScreen onL10nChange={() => this.setNavigationHeader()}>
+    return  <ScreenContainer>
     <View>
       {this.props.errorMessage ? <Text>{this.props.errorMessage}</Text> : null}
       <LoginButton
@@ -43,12 +44,17 @@ class _LoginScreen extends React.Component {
         }
       />
     </View>
-    </MokirimScreen>
+    </ScreenContainer>
+  }
+
+  afterSplash() {
+    this.props.navigation.setParams({header: props => <Header {...props}/>});
   }
 }
 
 const mapStateToProps = state => {
   return {
+    currentLanguage: state.appReducer.currentLanguage,
     errorMessage: state.appReducer.errorMessage,
   }
 };

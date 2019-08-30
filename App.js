@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+import { AppRegistry, FlatList, ActivityIndicator, Text, View  } from 'react-native';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { rootReducer } from './reducers';
-import { HomeScreen } from './HomeScreen';
-import { LoginScreen } from './LoginScreen';
-import { ProfileScreen } from './ProfileScreen';
-import { AppRegistry, FlatList, ActivityIndicator, Text, View  } from 'react-native';
+import { rootReducer } from './state/reducers';
+import Actions from './state/Actions';
+import { initNotifications } from './utils/notifications';
+import { initI18n } from './utils/i18n';
+import { HomeScreen } from './screens/HomeScreen';
+import { LoginScreen } from './screens/LoginScreen';
+import { ProfileScreen } from './screens/ProfileScreen';
 
 const MainNavigator = createStackNavigator({
   Home: {screen: HomeScreen},
@@ -17,7 +20,7 @@ const MainNavigator = createStackNavigator({
 
 const Navigation = createAppContainer(MainNavigator);
 
-const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 export default class App extends React.Component {
   render() {
@@ -28,6 +31,12 @@ export default class App extends React.Component {
     );
   }
 }
+
+const appStates = store.getState().appReducer;
+store.dispatch(Actions.loadAppStatesFromDb(appStates));
+
+initI18n(store);
+initNotifications(store);
 
 /**
  * Sample React Native App

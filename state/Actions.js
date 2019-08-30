@@ -1,14 +1,23 @@
 import ActionCodes from './ActionCodes';
-import Database from './utils/database'
+import Database from '../utils/database';
 
 const updateAppStates = states => ({
   type: ActionCodes.UPDATE_APP_STATES,
   states,
 });
 
+const clearSplash = () => ({
+  type: ActionCodes.CLEAR_SPLASH,
+});
+
 const setErrorMessage = message => ({
   type: ActionCodes.SET_ERROR_MESSAGE,
   message,
+});
+
+const setCurrentLanguage = languageCode => ({
+  type: ActionCodes.SET_CURRENT_LANGUAGE,
+  languageCode,
 });
 
 const _loggedInToFacebook = accessToken => ({
@@ -40,12 +49,12 @@ const logout = () => dispatch => {
   });
 }
 
-const loadStatesFromDb = () => dispatch => {
+const loadAppStatesFromDb = appStates => dispatch => {
   dispatch(updateAppStates({loadingStatesFromDb: true}));
 
   Database.openDatabase().then(db => {
     return Database.loadUserStates(db).then(rows => {
-      let states = {loadingStatesFromDb: false, statesLoadedFromDb: true};
+      let states = {...appStates, loadingStatesFromDb: false, statesLoadedFromDb: true};
       const len = rows.length;
       for (let i = 0; i < len; ++i) {
         let row = rows.item(i);
@@ -56,7 +65,7 @@ const loadStatesFromDb = () => dispatch => {
         } else if (name === 'loggedInVia') {
           states.loggedInVia = value;
         } else if (name === 'facebookAccessToken') {
-          states.facebook = {accessToken: value};
+          states.facebook.accessToken = value;
         }
       }
       dispatch(updateAppStates(states));
@@ -66,7 +75,9 @@ const loadStatesFromDb = () => dispatch => {
 
 export default Actions = {
   setErrorMessage,
+  clearSplash,
+  setCurrentLanguage,
   loggedInToFacebook,
   logout,
-  loadStatesFromDb,
+  loadAppStatesFromDb,
 }
