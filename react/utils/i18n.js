@@ -27,15 +27,16 @@ export const setI18nConfig = () => {
 
   I18n.translations = {en, id};
   I18n.locale = languageTag;
+  return languageTag;
 };
 
 export const initI18n = stateStore => {
-  setI18nConfig();
+  const languageTag = setI18nConfig();
 
   RNLocalize.addEventListener("change", () => {
-    setI18nConfig();
-    stateStore.dispatch(Actions.setCurrentLanguage(I18n.locale));
+    const languageTag = setI18nConfig();
+    stateStore.dispatch(Actions.setCurrentLanguage(languageTag));
   });
 
-  stateStore.dispatch(Actions.setCurrentLanguage(I18n.locale));
+  stateStore.dispatch(Actions.setCurrentLanguage(languageTag));
 };
