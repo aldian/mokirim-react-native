@@ -21,6 +21,20 @@ const receiveNotificationToken = token => ({
   token,
 });
 
+const _introFinished = () => ({
+  type: ActionCodes.INTRO_FINISHED,
+});
+
+const introFinished = () => dispatch => {
+  dispatch(_introFinished());
+
+  return Database.openDatabase().then(db => {
+    return Database.updateUserStates(db, {
+      introFinished: "1",
+    });
+  });
+}
+
 const _loggedInToFacebook = accessToken => ({
   type: ActionCodes.LOGGED_IN_TO_FACEBOOK,
   accessToken,
@@ -46,6 +60,7 @@ const logout = () => dispatch => {
   return Database.openDatabase().then(db => {
     return Database.updateUserStates(db, {
       loggedIn: undefined, loggedInVia: undefined, facebookAccessToken: undefined,
+      introFinished: undefined,
     });
   });
 }
@@ -67,13 +82,20 @@ const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
           states.loggedInVia = value;
         } else if (name === 'facebookAccessToken') {
           states.facebook.accessToken = value;
+        } else if (name == 'introFinished') {
+          states.introFinished = !!parseInt(value, 10);
         }
       }
       dispatch(updateAppStates(states));
       if (!navigate) {
         return;
       }
-      const nextScreen = states.loggedIn ? 'Dashboard' : 'Home';
+      let nextScreen = 'Home';
+      if (states.loggedIn) {
+        nextScreen = 'Dashboard';
+      } else if (!states.introFinished) {
+        nextScreen = 'IntroWhy';
+      }
       if (delay) {
         setTimeout(() => navigate(nextScreen), delay);
       } else {
@@ -85,6 +107,7 @@ const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
 
 export default Actions = {
   setErrorMessage,
+  introFinished,
   setCurrentLanguage,
   loggedInToFacebook,
   logout,

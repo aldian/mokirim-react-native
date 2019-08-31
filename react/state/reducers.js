@@ -7,6 +7,7 @@ const appReducerInitialState = {
   loadingStatesFromDb: false,
   errorMessage: '',
   notificationToken: null,
+  introFinished: false,
   loggedIn: false,
   loggedInVia: null,
   facebook: {
@@ -25,6 +26,10 @@ function appReducer(state = appReducerInitialState, action = {}) {
       return {
         ...state, errorMessage: action.message,
       };
+    case ActionCodes.INTRO_FINISHED:
+       return {
+         ...state, introFinished: true,
+       };
      case ActionCodes.RECEIVE_NOTIFICATION_TOKEN:
        return {
         ...state, notificationToken: action.token,

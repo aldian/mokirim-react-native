@@ -1,0 +1,31 @@
+import React from 'react';
+import { Button, Text, View } from 'react-native';
+import {connect} from 'react-redux';
+import { translate } from "../../utils/i18n";
+
+class _IntroWhyScreen extends React.Component {
+  render() {
+    const {goBack, navigate} = this.props.navigation;
+    return (
+      <View>
+        <Text>WHY</Text>
+        <Button
+          title={translate('buttonNext')}
+          onPress={() => navigate('IntroHow')}
+        />
+      </View>
+    );
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+  }
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+  }
+};
+
+export const IntroWhyScreen = connect(mapStateToProps, mapDispatchToProps)(_IntroWhyScreen);

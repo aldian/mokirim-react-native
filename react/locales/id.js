@@ -1,6 +1,9 @@
 export default {
-  headerDashboard: "Dashboard",
-  headerLogin: "Login",
+  buttonBack: "Kembali",
+  buttonNext: "Lanjut",
+
+  headerDashboard: "Dasbor",
+  headerLogin: "Masuk",
   headerProfile: "Profil",
   headerWelcome: "Selamat Datang",
 };

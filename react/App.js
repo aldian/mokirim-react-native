@@ -10,12 +10,29 @@ import { initNotifications } from './utils/notifications';
 import { initI18n } from './utils/i18n';
 import { NavigationHeader } from './components/NavigationHeader';
 import { SplashScreen } from './screens/SplashScreen';
+import { IntroWhyScreen } from './screens/intro-nav/IntroWhyScreen';
+import { IntroHowScreen } from './screens/intro-nav/IntroHowScreen';
+import { IntroMonitoringScreen } from './screens/intro-nav/IntroMonitoringScreen';
 import { HomeScreen } from './screens/public-nav/HomeScreen';
 import { LoginScreen } from './screens/public-nav/LoginScreen';
 import { DashboardScreen } from './screens/user-nav/DashboardScreen';
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
 
+export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+initI18n(store);
+initNotifications(store);
+
 useScreens();
+
+const IntroNavigator = createStackNavigator({
+  IntroWhy: {screen: IntroWhyScreen, path: 'introWhy'},
+  IntroHow: {screen: IntroHowScreen, path: 'introHow'},
+  IntroMonitoring: {screen: IntroMonitoringScreen, path: 'introMonitoring'},
+}, {
+  defaultNavigationOptions: {
+    header: null,
+  }
+});
 
 const PublicNavigator = createStackNavigator({
   Home: {screen: HomeScreen, path: 'home'},
@@ -37,13 +54,12 @@ const UserNavigator = createStackNavigator({
 
 const SwitchNavigator = createSwitchNavigator({
   Splash: SplashScreen,
+  Intro: IntroNavigator,
   Public: PublicNavigator,
   User: UserNavigator,
 });
 
 const Navigation = createAppContainer(SwitchNavigator);
-
-export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 export default class App extends React.Component {
   render() {
@@ -54,9 +70,6 @@ export default class App extends React.Component {
     );
   }
 }
-
-initI18n(store);
-initNotifications(store);
 
 /**
  * Sample React Native App
