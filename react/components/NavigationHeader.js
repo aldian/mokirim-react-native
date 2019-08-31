@@ -4,17 +4,13 @@ import { Header } from 'react-navigation-stack';
 
 class _NavigationHeader extends React.Component {
   render() {
-    if (this.props.splashShown) {
-      return <Header {...this.props}/>
-    }
-
-    return null;
+    // return null if you want to hide the header
+    return <Header {...this.props}/>
   }
 }
 
 const mapStateToProps = state => {
   return {
-    splashShown: state.appReducer.splashShown,
   }
 };
 

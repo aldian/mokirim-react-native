@@ -2,11 +2,11 @@ import {combineReducers} from 'redux';
 import ActionCodes from './ActionCodes';
 
 const appReducerInitialState = {
-  splashShown: false,
   currentLanguage: undefined,
   statesLoadedFromDb: false,
   loadingStatesFromDb: false,
   errorMessage: '',
+  notificationToken: null,
   loggedIn: false,
   loggedInVia: null,
   facebook: {
@@ -21,14 +21,14 @@ function appReducer(state = appReducerInitialState, action = {}) {
       return {
         ...state, ...action.states
       };
-    case ActionCodes.CLEAR_SPLASH:
-      return {
-        ...state, splashShown: true,
-      };
     case ActionCodes.SET_ERROR_MESSAGE:
       return {
         ...state, errorMessage: action.message,
       };
+     case ActionCodes.RECEIVE_NOTIFICATION_TOKEN:
+       return {
+        ...state, notificationToken: action.token,
+       };
     case ActionCodes.SET_CURRENT_LANGUAGE:
        return {
          ...state, currentLanguage: action.languageCode,
