@@ -3,20 +3,18 @@ import {connect} from 'react-redux';
 import { View, Text } from 'react-native';
 import { HeaderTitle } from 'react-navigation-stack';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
-import { translate } from "../utils/i18n";
-import Actions from '../state/Actions';
-import { NavigationL10nText } from '../components/NavigationL10nText';
-import { NavigationHeader } from '../components/NavigationHeader';
-import { ScreenContainer } from '../components/ScreenContainer';
+import { translate } from "../../utils/i18n";
+import Actions from '../../state/Actions';
+import { NavigationL10nText } from '../../components/NavigationL10nText';
+import { ScreenContainer } from '../../components/ScreenContainer';
 
 class _LoginScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
-    header: props => <NavigationHeader {...props}/>,
     headerTitle: <HeaderTitle><NavigationL10nText textKey="headerLogin"/></HeaderTitle>
   });
 
   render() {
-    const {navigate, goBack} = this.props.navigation;
+    const {navigate} = this.props.navigation;
     return  <ScreenContainer>
     <View>
       {this.props.errorMessage ? <Text>{this.props.errorMessage}</Text> : null}
@@ -31,12 +29,8 @@ class _LoginScreen extends React.Component {
               AccessToken.getCurrentAccessToken().then(
                 (data) => {
                   let stackIndex = this.props.navigation.dangerouslyGetParent().state.index;
-                  if (stackIndex > 0) {
-                    goBack();
-                  } else {
-                    navigate('Home');
-                  }
                   this.props.loggedInToFacebook(data.accessToken);
+                  navigate('Dashboard');
                 }
               )
             }
@@ -45,10 +39,6 @@ class _LoginScreen extends React.Component {
       />
     </View>
     </ScreenContainer>
-  }
-
-  afterSplash() {
-    this.props.navigation.setParams({header: props => <Header {...props}/>});
   }
 }
 

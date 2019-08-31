@@ -1,24 +1,47 @@
 import React, { Component } from 'react';
 import { AppRegistry, FlatList, ActivityIndicator, Text, View  } from 'react-native';
-import {createStackNavigator, createAppContainer} from 'react-navigation';
+import {createStackNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
+import { useScreens } from 'react-native-screens';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { rootReducer } from './state/reducers';
-import Actions from './state/Actions';
 import { initNotifications } from './utils/notifications';
 import { initI18n } from './utils/i18n';
-import { HomeScreen } from './screens/HomeScreen';
-import { LoginScreen } from './screens/LoginScreen';
-import { ProfileScreen } from './screens/ProfileScreen';
+import { NavigationHeader } from './components/NavigationHeader';
+import { SplashScreen } from './screens/SplashScreen';
+import { HomeScreen } from './screens/public-nav/HomeScreen';
+import { LoginScreen } from './screens/public-nav/LoginScreen';
+import { DashboardScreen } from './screens/user-nav/DashboardScreen';
+import { ProfileScreen } from './screens/user-nav/ProfileScreen';
 
-const MainNavigator = createStackNavigator({
-  Home: {screen: HomeScreen},
+useScreens();
+
+const PublicNavigator = createStackNavigator({
+  Home: {screen: HomeScreen, path: 'home'},
   Login: {screen: LoginScreen, path: 'login'},
-  Profile: {screen: ProfileScreen, path: 'profile'},
+}, {
+  defaultNavigationOptions: {
+    header: props => <NavigationHeader {...props}/>,
+  }
 });
 
-const Navigation = createAppContainer(MainNavigator);
+const UserNavigator = createStackNavigator({
+  Dashboard: {screen: DashboardScreen, path: 'dashboard'},
+  Profile: {screen: ProfileScreen, path: 'profile'},
+}, {
+  defaultNavigationOptions: {
+    header: props => <NavigationHeader {...props}/>,
+  }
+});
+
+const SwitchNavigator = createSwitchNavigator({
+  Splash: SplashScreen,
+  Public: PublicNavigator,
+  User: UserNavigator,
+});
+
+const Navigation = createAppContainer(SwitchNavigator);
 
 export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
@@ -31,9 +54,6 @@ export default class App extends React.Component {
     );
   }
 }
-
-const appStates = store.getState().appReducer;
-store.dispatch(Actions.loadAppStatesFromDb(appStates));
 
 initI18n(store);
 initNotifications(store);

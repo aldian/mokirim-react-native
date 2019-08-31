@@ -3,16 +3,14 @@ import {connect} from 'react-redux';
 import { Button, Text, View } from 'react-native';
 import { HeaderTitle } from 'react-navigation-stack';
 import { LoginButton } from 'react-native-fbsdk';
-import { translate } from "../utils/i18n";
-import Actions from '../state/Actions';
-import { NavigationL10nText } from '../components/NavigationL10nText';
-import { NavigationHeader } from '../components/NavigationHeader';
-import { ScreenContainer } from '../components/ScreenContainer';
+import { translate } from "../../utils/i18n";
+import Actions from '../../state/Actions';
+import { NavigationL10nText } from '../../components/NavigationL10nText';
+import { ScreenContainer } from '../../components/ScreenContainer';
 
 class _HomeScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, theme, navigationOptions}) => {
   return {
-    header: props => <NavigationHeader {...props}/>,
     headerTitle: <HeaderTitle><NavigationL10nText textKey="headerWelcome"/></HeaderTitle>,
   }};
 
@@ -31,7 +29,10 @@ class _HomeScreen extends React.Component {
         />
         {this.props.loggedIn ?
           (this.props.loggedInVia === 'facebook' ?
-            <LoginButton onLogoutFinished={() => this.props.logout()}/> :
+            <LoginButton onLogoutFinished={() => {
+              this.props.logout();
+              this.props.navigation.navigate('Home');
+            }}/> :
             null
           ) :
           null
@@ -44,7 +45,6 @@ class _HomeScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    splashShown: state.appReducer.splashShown,
     currentLanguage: state.appReducer.currentLanguage,
     errorMessage: state.appReducer.errorMessage,
     loggedIn: state.appReducer.loggedIn,

@@ -6,10 +6,6 @@ const updateAppStates = states => ({
   states,
 });
 
-const clearSplash = () => ({
-  type: ActionCodes.CLEAR_SPLASH,
-});
-
 const setErrorMessage = message => ({
   type: ActionCodes.SET_ERROR_MESSAGE,
   message,
@@ -18,6 +14,11 @@ const setErrorMessage = message => ({
 const setCurrentLanguage = languageCode => ({
   type: ActionCodes.SET_CURRENT_LANGUAGE,
   languageCode,
+});
+
+const receiveNotificationToken = token => ({
+  type: ActionCodes.RECEIVE_NOTIFICATION_TOKEN,
+  token,
 });
 
 const _loggedInToFacebook = accessToken => ({
@@ -49,7 +50,7 @@ const logout = () => dispatch => {
   });
 }
 
-const loadAppStatesFromDb = appStates => dispatch => {
+const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
   dispatch(updateAppStates({loadingStatesFromDb: true}));
 
   Database.openDatabase().then(db => {
@@ -69,13 +70,21 @@ const loadAppStatesFromDb = appStates => dispatch => {
         }
       }
       dispatch(updateAppStates(states));
+      if (!navigate) {
+        return;
+      }
+      const nextScreen = states.loggedIn ? 'Dashboard' : 'Home';
+      if (delay) {
+        setTimeout(() => navigate(nextScreen), delay);
+      } else {
+        navigate(nextScreen);
+      }
     });
   });
 }
 
 export default Actions = {
   setErrorMessage,
-  clearSplash,
   setCurrentLanguage,
   loggedInToFacebook,
   logout,

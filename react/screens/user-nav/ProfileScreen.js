@@ -2,14 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { Text } from 'react-native';
 import { HeaderTitle } from 'react-navigation-stack';
-import { translate } from "../utils/i18n";
-import { NavigationL10nText } from '../components/NavigationL10nText';
-import { NavigationHeader } from '../components/NavigationHeader';
-import { ScreenContainer } from '../components/ScreenContainer';
+import { translate } from "../../utils/i18n";
+import { NavigationL10nText } from '../../components/NavigationL10nText';
+import { ScreenContainer } from '../../components/ScreenContainer';
 
 class _ProfileScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
-    header: props => <NavigationHeader {...props}/>,
     headerTitle: <HeaderTitle><NavigationL10nText textKey="headerProfile"/></HeaderTitle>
   });
 
@@ -17,14 +15,11 @@ class _ProfileScreen extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <ScreenContainer>
-        <Text>{this.props.facebook.displayName}</Text>
-        <Text>{this.props.facebook.accessToken}</Text>
+        <Text>DISPLAY NAME: {this.props.facebook.displayName}</Text>
+        <Text>ACCESS TOKEN: {this.props.facebook.accessToken}</Text>
+        <Text>NOTIFICATION TOKEN: {this.props.notificationToken}</Text>
       </ScreenContainer>
     );
-  }
-
-  afterSplash() {
-    this.props.navigation.setParams({header: props => <Header {...props}/>});
   }
 }
 
@@ -32,6 +27,7 @@ const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
     facebook: state.appReducer.facebook,
+    notificationToken: state.appReducer.notificationToken,
   }
 };
 
