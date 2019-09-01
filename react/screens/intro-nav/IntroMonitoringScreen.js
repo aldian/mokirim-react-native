@@ -8,9 +8,9 @@ class _IntroMonitoringScreen extends React.Component {
   render() {
     const {goBack, navigate} = this.props.navigation;
     return (
-      <View style={styles.screen}>
+      <View style={[styles.screen, styles.splashScreen]}>
         <View style={styles.content}>
-          <Text>MONITORING</Text>
+          <Text style={styles.splashText}>MONITORING</Text>
         </View>
         <View style={styles.buttonsRow}>
           <Button

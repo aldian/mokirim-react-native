@@ -11,9 +11,9 @@ class _SplashScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.screen}>
+      <View style={[styles.screen, styles.splashScreen]}>
         <View style={styles.content}>
-        <Text>SPLASH SCREEN MOKIRIM</Text>
+        <Text style={styles.splashText}>MOKIRIM</Text>
         </View>
       </View>
     );

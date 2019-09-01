@@ -1,5 +1,6 @@
 import ActionCodes from './ActionCodes';
 import Database from '../utils/database';
+import MokirimAPI from '../utils/MokirimAPI';
 
 const updateAppStates = states => ({
   type: ActionCodes.UPDATE_APP_STATES,
@@ -50,6 +51,21 @@ const loggedInToFacebook = accessToken => dispatch => {
   });
 }
 
+const _loggedInToMokirim = accessToken => ({
+  type: ActionCodes.LOGGED_IN_TO_MOKIRIM,
+  accessToken,
+});
+
+const loggedInToMokirim = accessToken => dispatch => {
+  dispatch(_loggedInToMokirim(accessToken));
+
+  return Database.openDatabase().then(db => {
+    return Database.updateUserStates(db, {
+      loggedIn: "1", loggedInVia: "mokirim", accessToken: accessToken,
+    });
+  });
+}
+
 const _logout = () => ({
   type: ActionCodes.LOGOUT,
 });
@@ -80,6 +96,8 @@ const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
           states.loggedIn = !!parseInt(value, 10);
         } else if (name === 'loggedInVia') {
           states.loggedInVia = value;
+        } else if (name === 'accessToken') {
+          states.accessToken = value;
         } else if (name === 'facebookAccessToken') {
           states.facebook.accessToken = value;
         } else if (name == 'introFinished') {
@@ -105,11 +123,53 @@ const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
   });
 }
 
+const setLoginFormUsername = username => ({
+  type: ActionCodes.SET_LOGIN_FORM_USERNAME,
+  username,
+});
+
+const setLoginFormPassword = password => ({
+  type: ActionCodes.SET_LOGIN_FORM_PASSWORD,
+  password,
+});
+
+const setLoginFormErrorUsername = error => ({
+  type: ActionCodes.SET_LOGIN_FORM_ERROR_USERNAME,
+  error,
+});
+
+const setLoginFormErrorPassword = error => ({
+  type: ActionCodes.SET_LOGIN_FORM_ERROR_PASSWORD,
+  error,
+});
+
+const _submitLoginForm = submitting => ({
+  type: ActionCodes.SUBMIT_LOGIN_FORM,
+  submitting,
+});
+
+const submitLoginForm = (languageCode, username, password) => dispatch => {
+  dispatch(_submitLoginForm(true));
+  return MokirimAPI.login(languageCode, username, password);
+}
+
+const loginFormSubmitted = () => ({
+  type: ActionCodes.SUBMIT_LOGIN_FORM,
+  submitting: false,
+});
+
 export default Actions = {
   setErrorMessage,
   introFinished,
   setCurrentLanguage,
   loggedInToFacebook,
+  loggedInToMokirim,
   logout,
   loadAppStatesFromDb,
+  setLoginFormUsername,
+  setLoginFormPassword,
+  setLoginFormErrorUsername,
+  setLoginFormErrorPassword,
+  submitLoginForm,
+  loginFormSubmitted,
 }

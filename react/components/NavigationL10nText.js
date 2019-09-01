@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { Text } from 'react-native';
 import { translate } from "../utils/i18n";
 
 class _NavigationL10nText extends React.Component {

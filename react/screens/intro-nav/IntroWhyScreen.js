@@ -8,9 +8,9 @@ class _IntroWhyScreen extends React.Component {
   render() {
     const {goBack, navigate} = this.props.navigation;
     return (
-      <View style={styles.screen}>
+      <View style={[styles.screen, styles.splashScreen]}>
         <View style={[styles.content]}>
-          <Text>WHY</Text>
+          <Text style={styles.splashText}>WHY</Text>
         </View>
         <View style={[styles.buttonsRow, {justifyContent: 'flex-end'}]}>
             <Button
