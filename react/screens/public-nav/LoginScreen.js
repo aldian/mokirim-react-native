@@ -13,45 +13,53 @@ class _LoginScreen extends React.Component {
     headerTitle: <HeaderTitle><NavigationL10nText textKey="headerLogin"/></HeaderTitle>
   });
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      errorMessage: '',
+    }
+  }
+
   render() {
     const {navigate} = this.props.navigation;
-    return  <ScreenContainer>
-    <View>
-      {this.props.errorMessage ? <Text>{this.props.errorMessage}</Text> : null}
-      <LoginButton
-        onLoginFinished={
-          (error, result) => {
-            if (error) {
-              this.props.setErrorMessage(error);
-            } else if (result.isCancelled) {
-              meongMeong1();
-            } else {
-              AccessToken.getCurrentAccessToken().then(
-                (data) => {
-                  let stackIndex = this.props.navigation.dangerouslyGetParent().state.index;
-                  this.props.loggedInToFacebook(data.accessToken);
-                  navigate('Dashboard');
+    return  (
+      <ScreenContainer>
+        <View>
+          {this.state.errorMessage ? <Text>{this.state.errorMessage}</Text> : null}
+          <LoginButton
+            onLoginFinished={
+              (error, result) => {
+                if (error) {
+                  this.props.setErrorMessage(error);
+                } else if (result.isCancelled) {
+                  this.setState({errorMessage: translate("messageLoginCancelled")});
+                } else {
+                  AccessToken.getCurrentAccessToken().then(
+                    (data) => {
+                      let stackIndex = this.props.navigation.dangerouslyGetParent().state.index;
+                      this.props.loggedInToFacebook(data.accessToken);
+                      navigate('Dashboard');
+                    }
+                  )
                 }
-              )
+              }
             }
-          }
-        }
-      />
-    </View>
-    </ScreenContainer>
+          />
+        </View>
+      </ScreenContainer>
+    )
   }
 }
 
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
-    errorMessage: state.appReducer.errorMessage,
   }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    setErrorMessage: message => dispatch(Actions.setErrorMessage(message)),
     loggedInToFacebook: accessToken => dispatch(Actions.loggedInToFacebook(accessToken)),
   }
 };

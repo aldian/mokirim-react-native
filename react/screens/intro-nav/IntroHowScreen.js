@@ -2,21 +2,26 @@ import React from 'react';
 import { Button, Text, View } from 'react-native';
 import {connect} from 'react-redux';
 import { translate } from "../../utils/i18n";
+import styles from "../../styles";
 
 class _IntroHowScreen extends React.Component {
   render() {
     const {goBack, navigate} = this.props.navigation;
     return (
-      <View>
+      <View style={styles.screen}>
+        <View style={styles.content}>
         <Text>HOW</Text>
-        <Button
-           title={translate('buttonBack')}
-           onPress={() => goBack()}
-         />
-        <Button
-          title={translate('buttonNext')}
-          onPress={() => navigate('IntroMonitoring')}
-        />
+        </View>
+        <View style={styles.buttonsRow}>
+          <Button
+             title={translate('buttonBack')}
+             onPress={() => goBack()}
+           />
+          <Button
+            title={translate('buttonNext')}
+            onPress={() => navigate('IntroMonitoring')}
+          />
+        </View>
       </View>
     );
   }

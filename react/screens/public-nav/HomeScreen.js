@@ -7,6 +7,7 @@ import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 import { NavigationL10nText } from '../../components/NavigationL10nText';
 import { ScreenContainer } from '../../components/ScreenContainer';
+import styles from '../../styles';
 
 class _HomeScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, theme, navigationOptions}) => {
@@ -19,25 +20,20 @@ class _HomeScreen extends React.Component {
 
     return (
       <ScreenContainer>
-      <View>
-        {this.props.errorMessage ? <Text>{this.props.errorMessage}</Text> : null}
-        <Button
-          title={this.props.loggedIn ? translate('headerProfile') : translate('headerLogin')}
-          onPress={() => (
-            this.props.loggedIn ? navigate('Profile', {'name': ''}) : navigate('Login')
-          )}
-        />
-        {this.props.loggedIn ?
-          (this.props.loggedInVia === 'facebook' ?
-            <LoginButton onLogoutFinished={() => {
-              this.props.logout();
-              this.props.navigation.navigate('Home');
-            }}/> :
-            null
-          ) :
-          null
-        }
-      </View>
+        <View style={[styles.screen]}>
+          <View style={styles.content}>
+            <View style={[styles.buttonsRow, {width: 150}]}>
+              <Button
+                title={translate('headerLogin')}
+                onPress={() => navigate('Login')}
+              />
+              <Button
+                title={translate('headerRegister')}
+                onPress={() => navigate('Register')}
+               />
+            </View>
+          </View>
+        </View>
       </ScreenContainer>
     );
   }
@@ -46,7 +42,6 @@ class _HomeScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
-    errorMessage: state.appReducer.errorMessage,
     loggedIn: state.appReducer.loggedIn,
     loggedInVia: state.appReducer.loggedInVia,
   }
