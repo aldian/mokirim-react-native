@@ -8,19 +8,23 @@ class _IntroMonitoringScreen extends React.Component {
   render() {
     const {goBack, navigate} = this.props.navigation;
     return (
-      <View>
-        <Text>MONITORING</Text>
-        <Button
-           title={translate('buttonBack')}
-           onPress={() => goBack()}
-         />
-        <Button
-          title={translate('buttonNext')}
-          onPress={() => {
-            navigate('Home');
-            this.props.introFinished();
-          }}
-        />
+      <View style={styles.screen}>
+        <View style={styles.content}>
+          <Text>MONITORING</Text>
+        </View>
+        <View style={styles.buttonsRow}>
+          <Button
+             title={translate('buttonBack')}
+             onPress={() => goBack()}
+           />
+          <Button
+            title={translate('buttonNext')}
+            onPress={() => {
+              navigate('Home');
+              this.props.introFinished();
+            }}
+          />
+        </View>
       </View>
     );
   }

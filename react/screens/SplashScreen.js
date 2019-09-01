@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import {connect} from 'react-redux';
 import Actions from '../state/Actions';
+import styles from '../styles';
 
 class _SplashScreen extends React.Component {
   componentDidMount() {
@@ -9,7 +10,13 @@ class _SplashScreen extends React.Component {
   }
 
   render() {
-    return <Text>SPLASH SCREEN AHAY BAGUS!!!</Text>;
+    return (
+      <View style={styles.screen}>
+        <View style={styles.content}>
+        <Text>SPLASH SCREEN MOKIRIM</Text>
+        </View>
+      </View>
+    );
   }
 }
 
