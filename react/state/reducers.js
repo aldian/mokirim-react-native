@@ -10,10 +10,17 @@ const appReducerInitialState = {
   introFinished: false,
   loggedIn: false,
   loggedInVia: null,
+  loginForm: {
+    username: '',
+    password: '',
+    errors: {},
+    submitting: false,
+  },
   facebook: {
     accessToken: null,
     displayName: "ciki cipay",
-  }
+  },
+  accessToken: null,
 };
 
 function appReducer(state = appReducerInitialState, action = {}) {
@@ -42,6 +49,31 @@ function appReducer(state = appReducerInitialState, action = {}) {
       return {
         ...state, loggedIn: true, loggedInVia: 'facebook',
         facebook: {...state.facebook, accessToken: action.accessToken}
+      };
+    case ActionCodes.LOGGED_IN_TO_MOKIRIM:
+       return {
+         ...state, loggedIn: true, loggedInVia: 'mokirim',
+         accessToken: action.accessToken,
+       };
+    case ActionCodes.SET_LOGIN_FORM_USERNAME:
+      return {
+        ...state, loginForm: {...state.loginForm, username: action.username},
+      };
+    case ActionCodes.SET_LOGIN_FORM_PASSWORD:
+      return {
+        ...state, loginForm: {...state.loginForm, password: action.password},
+      };
+    case ActionCodes.SET_LOGIN_FORM_ERROR_USERNAME:
+      return {
+        ...state, loginForm: {...state.loginForm, errors: {...state.loginForm.errors, username: action.error}},
+      };
+    case ActionCodes.SET_LOGIN_FORM_ERROR_PASSWORD:
+      return {
+        ...state, loginForm: {...state.loginForm, errors: {...state.loginForm.errors, password: action.error}},
+      };
+    case ActionCodes.SUBMIT_LOGIN_FORM:
+      return {
+        ...state, loginForm: {...state.loginForm, submitting: action.submitting},
       };
     case ActionCodes.LOGOUT:
       return {

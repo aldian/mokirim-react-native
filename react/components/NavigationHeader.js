@@ -4,6 +4,8 @@ import { Header } from 'react-navigation-stack';
 
 class _NavigationHeader extends React.Component {
   render() {
+    //const index = this.props.navigation.dangerouslyGetParent().state.index;
+    //alert("PROPS:" + index);
     // return null if you want to hide the header
     return <Header {...this.props}/>
   }

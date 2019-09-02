@@ -8,6 +8,15 @@ export default styles = StyleSheet.create({
      justifyContent: 'space-between',
   },
 
+  splashScreen: {
+    backgroundColor: '#F58223',
+  },
+
+  splashText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+
   content: {
      flex: 1,
      flexDirection: 'column',

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { AppRegistry, FlatList, ActivityIndicator, Text, View  } from 'react-native';
 import {createStackNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
 import { useScreens } from 'react-native-screens';
+import { Root } from 'native-base';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
@@ -18,6 +19,8 @@ import { LoginScreen } from './screens/public-nav/LoginScreen';
 import { RegisterScreen } from './screens/public-nav/RegisterScreen';
 import { DashboardScreen } from './screens/user-nav/DashboardScreen';
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
+
+console.disableYellowBox = true
 
 export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 initI18n(store);
@@ -66,9 +69,11 @@ const Navigation = createAppContainer(SwitchNavigator);
 export default class App extends React.Component {
   render() {
     return (
+      <Root>
       <Provider store={store}>
         <Navigation/>
       </Provider>
+      </Root>
     );
   }
 }
