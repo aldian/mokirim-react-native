@@ -33,16 +33,22 @@ class _DashboardScreen extends React.Component {
           {this.props.errorMessage ? <Text>{this.props.errorMessage}</Text> : null}
           <Button
             title={translate('headerProfile')}
-            onPress={() => (
-              navigate('Profile', {'name': ''})
-            )}
+            onPress={() => navigate('Profile', {'name': ''})}
           />
-          {this.props.loggedInVia === 'facebook' ?
+          {this.props.loggedInVia === 'facebook' &&
             <LoginButton onLogoutFinished={() => {
-              this.props.logout();
+              this.props.logout(this.props.currentLanguage, this.props.accessToken, 'facebook');
               navigate('Home');
-            }}/> :
-            null
+            }}/>
+          }
+          {this.props.loggedInVia === 'mokirim' &&
+            <Button
+              title={translate('buttonLogout')}
+              onPress={() => {
+                this.props.logout(this.props.currentLanguage, this.props.accessToken);
+                navigate('Home');
+              }}
+            />
           }
           </View>
         </View>
@@ -56,12 +62,15 @@ const mapStateToProps = state => {
     currentLanguage: state.appReducer.currentLanguage,
     errorMessage: state.appReducer.errorMessage,
     loggedInVia: state.appReducer.loggedInVia,
+    accessToken: state.appReducer.accessToken,
   }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    logout: () => dispatch(Actions.logout()),
+    logout: (languageCode, accessToken, via) => (
+      dispatch(Actions.logout(languageCode, accessToken, via))
+    ),
   }
 };
 

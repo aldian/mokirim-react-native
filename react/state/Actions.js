@@ -70,15 +70,17 @@ const _logout = () => ({
   type: ActionCodes.LOGOUT,
 });
 
-const logout = () => dispatch => {
+const logout = (languageCode, accessToken, via) => dispatch => {
   dispatch(_logout());
 
-  return Database.openDatabase().then(db => {
+  Database.openDatabase().then(db => {
     return Database.updateUserStates(db, {
       loggedIn: undefined, loggedInVia: undefined, facebookAccessToken: undefined,
-      introFinished: undefined,
+      introFinished: undefined, accessToken: undefined,
     });
   });
+
+  MokirimAPI.logout(languageCode, accessToken);
 }
 
 const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {

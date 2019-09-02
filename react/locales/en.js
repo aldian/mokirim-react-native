@@ -2,6 +2,7 @@ export default {
   buttonBack: "Back",
   buttonNext: "Next",
   buttonLogin: "Login",
+  buttonLogout: "Logout",
 
   headerDashboard: "Dashboard",
   headerLogin: "Login",
