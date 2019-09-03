@@ -2,6 +2,7 @@ export default {
   buttonBack: "Kembali",
   buttonNext: "Lanjut",
   buttonLogin: "Masuk",
+  buttonLogout: "Keluar",
 
   headerDashboard: "Dasbor",
   headerLogin: "Masuk",

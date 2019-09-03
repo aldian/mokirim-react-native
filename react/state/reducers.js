@@ -77,7 +77,7 @@ function appReducer(state = appReducerInitialState, action = {}) {
       };
     case ActionCodes.LOGOUT:
       return {
-         ...state, loggedIn: false, loggedInVia: null,
+         ...state, loggedIn: false, loggedInVia: null, accessToken: null,
       };
     default:
       return state;

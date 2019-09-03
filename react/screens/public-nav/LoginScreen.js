@@ -149,10 +149,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       languageCode, username, password
     )).then(
       response => {
-        dispatch(Actions.setLoginFormErrorUsername(true));
-        dispatch(Actions.setLoginFormErrorPassword(true));
         dispatch(Actions.loginFormSubmitted());
+
         if (response.ok) {
+          dispatch(Actions.setLoginFormErrorUsername(false));
+          dispatch(Actions.setLoginFormErrorPassword(false));
+          dispatch(Actions.setLoginFormUsername(''));
+          dispatch(Actions.setLoginFormPassword(''));
+
           response.json().then(obj => {
             dispatch(Actions.loggedInToMokirim(obj.token));
             navigate("Dashboard");
@@ -163,6 +167,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               text: translate("errorResourceNotFound"),
             });
           } else if (response.status === 400) {
+            dispatch(Actions.setLoginFormErrorUsername(true));
+            dispatch(Actions.setLoginFormErrorPassword(true));
             response.json().then(obj => {
               Toast.show({
                 text: translate("errorInvalidUsernameOrPassword"),
@@ -177,8 +183,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     ).catch(
       error => {
-         dispatch(Actions.setLoginFormErrorUsername(true));
-         dispatch(Actions.setLoginFormErrorPassword(true));
          dispatch(Actions.loginFormSubmitted());
          Toast.show({
            text: error,
