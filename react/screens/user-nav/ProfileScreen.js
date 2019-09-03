@@ -34,7 +34,8 @@ class _ProfileScreen extends React.Component {
         <View style={styles.screen}>
           <View style={styles.content}>
             <Text>DISPLAY NAME: {this.props.facebook.displayName}</Text>
-            <Text>ACCESS TOKEN: {this.props.facebook.accessToken}</Text>
+            <Text>ACCESS TOKEN: {this.props.accessToken}</Text>
+            <Text>FACEBOOK ACCESS TOKEN: {this.props.facebook.accessToken}</Text>
             <Text>NOTIFICATION TOKEN: {this.props.notificationToken}</Text>
           </View>
         </View>
@@ -46,6 +47,7 @@ class _ProfileScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
+    accessToken: state.appReducer.accessToken,
     facebook: state.appReducer.facebook,
     notificationToken: state.appReducer.notificationToken,
   }

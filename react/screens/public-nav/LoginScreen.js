@@ -99,6 +99,7 @@ class _LoginScreen extends React.Component {
                 <View style={styles.content}>
                   <View></View>
                   <LoginButton
+                    permissions={['email']}
                     onLoginFinished={
                       (error, result) => {
                         if (error) {
@@ -111,8 +112,7 @@ class _LoginScreen extends React.Component {
                         } else {
                           AccessToken.getCurrentAccessToken().then(
                             (data) => {
-                              let stackIndex = this.props.navigation.dangerouslyGetParent().state.index;
-                              this.props.loggedInToFacebook(data.accessToken);
+                              this.props.loggedInToFacebook(this.props.currentLanguage, data.accessToken);
                               navigate('Dashboard');
                             }
                           )
@@ -144,7 +144,24 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const {navigate} = ownProps.navigation;
   return {
-    loggedInToFacebook: accessToken => dispatch(Actions.loggedInToFacebook(accessToken)),
+    loggedInToFacebook: (languageCode, accessToken) => dispatch(Actions.loggedInToFacebook(languageCode, accessToken)).then(response => {
+      if (response.ok) {
+        return; // as ok response only handled in Actions
+      }
+      if (response.status === 404) {
+        Toast.show({
+          text: translate("errorResourceNotFound")
+        });
+      } else if (response.status === 400) {
+        Toast.show({
+          text: translate("errorInvalidFacebookAccessToken"),
+        });
+      } else {
+        Toast.show({
+          text: "ERROR " + response.status,
+        });
+      }
+    }),
     submitForm: (languageCode, username, password) => dispatch(Actions.submitLoginForm(
       languageCode, username, password
     )).then(
