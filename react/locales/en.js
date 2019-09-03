@@ -16,5 +16,6 @@ export default {
   messageLoginCancelled: "Login cancelled.",
 
   errorResourceNotFound: "Resource not found.",
-  errorInvalidUsernameOrPassword: "Invalid username or password",
+  errorInvalidUsernameOrPassword: "Invalid username or password.",
+  errorInvalidFacebookAccessToken: "Invalid Facebook access token.",
 };

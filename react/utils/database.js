@@ -5,7 +5,7 @@ SQLite.enablePromise(true);
 const DATABASE_NAME = "mokirim.sqlite";
 const DATABASE_VERSION = "1.0";
 const DATABASE_DISPLAY_NAME = "Mokirim Local Database";
-const DATABASE_SIZE = 1000000;
+const DATABASE_SIZE = 33554432;
 
 let msg = "";
 

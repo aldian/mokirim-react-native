@@ -41,13 +41,29 @@ const _loggedInToFacebook = accessToken => ({
   accessToken,
 });
 
-const loggedInToFacebook = accessToken => dispatch => {
-  dispatch(_loggedInToFacebook(accessToken));
+const loggedInToFacebook = (languageCode, facebookAccessToken) => dispatch => {
+  dispatch(_loggedInToFacebook(facebookAccessToken));
 
-  return Database.openDatabase().then(db => {
+  Database.openDatabase().then(db => {
     return Database.updateUserStates(db, {
-      loggedIn: "1", loggedInVia: "facebook", facebookAccessToken: accessToken,
+      loggedIn: "1", loggedInVia: "facebook", facebookAccessToken,
     });
+  });
+
+  return MokirimAPI.loginWithFacebook(languageCode, facebookAccessToken).then(response => {
+    const responseClone = response.clone();
+    if (responseClone.ok) {
+      responseClone.json().then(obj => {
+        Database.openDatabase().then(db => {
+          return Database.updateUserStates(db, {
+            accessToken: obj.accessToken,
+          });
+        });
+
+        dispatch(updateAppStates({accessToken: obj.accessToken}));
+      });
+    }
+    return response;
   });
 }
 
