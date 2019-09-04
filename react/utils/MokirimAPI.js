@@ -7,6 +7,9 @@ const LOGOUT_PATH = "/api/logout/";
 const LOGIN_FACEBOOK_PATH = "/api/login/facebook/";
 const LOGIN_GOOGLE_PATH = "/api/login/google/";
 
+const REGISTER_PATH = "/auth/users/";
+const ACTIVATE_PATH = "/auth/users/activation/";
+
 const login = (languageCode, username, password) => {
   const requestOptions = {
     method: 'POST',
@@ -59,9 +62,38 @@ const loginWithGoogle = (languageCode, googleAccessToken) => {
   return fetch(BASE_URL + languageCode + LOGIN_GOOGLE_PATH, requestOptions);
 };
 
+const register = (languageCode, username, password) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Referer': BASE_URL,
+      'Content-Type': CONTENT_TYPE_URL_ENCODED,
+    },
+    body: qs.stringify({username, password, email: username}),
+  };
+
+  return fetch(BASE_URL + languageCode + REGISTER_PATH, requestOptions);
+};
+
+const activate = (languageCode, encodedUserId, activationCode) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Referer': BASE_URL,
+      'Content-Type': CONTENT_TYPE_URL_ENCODED,
+    },
+    body: qs.stringify({uid: encodedUserId, token: activationCode}),
+  };
+
+  return fetch(BASE_URL + languageCode + ACTIVATE_PATH, requestOptions);
+};
+
 export default {
   login,
   logout,
   loginWithFacebook,
   loginWithGoogle,
+
+  register,
+  activate,
 };

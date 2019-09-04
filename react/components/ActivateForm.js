@@ -1,0 +1,82 @@
+import React from 'react';
+import {connect} from 'react-redux';
+import {
+  Button, Form, IconNB, Input, Item, Label, Spinner, Text, Toast,
+} from 'native-base';
+import { translate } from "../utils/i18n";
+import Actions from '../state/Actions';
+import styles from '../styles';
+import getTheme from '../theme/components';
+import themeVars from '../theme/variables/material';
+
+class _ActivateForm extends React.Component {
+  componentDidMount() {
+    this.props.setCode('');
+    this.props.setErrorCode(false);
+  };
+
+  render() {
+    return  (
+      <React.Fragment>
+         <Text>{translate("instructionActivate.counting", {count: 6, email: this.props.email})}</Text>
+         <Form>
+            <Item fixedLabel error={!!this.props.errors.code}>
+              <Label>{translate("labelCode")}</Label>
+              <Input onChangeText={val => this.props.setCode(val)} value={this.props.code}/>
+              {!!this.props.errors.code ?
+                <IconNB
+                  name="ios-close-circle"
+                  onPress={() => {
+                    this.props.setCode('');
+                    this.props.setErrorCode(false);
+                  }}
+                /> :
+                null
+              }
+            </Item>
+         </Form>
+         {this.props.submitting ?
+            <Spinner/> :
+            <Button
+              block style={styles.submitButton}
+              onPress={() => this.props.submitForm(
+                this.props.currentLanguage, this.props.encodedUserId, this.props.code,
+              ).then(() => {
+                Toast.show({text: translate('messageAccountActivated'), buttonText: "OK", duration: 10000});
+                this.props.navigate('Login');
+              })}
+            >
+              <Text>{translate("buttonActivate")}</Text>
+            </Button>
+         }
+      </React.Fragment>
+    )
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    currentLanguage: state.appReducer.currentLanguage,
+    encodedUserId: state.appReducer.encodedUserId,
+    email: state.appReducer.email,
+    code: state.appReducer.activateForm.code,
+    errors: state.appReducer.activateForm.errors,
+    submitting: state.appReducer.registerForm.submitting,
+  }
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    submitForm: (languageCode, encodedUserId, code) => dispatch(Actions.submitActivateForm(
+      languageCode, encodedUserId, code,
+    )).catch(error => {
+      Toast.show({text: error, buttonText: "OK", duration: 10000});
+      return new Promise((resolve, reject) => reject());
+    }),
+
+    setCode: code => dispatch(Actions.setActivateFormCode(code)),
+    setErrorCode: error => dispatch(Actions.setActivateFormErrorCode(error)),
+  }
+};
+
+export const ActivateForm = connect(mapStateToProps, mapDispatchToProps)(_ActivateForm);

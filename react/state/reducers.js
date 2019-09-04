@@ -3,6 +3,7 @@ import ActionCodes from './ActionCodes';
 
 const appReducerInitialState = {
   currentLanguage: undefined,
+  splashShown: false,
   statesLoadedFromDb: false,
   loadingStatesFromDb: false,
   errorMessage: '',
@@ -16,14 +17,26 @@ const appReducerInitialState = {
     errors: {},
     submitting: false,
   },
+  registerForm: {
+    username: '',
+    password: '',
+    errors: {},
+    submitting: false,
+  },
+  activateForm: {
+    code: '',
+    errors: {},
+  },
   facebook: {
     accessToken: null,
-    displayName: "ciki cipay",
+    displayName: "",
   },
   google: {
     accessToken: null,
   },
+  encodedUserId: null,
   accessToken: null,
+  email: null,
 };
 
 function appReducer(state = appReducerInitialState, action = {}) {
@@ -83,9 +96,45 @@ function appReducer(state = appReducerInitialState, action = {}) {
       return {
         ...state, loginForm: {...state.loginForm, submitting: action.submitting},
       };
+
+    case ActionCodes.SET_REGISTER_FORM_USERNAME:
+       return {
+         ...state, registerForm: {...state.registerForm, username: action.username},
+       };
+    case ActionCodes.SET_REGISTER_FORM_PASSWORD:
+       return {
+         ...state, registerForm: {...state.registerForm, password: action.password},
+       };
+    case ActionCodes.SET_REGISTER_FORM_ERROR_USERNAME:
+       return {
+         ...state, registerForm: {...state.registerForm, errors: {...state.registerForm.errors, username: action.error}},
+       };
+    case ActionCodes.SET_REGISTER_FORM_ERROR_PASSWORD:
+       return {
+         ...state, registerForm: {...state.registerForm, errors: {...state.registerForm.errors, password: action.error}},
+       };
+    case ActionCodes.SUBMIT_REGISTER_FORM:
+      return {
+        ...state, registerForm: {...state.registerForm, submitting: action.submitting},
+      };
+
+    case ActionCodes.SET_ACTIVATE_FORM_CODE:
+       return {
+         ...state, activateForm: {...state.activateForm, code: action.code},
+       };
+    case ActionCodes.SET_ACTIVATE_FORM_ERROR_CODE:
+       return {
+         ...state, activateForm: {...state.activateForm, errors: {...state.activateForm.errors, code: action.error}},
+       };
+    case ActionCodes.SUBMIT_ACTIVATE_FORM:
+      return {
+        ...state, activateForm: {...state.activateForm, submitting: action.submitting},
+      };
+
     case ActionCodes.LOGOUT:
       return {
-         ...state, loggedIn: false, loggedInVia: null, accessToken: null,
+         ...state, loggedIn: false, loggedInVia: null, encodedUserId: null, accessToken: null,
+         email: null,
          facebook: {...state.facebook, accessToken: null},
          google: {...state.google, accessToken: null},
       };
