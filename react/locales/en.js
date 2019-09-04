@@ -18,4 +18,5 @@ export default {
   errorResourceNotFound: "Resource not found.",
   errorInvalidUsernameOrPassword: "Invalid username or password.",
   errorInvalidFacebookAccessToken: "Invalid Facebook access token.",
+  errorInvalidGoogleAccessToken: "Invalid Google access token.",
 };

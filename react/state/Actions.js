@@ -1,3 +1,4 @@
+import { GoogleSignin } from 'react-native-google-signin';
 import ActionCodes from './ActionCodes';
 import Database from '../utils/database';
 import MokirimAPI from '../utils/MokirimAPI';
@@ -56,11 +57,11 @@ const loggedInToFacebook = (languageCode, facebookAccessToken) => dispatch => {
       responseClone.json().then(obj => {
         Database.openDatabase().then(db => {
           return Database.updateUserStates(db, {
-            accessToken: obj.accessToken,
+            accessToken: obj.token,
           });
         });
 
-        dispatch(updateAppStates({accessToken: obj.accessToken}));
+        dispatch(updateAppStates({accessToken: obj.token}));
       });
     }
     return response;
@@ -92,6 +93,7 @@ const logout = (languageCode, accessToken, via) => dispatch => {
   Database.openDatabase().then(db => {
     return Database.updateUserStates(db, {
       loggedIn: undefined, loggedInVia: undefined, facebookAccessToken: undefined,
+      googleAccessToken: undefined,
       introFinished: undefined, accessToken: undefined,
     });
   });
@@ -118,6 +120,8 @@ const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
           states.accessToken = value;
         } else if (name === 'facebookAccessToken') {
           states.facebook.accessToken = value;
+        } else if (name === 'googleAccessToken') {
+          states.google.accessToken = value;
         } else if (name == 'introFinished') {
           states.introFinished = !!parseInt(value, 10);
         }
@@ -176,6 +180,41 @@ const loginFormSubmitted = () => ({
   submitting: false,
 });
 
+const _loggedInToGoogle = accessToken => ({
+  type: ActionCodes.LOGGED_IN_TO_GOOGLE,
+  accessToken,
+});
+
+const pressGoogleLogin = languageCode => dispatch => {
+  return GoogleSignin.hasPlayServices().then(() => GoogleSignin.signIn()).then(userInfo => {
+    return GoogleSignin.getTokens().then(tokens => {
+      dispatch(_loggedInToGoogle(tokens.accessToken));
+
+       Database.openDatabase().then(db => {
+         return Database.updateUserStates(db, {
+           loggedIn: "1", loggedInVia: "google", googleAccessToken: tokens.accessToken,
+         });
+       });
+
+       return MokirimAPI.loginWithGoogle(languageCode, tokens.accessToken).then(response => {
+         const responseClone = response.clone();
+         if (responseClone.ok) {
+           responseClone.json().then(obj => {
+             Database.openDatabase().then(db => {
+               return Database.updateUserStates(db, {
+                 accessToken: obj.token,
+               });
+             });
+
+             dispatch(updateAppStates({accessToken: obj.token}));
+           });
+         }
+         return response;
+       });
+    });
+  });
+};
+
 export default Actions = {
   setErrorMessage,
   introFinished,
@@ -190,4 +229,5 @@ export default Actions = {
   setLoginFormErrorPassword,
   submitLoginForm,
   loginFormSubmitted,
+  pressGoogleLogin,
 }

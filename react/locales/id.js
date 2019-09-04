@@ -18,4 +18,5 @@ export default {
   errorResourceNotFound: "Resource tak ditemukan.",
   errorInvalidUsernameOrPassword: "Username atau sandi salah.",
   errorInvalidFacebookAccessToken: "Access token Facebook tidak valid.",
+  errorInvalidGoogleAccessToken: "Access token Google tidak valid.",
 };

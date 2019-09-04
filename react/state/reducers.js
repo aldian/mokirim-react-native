@@ -20,6 +20,9 @@ const appReducerInitialState = {
     accessToken: null,
     displayName: "ciki cipay",
   },
+  google: {
+    accessToken: null,
+  },
   accessToken: null,
 };
 
@@ -50,6 +53,11 @@ function appReducer(state = appReducerInitialState, action = {}) {
         ...state, loggedIn: true, loggedInVia: 'facebook',
         facebook: {...state.facebook, accessToken: action.accessToken}
       };
+    case ActionCodes.LOGGED_IN_TO_GOOGLE:
+      return {
+        ...state, loggedIn: true, loggedInVia: 'google',
+        google: {...state.google, accessToken: action.accessToken}
+      };
     case ActionCodes.LOGGED_IN_TO_MOKIRIM:
        return {
          ...state, loggedIn: true, loggedInVia: 'mokirim',
@@ -78,6 +86,8 @@ function appReducer(state = appReducerInitialState, action = {}) {
     case ActionCodes.LOGOUT:
       return {
          ...state, loggedIn: false, loggedInVia: null, accessToken: null,
+         facebook: {...state.facebook, accessToken: null},
+         google: {...state.google, accessToken: null},
       };
     default:
       return state;

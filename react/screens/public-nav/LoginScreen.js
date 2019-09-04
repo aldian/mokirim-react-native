@@ -9,6 +9,7 @@ import {
   Icon, IconNB, Spinner, StyleProvider,
 } from 'native-base';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 import { NavigationL10nText } from '../../components/NavigationL10nText';
@@ -97,7 +98,6 @@ class _LoginScreen extends React.Component {
               null :
               <View style={styles.screen}>
                 <View style={styles.content}>
-                  <View></View>
                   <LoginButton
                     permissions={['email']}
                     onLoginFinished={
@@ -120,6 +120,14 @@ class _LoginScreen extends React.Component {
                       }
                     }
                   />
+
+                  <GoogleSigninButton
+                    style={{ width: 250, height: 48 }}
+                    size={GoogleSigninButton.Size.Wide}
+                    color={GoogleSigninButton.Color.Dark}
+                    onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage)}
+                    disabled={false} />
+
                 </View>
               </View>
             }
@@ -162,6 +170,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         });
       }
     }),
+
     submitForm: (languageCode, username, password) => dispatch(Actions.submitLoginForm(
       languageCode, username, password
     )).then(
@@ -204,9 +213,29 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          Toast.show({
            text: error,
          });
-
       }
     ),
+
+    pressGoogleLogin: (navigate, languageCode) => dispatch(Actions.pressGoogleLogin(languageCode)).then(response => {
+       if (response.ok) {
+         navigate("Dashboard");
+         return; // as ok response only handled in Actions
+       }
+       if (response.status === 404) {
+         Toast.show({
+           text: translate("errorResourceNotFound")
+         });
+       } else if (response.status === 400) {
+         Toast.show({
+           text: translate("errorInvalidGoogleAccessToken"),
+         });
+       } else {
+         Toast.show({
+           text: "ERROR " + response.status,
+         });
+       }
+    }),
+
     setUsername: username => dispatch(Actions.setLoginFormUsername(username)),
     setPassword: password => dispatch(Actions.setLoginFormPassword(password)),
     setErrorUsername: error => dispatch(Actions.setLoginFormErrorUsername(error)),
