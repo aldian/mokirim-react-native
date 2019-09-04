@@ -6,6 +6,7 @@ import { Root } from 'native-base';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { GoogleSignin } from 'react-native-google-signin';
 import { rootReducer } from './state/reducers';
 import { initNotifications } from './utils/notifications';
 import { initI18n } from './utils/i18n';
@@ -27,6 +28,8 @@ initI18n(store);
 initNotifications(store);
 
 useScreens();
+
+GoogleSignin.configure();
 
 const IntroNavigator = createStackNavigator({
   IntroWhy: {screen: IntroWhyScreen, path: 'introWhy'},

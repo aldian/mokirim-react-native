@@ -6,6 +6,7 @@ import {
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
   StyleProvider,
 } from 'native-base';
+import { GoogleSignin } from 'react-native-google-signin';
 import { LoginButton } from 'react-native-fbsdk';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
@@ -40,6 +41,13 @@ class _DashboardScreen extends React.Component {
               this.props.logout(this.props.currentLanguage, this.props.accessToken, 'facebook');
               navigate('Home');
             }}/>
+          }
+          {this.props.loggedInVia === 'google' &&
+             <Button title={translate('buttonLogout')} onPress={() => {
+               GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut());
+               this.props.logout(this.props.currentLanguage, this.props.accessToken);
+               navigate('Home');
+             }}/>
           }
           {this.props.loggedInVia === 'mokirim' &&
             <Button
