@@ -5,15 +5,15 @@ import { View } from 'react-native';
 import {
   Button,
   Container, Content, Form, Input, Item, Label, Text, Toast,
-  Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
+  Title as HeaderTitle,
   Icon, IconNB, Spinner, StyleProvider,
 } from 'native-base';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
-import { NavigationL10nText } from '../../components/NavigationL10nText';
-import { ScreenContainer } from '../../components/ScreenContainer';
+//import { NavigationL10nText } from '../../components/NavigationL10nText';
+//import { ScreenContainer } from '../../components/ScreenContainer';
 import { LoginFormHeader } from '../../components/LoginFormHeader';
 import styles from '../../styles';
 import getTheme from '../../theme/components';
@@ -24,16 +24,6 @@ class _LoginScreen extends React.Component {
     //headerTitle: <HeaderTitle><NavigationL10nText textKey="headerLogin"/></HeaderTitle>
     header: <LoginFormHeader navigation={navigation}/>,
   });
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      errors: {},
-      username: '',
-      password: '',
-    };
-  }
 
   componentDidMount() {
     this.props.setUsername('');
@@ -51,7 +41,7 @@ class _LoginScreen extends React.Component {
           <Content>
             <Form>
               <Item fixedLabel error={!!this.props.errors.username}>
-                <Label>{translate("labelUsername")}</Label>
+                <Label>{translate("labelEmailOrUsername")}</Label>
                 <Input onChangeText={val => this.props.setUsername(val)} value={this.props.username}/>
                 {!!this.props.errors.username ?
                   <IconNB
@@ -85,7 +75,7 @@ class _LoginScreen extends React.Component {
             {this.props.submitting ?
               <Spinner/> :
               <Button
-                block style={{margin: 15}}
+                block style={styles.submitButton}
                 onPress={() => this.props.submitForm(
                   this.props.currentLanguage, this.props.username, this.props.password
                 )}
@@ -99,6 +89,7 @@ class _LoginScreen extends React.Component {
               <View style={styles.screen}>
                 <View style={styles.content}>
                   <LoginButton
+                    style={{width: 250, height: 32}}
                     permissions={['email']}
                     onLoginFinished={
                       (error, result) => {
@@ -193,15 +184,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               text: translate("errorResourceNotFound"),
             });
           } else if (response.status === 400) {
-            dispatch(Actions.setLoginFormErrorUsername(true));
-            dispatch(Actions.setLoginFormErrorPassword(true));
             response.json().then(obj => {
+              let texts = [];
+              if (obj.__all__) {
+                dispatch(Actions.setLoginFormErrorUsername(true));
+                dispatch(Actions.setLoginFormErrorPassword(true));
+                texts = [...texts, ...obj.__all__];
+              }
+              if (obj.username) {
+                dispatch(Actions.setLoginFormErrorUsername(true));
+                texts = [...texts, ...obj.username.map(txt => 'username: ' + txt)];
+              }
+              if (obj.password) {
+                dispatch(Actions.setLoginFormErrorPassword(true));
+                texts = [...texts, ...obj.password.map(txt => 'password: ' + txt)];
+              }
               Toast.show({
-                text: translate("errorInvalidUsernameOrPassword"),
+                text: texts.join(' - '), buttonText: "OK", duration: 10000,
               });
             });
           } else {
             Toast.show({
+              //text: translate("errorInvalidUsernameOrPassword"),
               text: "ERROR " + response.status,
             });
           }

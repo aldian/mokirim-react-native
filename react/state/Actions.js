@@ -1,4 +1,5 @@
 import { GoogleSignin } from 'react-native-google-signin';
+import { translate } from "../utils/i18n";
 import ActionCodes from './ActionCodes';
 import Database from '../utils/database';
 import MokirimAPI from '../utils/MokirimAPI';
@@ -94,7 +95,8 @@ const logout = (languageCode, accessToken, via) => dispatch => {
     return Database.updateUserStates(db, {
       loggedIn: undefined, loggedInVia: undefined, facebookAccessToken: undefined,
       googleAccessToken: undefined,
-      introFinished: undefined, accessToken: undefined,
+      introFinished: undefined, encodedUserId: undefined, accessToken: undefined,
+      email: undefined,
     });
   });
 
@@ -112,10 +114,16 @@ const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
         let row = rows.item(i);
         const name = row.name;
         const value = row.value;
-        if (name === 'loggedIn') {
+        if (name === 'splashShown') {
+          states.splashShown = !!parseInt(value, 10);
+        } else if (name === 'loggedIn') {
           states.loggedIn = !!parseInt(value, 10);
         } else if (name === 'loggedInVia') {
           states.loggedInVia = value;
+        } else if (name === 'encodedUserId') {
+          states.encodedUserId = value;
+        } else if (name === 'email') {
+          states.email = value;
         } else if (name === 'accessToken') {
           states.accessToken = value;
         } else if (name === 'facebookAccessToken') {
@@ -136,8 +144,10 @@ const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
       } else if (!states.introFinished) {
         nextScreen = 'IntroWhy';
       }
-      if (delay) {
+      if (delay && !states.splashShown) {
         setTimeout(() => navigate(nextScreen), delay);
+        dispatch(updateAppStates({splashShown: true}));
+        Database.updateUserStates(db, {splashShown: "1"});
       } else {
         navigate(nextScreen);
       }
@@ -215,6 +225,141 @@ const pressGoogleLogin = languageCode => dispatch => {
   });
 };
 
+const setRegisterFormUsername = username => ({
+  type: ActionCodes.SET_REGISTER_FORM_USERNAME,
+  username,
+});
+
+const setRegisterFormPassword = password => ({
+  type: ActionCodes.SET_REGISTER_FORM_PASSWORD,
+  password,
+});
+
+const setRegisterFormErrorUsername = error => ({
+  type: ActionCodes.SET_REGISTER_FORM_ERROR_USERNAME,
+  error,
+});
+
+const setRegisterFormErrorPassword = error => ({
+  type: ActionCodes.SET_REGISTER_FORM_ERROR_PASSWORD,
+  error,
+});
+
+const _submitRegisterForm = submitting => ({
+  type: ActionCodes.SUBMIT_REGISTER_FORM,
+  submitting,
+});
+
+const submitRegisterForm = (languageCode, username, password) => dispatch => {
+  dispatch(_submitRegisterForm(true));
+  return MokirimAPI.register(languageCode, username, password).then(response => {
+     if (response.ok) {
+       dispatch(setRegisterFormErrorUsername(false));
+       dispatch(setRegisterFormErrorPassword(false));
+       dispatch(setRegisterFormUsername(''));
+       dispatch(setRegisterFormPassword(''));
+
+       return response.json().then(obj => {
+         Database.openDatabase().then(db => {
+           return Database.updateUserStates(db, {
+             encodedUserId: obj.encodedId,
+             email: username,
+           });
+         });
+
+         return dispatch(updateAppStates({encodedUserId: obj.encodedId, email: username}));
+       });
+     } else {
+       if (response.status === 404) {
+         return new Promise((resolve, reject) => reject(translate("errorResourceNotFound")));
+       } else if (response.status === 400) {
+         return response.json().then(obj => {
+           return new Promise(
+             (resolve, reject) => {
+               let texts = [];
+               if (obj.__all__) {
+                 dispatch(setRegisterFormErrorUsername(true));
+                 dispatch(setRegisterFormErrorPassword(true));
+                 texts = [...texts, ...obj.__all__];
+               }
+               if (obj.username) {
+                 dispatch(setRegisterFormErrorUsername(true));
+                 texts = [...texts, ...obj.username.map(txt => 'username: ' + txt)];
+               }
+               if (obj.password) {
+                 dispatch(setRegisterFormErrorPassword(true));
+                 texts = [...texts, ...obj.password.map(txt => 'password: ' + txt)];
+               }
+               return reject(texts.join(' - '));
+             }
+           );
+         });
+       } else {
+         return new Promise((resolve, reject) => reject("ERROR " + response.status));
+       }
+     }
+  }).finally(() => {
+    dispatch(_submitRegisterForm(false));
+  });
+}
+
+const setActivateFormCode = code => ({
+  type: ActionCodes.SET_ACTIVATE_FORM_CODE,
+  code,
+});
+
+const setActivateFormErrorCode = error => ({
+  type: ActionCodes.SET_ACTIVATE_FORM_ERROR_CODE,
+  error,
+});
+
+const submitActivateForm = (languageCode, encodedUserId, code) => dispatch => {
+  dispatch(_submitRegisterForm(true));
+  return MokirimAPI.activate(languageCode, encodedUserId, code.toUpperCase()).then(response => {
+     if (response.ok) {
+       dispatch(setActivateFormErrorCode(false));
+       dispatch(setActivateFormCode(''));
+
+       Database.openDatabase().then(db => {
+         return Database.updateUserStates(db, {
+           encodedUserId: undefined,
+           email: undefined,
+         });
+       });
+
+       return dispatch(updateAppStates({encodedUserId: null, email: null}));
+     } else {
+       if (response.status === 404) {
+         return new Promise((resolve, reject) => reject(translate("errorResourceNotFound")));
+       } else if (response.status === 400) {
+         return response.json().then(obj => {
+           return new Promise(
+             (resolve, reject) => {
+               let texts = [];
+               if (obj.__all__) {
+                 dispatch(setActivateFormErrorCode(true));
+                 texts = [...texts, ...obj.__all__];
+               }
+               if (obj.uid) {
+                 texts = [...texts, ...obj.uid];
+               }
+               if (obj.token) {
+                 dispatch(setActivateFormErrorCode(true));
+                 texts = [...texts, ...obj.token];
+               }
+               return reject(texts.join(' - '));
+             }
+           );
+         });
+       } else {
+         return new Promise((resolve, reject) => reject("ERROR " + response.status));
+       }
+     }
+  }).finally(() => {
+    dispatch(_submitRegisterForm(false));
+  });
+}
+
 export default Actions = {
   setErrorMessage,
   introFinished,
@@ -223,6 +368,7 @@ export default Actions = {
   loggedInToMokirim,
   logout,
   loadAppStatesFromDb,
+
   setLoginFormUsername,
   setLoginFormPassword,
   setLoginFormErrorUsername,
@@ -230,4 +376,14 @@ export default Actions = {
   submitLoginForm,
   loginFormSubmitted,
   pressGoogleLogin,
+
+  setRegisterFormUsername,
+  setRegisterFormPassword,
+  setRegisterFormErrorUsername,
+  setRegisterFormErrorPassword,
+  submitRegisterForm,
+
+  setActivateFormCode,
+  setActivateFormErrorCode,
+  submitActivateForm,
 }
