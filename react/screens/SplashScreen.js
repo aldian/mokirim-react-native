@@ -1,21 +1,33 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import {
+  Container, Content,
+  StyleProvider, Toast,
+} from 'native-base';
 import {connect} from 'react-redux';
 import Actions from '../state/Actions';
 import styles from '../styles';
+import getTheme from '../theme/components';
+import themeVars from '../theme/variables/material';
 
 class _SplashScreen extends React.Component {
   componentDidMount() {
-    this.props.loadAppStatesFromDb(this.props.states, this.props.navigation.navigate, 2000);
+    this.props.loadAppStatesFromDb(this.props.states, 2000).then(nextScreen => {
+      this.props.navigation.navigate(nextScreen);
+    }).catch(error => {
+      Toast.show({text: error, buttonText: "OK", duration: 60000});
+    });
   }
 
   render() {
     return (
-      <View style={[styles.screen, styles.splashScreen]}>
-        <View style={styles.content}>
-        <Text style={styles.splashText}>MOKIRIM</Text>
+      <StyleProvider style={getTheme(themeVars)}>
+        <View style={[styles.screen, styles.splashScreen]}>
+          <View style={styles.content}>
+          <Text style={styles.splashText}>MOKIRIM</Text>
+          </View>
         </View>
-      </View>
+      </StyleProvider>
     );
   }
 }
@@ -28,8 +40,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    loadAppStatesFromDb: (states, navigate, delay) => (
-      dispatch(Actions.loadAppStatesFromDb(states, navigate, delay))
+    loadAppStatesFromDb: (states, delay) => (
+      dispatch(Actions.loadAppStatesFromDb(states, delay))
     ),
   }
 };

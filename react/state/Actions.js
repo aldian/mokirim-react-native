@@ -1,4 +1,5 @@
 import { GoogleSignin } from 'react-native-google-signin';
+import uuid from 'uuid';
 import { translate } from "../utils/i18n";
 import ActionCodes from './ActionCodes';
 import Database from '../utils/database';
@@ -103,10 +104,28 @@ const logout = (languageCode, accessToken, via) => dispatch => {
   MokirimAPI.logout(languageCode, accessToken);
 }
 
-const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
+const _afterSplash = (dispatch, timerStart, db, splashShown, delay, nextScreen) => {
+  if (delay && !splashShown) {
+    return new Promise((resolve, reject) => {
+      const timerStop = (new Date()).getTime();
+      let remainingDelay = delay - (timerStop - timerStart);
+      remainingDelay = remainingDelay > 0 ? remainingDelay : 0;
+      setTimeout(() => {
+        resolve(nextScreen);
+      }, delay);
+      dispatch(updateAppStates({splashShown: true}));
+      Database.updateUserStates(db, {splashShown: "1"});
+    });
+  } else {
+    return new Promise((resolve, reject) => resolve(nextScreen));
+  }
+}
+
+const loadAppStatesFromDb = (appStates, delay) => dispatch => {
+  const timerStart = (new Date()).getTime();
   dispatch(updateAppStates({loadingStatesFromDb: true}));
 
-  Database.openDatabase().then(db => {
+  return Database.openDatabase().then(db => {
     return Database.loadUserStates(db).then(rows => {
       let states = {...appStates, loadingStatesFromDb: false, statesLoadedFromDb: true};
       const len = rows.length;
@@ -132,25 +151,39 @@ const loadAppStatesFromDb = (appStates, navigate, delay) => dispatch => {
           states.google.accessToken = value;
         } else if (name == 'introFinished') {
           states.introFinished = !!parseInt(value, 10);
+        } else if (name == 'deviceId') {
+          states.deviceId = value;
+        } else if (name == 'deviceToken') {
+          states.deviceToken = value;
         }
       }
       dispatch(updateAppStates(states));
-      if (!navigate) {
-        return;
-      }
+
       let nextScreen = 'Home';
       if (states.loggedIn) {
         nextScreen = 'Dashboard';
       } else if (!states.introFinished) {
         nextScreen = 'IntroWhy';
       }
-      if (delay && !states.splashShown) {
-        setTimeout(() => navigate(nextScreen), delay);
-        dispatch(updateAppStates({splashShown: true}));
-        Database.updateUserStates(db, {splashShown: "1"});
-      } else {
-        navigate(nextScreen);
+      if (states.deviceId) {
+        return _afterSplash(dispatch, timerStart, db, states.splashShown, delay, nextScreen);
       }
+
+      states.deviceId = uuid.v4();
+      return MokirimAPI.registerDevice(states.currentLanguage, states.deviceId).then(response => {
+        if (response.ok) {
+          return response.json().then(obj => {
+            states.deviceToken = obj.token;
+            dispatch(updateAppStates(states));
+            Database.updateUserStates(
+              db, {deviceId: states.deviceId, deviceToken: states.deviceToken}
+            );
+            return _afterSplash(dispatch, timerStart, db, states.splashShown, delay, nextScreen);
+          });
+        } else {
+          return new Promise((resolve, reject) => reject('ERROR ' + response.status));
+        }
+      });
     });
   });
 }

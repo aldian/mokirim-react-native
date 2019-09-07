@@ -2,6 +2,8 @@ import qs from 'query-string';
 
 const CONTENT_TYPE_URL_ENCODED = 'application/x-www-form-urlencoded';
 const BASE_URL = "https://mokirim.aldianfazrihady.com/";
+const DEVICE_PATH = "/api/device/";
+
 const LOGIN_PATH = "/api/login/";
 const LOGOUT_PATH = "/api/logout/";
 const LOGIN_FACEBOOK_PATH = "/api/login/facebook/";
@@ -12,6 +14,19 @@ const ACTIVATE_PATH = "/auth/users/activation/";
 
 const RESET_PASSWORD_PATH = "/auth/users/reset_password/";
 const CONFIRM_PASSWORD_RESET_PATH = "/auth/users/reset_password_confirm/";
+
+const registerDevice = (languageCode, deviceId) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Referer': BASE_URL,
+      'Content-Type': CONTENT_TYPE_URL_ENCODED,
+    },
+    body: qs.stringify({deviceId}),
+  };
+
+  return fetch(BASE_URL + languageCode + DEVICE_PATH, requestOptions);
+}
 
 const login = (languageCode, username, password) => {
   const requestOptions = {
@@ -118,6 +133,8 @@ const confirmPasswordReset = (languageCode, encodedUserId, activationCode, newPa
 };
 
 export default {
+  registerDevice,
+
   login,
   logout,
   loginWithFacebook,
