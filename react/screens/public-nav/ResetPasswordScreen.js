@@ -5,13 +5,13 @@ import {
 } from 'native-base';
 import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
-import { RegisterScreenHeader } from '../../components/RegisterScreenHeader';
-import { RegisterForm } from '../../components/RegisterForm';
-import { ActivateForm } from '../../components/ActivateForm';
+import { ResetPasswordScreenHeader } from '../../components/ResetPasswordScreenHeader';
+import { ResetPasswordForm } from '../../components/ResetPasswordForm';
+import { ConfirmPasswordResetForm } from '../../components/ConfirmPasswordResetForm';
 
-class _RegisterScreen extends React.Component {
+class _ResetPasswordScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
-    header: <RegisterScreenHeader navigation={navigation}/>,
+    header: <ResetPasswordScreenHeader navigation={navigation}/>,
   });
 
   render() {
@@ -20,9 +20,9 @@ class _RegisterScreen extends React.Component {
       <StyleProvider style={getTheme(themeVars)}>
         <Container>
           <Content>
-            <RegisterForm/>
+            <ResetPasswordForm/>
             {this.props.encodedUserId ?
-              <ActivateForm navigate={navigate}/> :
+              <ConfirmPasswordResetForm navigate={navigate}/> :
               null
             }
           </Content>
@@ -43,4 +43,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 };
 
-export const RegisterScreen = connect(mapStateToProps, mapDispatchToProps)(_RegisterScreen);
+export const ResetPasswordScreen = connect(mapStateToProps, mapDispatchToProps)(_ResetPasswordScreen);

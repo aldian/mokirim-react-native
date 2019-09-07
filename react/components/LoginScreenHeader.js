@@ -9,7 +9,7 @@ import { translate } from "../utils/i18n";
 import getTheme from '../theme/components';
 import themeVars from '../theme/variables/material';
 
-class _RegisterFormHeader extends React.Component {
+class _LoginScreenHeader extends React.Component {
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
       <Header>
@@ -22,7 +22,7 @@ class _RegisterFormHeader extends React.Component {
           }
        </HeaderLeft>
        <HeaderBody>
-          <HeaderTitle>{translate("headerRegister")}</HeaderTitle>
+          <HeaderTitle>{translate("headerLogin")}</HeaderTitle>
         </HeaderBody>
         <HeaderRight/>
       </Header>
@@ -32,7 +32,7 @@ class _RegisterFormHeader extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    submitting: state.appReducer.registerForm.submitting,
+    submitting: state.appReducer.loginForm.submitting,
   }
 };
 
@@ -41,4 +41,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 };
 
-export const RegisterFormHeader = connect(mapStateToProps, mapDispatchToProps)(_RegisterFormHeader);
+export const LoginScreenHeader = connect(mapStateToProps, mapDispatchToProps)(_LoginScreenHeader);

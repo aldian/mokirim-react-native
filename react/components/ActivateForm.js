@@ -59,8 +59,8 @@ const mapStateToProps = state => {
     currentLanguage: state.appReducer.currentLanguage,
     encodedUserId: state.appReducer.encodedUserId,
     email: state.appReducer.email,
-    code: state.appReducer.activateForm.code,
-    errors: state.appReducer.activateForm.errors,
+    code: state.appReducer.registerForm.activationCode,
+    errors: state.appReducer.registerForm.errors,
     submitting: state.appReducer.registerForm.submitting,
   }
 };

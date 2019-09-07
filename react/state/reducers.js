@@ -20,12 +20,16 @@ const appReducerInitialState = {
   registerForm: {
     username: '',
     password: '',
+    activationCode: '',
     errors: {},
     submitting: false,
   },
-  activateForm: {
-    code: '',
+  resetPasswordForm: {
+    email: '',
+    activationCode: '',
+    newPassword: '',
     errors: {},
+    submitting: false,
   },
   facebook: {
     accessToken: null,
@@ -97,6 +101,14 @@ function appReducer(state = appReducerInitialState, action = {}) {
         ...state, loginForm: {...state.loginForm, submitting: action.submitting},
       };
 
+    case ActionCodes.LOGOUT:
+      return {
+        ...state, loggedIn: false, loggedInVia: null, encodedUserId: null, accessToken: null,
+        email: null,
+        facebook: {...state.facebook, accessToken: null},
+        google: {...state.google, accessToken: null},
+      };
+
     case ActionCodes.SET_REGISTER_FORM_USERNAME:
        return {
          ...state, registerForm: {...state.registerForm, username: action.username},
@@ -113,31 +125,51 @@ function appReducer(state = appReducerInitialState, action = {}) {
        return {
          ...state, registerForm: {...state.registerForm, errors: {...state.registerForm.errors, password: action.error}},
        };
+    case ActionCodes.SET_ACTIVATE_FORM_CODE:
+       return {
+         ...state, registerForm: {...state.registerForm, activationCode: action.code},
+       };
+    case ActionCodes.SET_ACTIVATE_FORM_ERROR_CODE:
+       return {
+         ...state, registerForm: {...state.registerForm, errors: {...state.registerForm.errors, activationCode: action.error}},
+       };
     case ActionCodes.SUBMIT_REGISTER_FORM:
+    case ActionCodes.SUBMIT_ACTIVATE_FORM:
       return {
         ...state, registerForm: {...state.registerForm, submitting: action.submitting},
       };
 
-    case ActionCodes.SET_ACTIVATE_FORM_CODE:
-       return {
-         ...state, activateForm: {...state.activateForm, code: action.code},
-       };
-    case ActionCodes.SET_ACTIVATE_FORM_ERROR_CODE:
-       return {
-         ...state, activateForm: {...state.activateForm, errors: {...state.activateForm.errors, code: action.error}},
-       };
-    case ActionCodes.SUBMIT_ACTIVATE_FORM:
+    case ActionCodes.SET_RESET_PASSWORD_FORM_EMAIL:
       return {
-        ...state, activateForm: {...state.activateForm, submitting: action.submitting},
+        ...state, resetPasswordForm: {...state.resetPasswordForm, email: action.email},
+      };
+    case ActionCodes.SET_RESET_PASSWORD_FORM_ERROR_EMAIL:
+      return {
+        ...state, resetPasswordForm: {...state.resetPasswordForm, errors: {...state.resetPasswordForm.errors, email: action.error}},
       };
 
-    case ActionCodes.LOGOUT:
+    case ActionCodes.SET_CONFIRM_PASSWORD_RESET_FORM_CODE:
       return {
-         ...state, loggedIn: false, loggedInVia: null, encodedUserId: null, accessToken: null,
-         email: null,
-         facebook: {...state.facebook, accessToken: null},
-         google: {...state.google, accessToken: null},
+        ...state, resetPasswordForm: {...state.resetPasswordForm, activationCode: action.code},
       };
+    case ActionCodes.SET_CONFIRM_PASSWORD_RESET_FORM_ERROR_CODE:
+      return {
+        ...state, resetPasswordForm: {...state.resetPasswordForm, errors: {...state.resetPasswordForm.errors, activationCode: action.error}},
+      };
+    case ActionCodes.SET_CONFIRM_PASSWORD_RESET_FORM_NEW_PASSWORD:
+      return {
+        ...state, resetPasswordForm: {...state.resetPasswordForm, newPassword: action.password},
+      };
+    case ActionCodes.SET_CONFIRM_PASSWORD_RESET_FORM_ERROR_NEW_PASSWORD:
+      return {
+        ...state, resetPasswordForm: {...state.resetPasswordForm, errors: {...state.resetPasswordForm.errors, newPassword: action.error}},
+      };
+    case ActionCodes.SUBMIT_RESET_PASSWORD_FORM:
+    case ActionCodes.SUBMIT_CONFIRM_PASSWORD_RESET_FORM:
+      return {
+        ...state, resetPasswordForm: {...state.resetPasswordForm, submitting: action.submitting},
+      };
+
     default:
       return state;
   }
