@@ -18,6 +18,7 @@ import { IntroMonitoringScreen } from './screens/intro-nav/IntroMonitoringScreen
 import { HomeScreen } from './screens/public-nav/HomeScreen';
 import { LoginScreen } from './screens/public-nav/LoginScreen';
 import { RegisterScreen } from './screens/public-nav/RegisterScreen';
+import { ResetPasswordScreen } from './screens/public-nav/ResetPasswordScreen';
 import { DashboardScreen } from './screens/user-nav/DashboardScreen';
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
 
@@ -45,6 +46,7 @@ const PublicNavigator = createStackNavigator({
   Home: {screen: HomeScreen, path: 'home'},
   Login: {screen: LoginScreen, path: 'login'},
   Register: {screen: RegisterScreen, path: 'register'},
+  ResetPassword: {screen: ResetPasswordScreen, path: 'resetPassword'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,

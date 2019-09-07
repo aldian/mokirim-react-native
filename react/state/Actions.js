@@ -360,6 +360,155 @@ const submitActivateForm = (languageCode, encodedUserId, code) => dispatch => {
   });
 }
 
+const setResetPasswordFormEmail = email => ({
+  type: ActionCodes.SET_RESET_PASSWORD_FORM_EMAIL,
+  email,
+});
+
+const setResetPasswordFormErrorEmail = error => ({
+  type: ActionCodes.SET_RESET_PASSWORD_FORM_ERROR_EMAIL,
+  error,
+});
+
+const _submitResetPasswordForm = submitting => ({
+  type: ActionCodes.SUBMIT_RESET_PASSWORD_FORM,
+  submitting,
+});
+
+const submitResetPasswordForm = (languageCode, email) => dispatch => {
+  dispatch(_submitResetPasswordForm(true));
+  return MokirimAPI.resetPassword(languageCode, email).then(response => {
+     if (response.ok) {
+       dispatch(setResetPasswordFormErrorEmail(false));
+       dispatch(setResetPasswordFormEmail(''));
+
+       return response.json().then(obj => {
+         Database.openDatabase().then(db => {
+           return Database.updateUserStates(db, {
+             encodedUserId: obj.encodedId,
+             email,
+           });
+         });
+
+         return dispatch(updateAppStates({encodedUserId: obj.encodedId, email}));
+       });
+     } else {
+       if (response.status === 404) {
+         return new Promise((resolve, reject) => reject(translate("errorResourceNotFound")));
+       } else if (response.status === 400) {
+         return response.json().then(obj => {
+           return new Promise(
+             (resolve, reject) => {
+               let texts = [];
+               dispatch(setResetPasswordFormErrorEmail(true));
+               if (Array.isArray(obj)) {
+                 texts = [...texts, ...obj];
+               } else {
+                 if (obj.__all__) {
+                   texts = [...texts, ...obj.__all__];
+                 }
+                 if (obj.email) {
+                   texts = [...texts, ...obj.email.map(txt => 'email: ' + txt)];
+                 }
+               }
+               return reject(texts.join(' - '));
+             }
+           );
+         });
+       } else {
+         return new Promise((resolve, reject) => reject("ERROR " + response.status));
+       }
+     }
+  }).finally(() => {
+    dispatch(_submitResetPasswordForm(false));
+  });
+}
+
+const setConfirmPasswordResetFormCode = code => ({
+  type: ActionCodes.SET_CONFIRM_PASSWORD_RESET_FORM_CODE,
+  code,
+});
+
+const setConfirmPasswordResetFormErrorCode = error => ({
+  type: ActionCodes.SET_CONFIRM_PASSWORD_RESET_FORM_ERROR_CODE,
+  error,
+});
+
+const setConfirmPasswordResetFormNewPassword = password => ({
+  type: ActionCodes.SET_CONFIRM_PASSWORD_RESET_FORM_NEW_PASSWORD,
+  password,
+});
+
+const setConfirmPasswordResetFormErrorNewPassword = error => ({
+  type: ActionCodes.SET_CONFIRM_PASSWORD_RESET_FORM_ERROR_NEW_PASSWORD,
+  error,
+});
+
+const _submitConfirmPasswordResetForm = submitting => ({
+  type: ActionCodes.SUBMIT_CONFIRM_PASSWORD_RESET_FORM,
+  submitting,
+});
+
+const submitConfirmPasswordResetForm = (languageCode, encodedUserId, code, newPassword) => dispatch => {
+  dispatch(_submitConfirmPasswordResetForm(true));
+  return MokirimAPI.confirmPasswordReset(languageCode, encodedUserId, code, newPassword).then(response => {
+     if (response.ok) {
+       dispatch(setConfirmPasswordResetFormErrorCode(false));
+       dispatch(setConfirmPasswordResetFormCode(''));
+       dispatch(setConfirmPasswordResetFormErrorNewPassword(false));
+       dispatch(setConfirmPasswordResetFormNewPassword(''));
+
+       Database.openDatabase().then(db => {
+         return Database.updateUserStates(db, {
+           encodedUserId: undefined,
+           email: undefined,
+         });
+       });
+
+       return dispatch(updateAppStates({encodedUserId: null, email: null}));
+     } else {
+       if (response.status === 404) {
+         return new Promise((resolve, reject) => reject(translate("errorResourceNotFound")));
+       } else if (response.status === 400) {
+         return response.json().then(obj => {
+           return new Promise(
+             (resolve, reject) => {
+               let texts = [];
+               if (Array.isArray(obj)) {
+                 dispatch(setConfirmPasswordResetFormErrorCode(true));
+                 dispatch(setConfirmPasswordResetFormErrorNewPassword(true));
+                 texts = [...texts, ...obj];
+               } else {
+                 if (obj.__all__) {
+                   dispatch(setConfirmPasswordResetFormErrorCode(true));
+                   dispatch(setConfirmPasswordResetFormErrorNewPassword(true));
+                   texts = [...texts, ...obj.__all__];
+                 }
+                 if (obj.uid) {
+                   texts = [...texts, ...obj.uid.map(txt => 'uid: ' + txt)];
+                 }
+                 if (obj.token) {
+                   dispatch(setConfirmPasswordResetFormErrorCode(true));
+                   texts = [...texts, ...obj.token.map(txt => 'token: ' + txt)];
+                 }
+                 if (obj.new_password) {
+                   dispatch(setConfirmPasswordResetFormErrorNewPassword(true));
+                   texts = [...texts, ...obj.new_password.map(txt => 'password: ' + txt)];
+                 }
+               }
+               return reject(texts.join(' - '));
+             }
+           );
+         });
+       } else {
+         return new Promise((resolve, reject) => reject("ERROR " + response.status));
+       }
+     }
+  }).finally(() => {
+    dispatch(_submitConfirmPasswordResetForm(false));
+  });
+}
+
 export default Actions = {
   setErrorMessage,
   introFinished,
@@ -386,4 +535,14 @@ export default Actions = {
   setActivateFormCode,
   setActivateFormErrorCode,
   submitActivateForm,
+
+  setResetPasswordFormEmail,
+  setResetPasswordFormErrorEmail,
+  submitResetPasswordForm,
+
+  setConfirmPasswordResetFormCode,
+  setConfirmPasswordResetFormErrorCode,
+  setConfirmPasswordResetFormNewPassword,
+  setConfirmPasswordResetFormErrorNewPassword,
+  submitConfirmPasswordResetForm,
 }

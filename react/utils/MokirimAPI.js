@@ -10,6 +10,9 @@ const LOGIN_GOOGLE_PATH = "/api/login/google/";
 const REGISTER_PATH = "/auth/users/";
 const ACTIVATE_PATH = "/auth/users/activation/";
 
+const RESET_PASSWORD_PATH = "/auth/users/reset_password/";
+const CONFIRM_PASSWORD_RESET_PATH = "/auth/users/reset_password_confirm/";
+
 const login = (languageCode, username, password) => {
   const requestOptions = {
     method: 'POST',
@@ -88,6 +91,32 @@ const activate = (languageCode, encodedUserId, activationCode) => {
   return fetch(BASE_URL + languageCode + ACTIVATE_PATH, requestOptions);
 };
 
+const resetPassword = (languageCode, email) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Referer': BASE_URL,
+      'Content-Type': CONTENT_TYPE_URL_ENCODED,
+    },
+    body: qs.stringify({email}),
+  };
+
+  return fetch(BASE_URL + languageCode + RESET_PASSWORD_PATH, requestOptions);
+};
+
+const confirmPasswordReset = (languageCode, encodedUserId, activationCode, newPassword) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Referer': BASE_URL,
+      'Content-Type': CONTENT_TYPE_URL_ENCODED,
+    },
+    body: qs.stringify({uid: encodedUserId, token: activationCode, new_password: newPassword}),
+  };
+
+  return fetch(BASE_URL + languageCode + CONFIRM_PASSWORD_RESET_PATH, requestOptions);
+};
+
 export default {
   login,
   logout,
@@ -96,4 +125,7 @@ export default {
 
   register,
   activate,
+
+  resetPassword,
+  confirmPasswordReset,
 };

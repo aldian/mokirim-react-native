@@ -14,7 +14,7 @@ import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 //import { NavigationL10nText } from '../../components/NavigationL10nText';
 //import { ScreenContainer } from '../../components/ScreenContainer';
-import { LoginFormHeader } from '../../components/LoginFormHeader';
+import { LoginScreenHeader } from '../../components/LoginScreenHeader';
 import styles from '../../styles';
 import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
@@ -22,7 +22,7 @@ import themeVars from '../../theme/variables/material';
 class _LoginScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
     //headerTitle: <HeaderTitle><NavigationL10nText textKey="headerLogin"/></HeaderTitle>
-    header: <LoginFormHeader navigation={navigation}/>,
+    header: <LoginScreenHeader navigation={navigation}/>,
   });
 
   componentDidMount() {
@@ -74,14 +74,22 @@ class _LoginScreen extends React.Component {
             </Form>
             {this.props.submitting ?
               <Spinner/> :
-              <Button
-                block style={styles.submitButton}
-                onPress={() => this.props.submitForm(
-                  this.props.currentLanguage, this.props.username, this.props.password
-                )}
-              >
-                <Text>{translate("buttonLogin")}</Text>
-              </Button>
+              <React.Fragment>
+                <Button
+                  block style={styles.submitButton}
+                  onPress={() => this.props.submitForm(
+                    this.props.currentLanguage, this.props.username, this.props.password
+                  )}
+                >
+                  <Text>{translate("buttonLogin")}</Text>
+                </Button>
+                <Button
+                  transparent style={styles.submitButton}
+                  onPress={() => navigate('ResetPassword')}
+                >
+                  <Text>{translate("buttonForgotPassword")}</Text>
+                </Button>
+              </React.Fragment>
             }
 
             {this.props.submitting ?

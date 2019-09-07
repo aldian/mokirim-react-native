@@ -69,7 +69,6 @@ class _RegisterForm extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    encodedUserId: state.appReducer.encodedUserId,
     currentLanguage: state.appReducer.currentLanguage,
     username: state.appReducer.registerForm.username,
     password: state.appReducer.registerForm.password,

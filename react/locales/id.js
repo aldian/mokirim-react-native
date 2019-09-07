@@ -5,15 +5,19 @@ export default {
   buttonLogout: "Keluar",
   buttonRegister: "Daftar",
   buttonActivate: "Aktifkan",
+  buttonForgotPassword: "Lupa kata sandi.",
+  buttonResetPassword: "Reset Kata Sandi",
+  buttonChangePassword: "Ubah Kata Sandi",
 
   errorResourceNotFound: "Resource tak ditemukan.",
-  errorInvalidUsernameOrPassword: "Username atau sandi salah.",
+  errorInvalidUsernameOrPassword: "Username atau kata sandi salah.",
   errorInvalidFacebookAccessToken: "Access token Facebook tidak valid.",
   errorInvalidGoogleAccessToken: "Access token Google tidak valid.",
 
   headerDashboard: "Dasbor",
   headerLogin: "Masuk",
   headerRegister: "Daftar",
+  headerResetPassword: "Reset Kata Sandi",
   headerProfile: "Profil",
   headerWelcome: "Selamat Datang",
 
@@ -22,13 +26,20 @@ export default {
     other: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
     zero: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
   }},
+  instructionReset: {counting: {
+    one: "Silahkan ketik {{count}} angka/huruf kode reset yang telah dikirimkan ke alamat email %{email}.",
+    other: "Silahkan ketik {{count}} angka/huruf kode reset yang telah dikirimkan ke alamat email %{email}.",
+    zero: "Silahkan ketik {{count}} angka/huruf kode reset yang telah dikirimkan ke alamat email %{email}.",
+  }},
 
   labelEmail: "Email",
   labelEmailOrUsername: "Email/username",
   labelUsername: "Username",
-  labelPassword: "Sandi",
+  labelPassword: "Kata sandi",
   labelCode: "Kode",
+  labelNewPassword: "Password Baru",
 
   messageAccountActivated: "Akun Anda telah berhasil diaktifkan!",
   messageLoginCancelled: "Batal masuk.",
+  messagePasswordChanged: "Password telah diubah.",
 };
