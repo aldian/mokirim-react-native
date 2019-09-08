@@ -9,6 +9,9 @@ export default {
   buttonResetPassword: "Reset Password",
   buttonChangePassword: "Change Password",
   buttonMemberBenefits: "Login or register to enjoy member benefits!",
+  buttonHome: "Home",
+  buttonAccount: "Account",
+  buttonDashboard: "Dashboard",
 
   errorResourceNotFound: "Resource not found.",
   errorInvalidUsernameOrPassword: "Invalid username or password.",

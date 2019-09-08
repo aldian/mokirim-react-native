@@ -28,7 +28,7 @@ class _DashboardScreen extends React.Component {
     const {navigate} = this.props.navigation;
 
     return (
-      <StyleProvider style={getTheme(themeVars)}>
+      <ScreenContainer navigate={navigate} currentTab="Dashboard">
         <View style={styles.screen}>
           <View style={styles.content}>
           {this.props.errorMessage ? <Text>{this.props.errorMessage}</Text> : null}
@@ -60,7 +60,7 @@ class _DashboardScreen extends React.Component {
           }
           </View>
         </View>
-      </StyleProvider>
+      </ScreenContainer>
     );
   }
 }

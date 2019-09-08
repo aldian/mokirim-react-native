@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import {
   Button, Text,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
+  Footer, FooterTab,
   StyleProvider,
 } from 'native-base';
 import { LoginButton } from 'react-native-fbsdk';
@@ -31,17 +32,13 @@ class _HomeScreen extends React.Component {
     const {navigate} = this.props.navigation;
 
     return (
-      //<ScreenContainer>
-        <StyleProvider style={getTheme(themeVars)}>
-        <Container>
-          <Content>
-            <Button transparent onPress={() => navigate('MemberBenefits')}>
-              <Text>{translate('buttonMemberBenefits')}</Text>
-            </Button>
-          </Content>
-        </Container>
-        </StyleProvider>
-      //</ScreenContainer>
+      <ScreenContainer navigate={navigate} currentTab="Home">
+        <Content>
+          <Button transparent onPress={() => navigate('MemberBenefits')}>
+            <Text>{translate('buttonMemberBenefits')}</Text>
+          </Button>
+        </Content>
+      </ScreenContainer>
     );
   }
 }
