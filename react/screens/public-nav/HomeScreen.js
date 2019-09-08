@@ -1,9 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { Button, Text, View } from 'react-native';
+import { View } from 'react-native';
 //import { HeaderTitle } from 'react-navigation-stack';
 import {
-  //Button,
+  Button, Text,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
   StyleProvider,
 } from 'native-base';
@@ -35,20 +35,9 @@ class _HomeScreen extends React.Component {
         <StyleProvider style={getTheme(themeVars)}>
         <Container>
           <Content>
-            <View style={[styles.screen]}>
-              <View style={styles.content}>
-                <View style={[styles.buttonsRow, {width: 150}]}>
-                  <Button
-                    title={translate('headerLogin')}
-                    onPress={() => navigate('Login')}
-                  />
-                  <Button
-                    title={translate('headerRegister')}
-                    onPress={() => navigate('Register')}
-                   />
-                </View>
-              </View>
-            </View>
+            <Button transparent onPress={() => navigate('MemberBenefits')}>
+              <Text>{translate('buttonMemberBenefits')}</Text>
+            </Button>
           </Content>
         </Container>
         </StyleProvider>
@@ -60,14 +49,11 @@ class _HomeScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
-    loggedIn: state.appReducer.loggedIn,
-    loggedInVia: state.appReducer.loggedInVia,
   }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    logout: () => dispatch(Actions.logout()),
   }
 };
 

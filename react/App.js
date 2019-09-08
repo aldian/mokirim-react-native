@@ -11,14 +11,19 @@ import { rootReducer } from './state/reducers';
 import { initNotifications } from './utils/notifications';
 import { initI18n } from './utils/i18n';
 import { NavigationHeader } from './components/NavigationHeader';
+
 import { SplashScreen } from './screens/SplashScreen';
+
 import { IntroWhyScreen } from './screens/intro-nav/IntroWhyScreen';
 import { IntroHowScreen } from './screens/intro-nav/IntroHowScreen';
 import { IntroMonitoringScreen } from './screens/intro-nav/IntroMonitoringScreen';
+
 import { HomeScreen } from './screens/public-nav/HomeScreen';
 import { LoginScreen } from './screens/public-nav/LoginScreen';
 import { RegisterScreen } from './screens/public-nav/RegisterScreen';
 import { ResetPasswordScreen } from './screens/public-nav/ResetPasswordScreen';
+import { MemberBenefitsScreen } from './screens/public-nav/MemberBenefitsScreen';
+
 import { DashboardScreen } from './screens/user-nav/DashboardScreen';
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
 
@@ -47,6 +52,7 @@ const PublicNavigator = createStackNavigator({
   Login: {screen: LoginScreen, path: 'login'},
   Register: {screen: RegisterScreen, path: 'register'},
   ResetPassword: {screen: ResetPasswordScreen, path: 'resetPassword'},
+  MemberBenefits: {screen: MemberBenefitsScreen, path: 'memberBenefits'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,

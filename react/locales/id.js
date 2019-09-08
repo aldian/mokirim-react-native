@@ -8,6 +8,7 @@ export default {
   buttonForgotPassword: "Lupa kata sandi.",
   buttonResetPassword: "Reset Kata Sandi",
   buttonChangePassword: "Ubah Kata Sandi",
+  buttonMemberBenefits: "Masuk atau daftar untuk mendapatkan keuntungan anggota!",
 
   errorResourceNotFound: "Resource tak ditemukan.",
   errorInvalidUsernameOrPassword: "Username atau kata sandi salah.",
@@ -20,6 +21,7 @@ export default {
   headerResetPassword: "Reset Kata Sandi",
   headerProfile: "Profil",
   headerWelcome: "Selamat Datang",
+  headerMemberBenefits: "Keuntungan Anggota",
 
   instructionActivate: {counting: {
     one: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
