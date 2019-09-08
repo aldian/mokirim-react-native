@@ -8,6 +8,7 @@ export default {
   buttonForgotPassword: "I forgot my password.",
   buttonResetPassword: "Reset Password",
   buttonChangePassword: "Change Password",
+  buttonMemberBenefits: "Login or register to enjoy member benefits!",
 
   errorResourceNotFound: "Resource not found.",
   errorInvalidUsernameOrPassword: "Invalid username or password.",
@@ -20,6 +21,7 @@ export default {
   headerResetPassword: "Reset Password",
   headerProfile: "Profile",
   headerWelcome: "Welcome",
+  headerMemberBenefits: "Member Benefits",
 
   instructionActivate: {counting: {
     one: "Please type {{count}} digit/letter activation code sent to email address %{email}.",
