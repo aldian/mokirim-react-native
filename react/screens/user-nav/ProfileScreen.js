@@ -30,7 +30,7 @@ class _ProfileScreen extends React.Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <StyleProvider style={getTheme(themeVars)}>
+      <ScreenContainer navigate={navigate} currentTab={"Profile"}>
         <View style={styles.screen}>
           <View style={styles.content}>
             <Text>DISPLAY NAME: {this.props.facebook.displayName}</Text>
@@ -40,7 +40,7 @@ class _ProfileScreen extends React.Component {
             <Text>NOTIFICATION TOKEN: {this.props.notificationToken}</Text>
           </View>
         </View>
-      </StyleProvider>
+      </ScreenContainer>
     );
   }
 }

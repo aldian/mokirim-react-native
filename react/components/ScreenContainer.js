@@ -1,7 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { Text } from 'react-native';
 import * as RNLocalize from "react-native-localize";
+import {
+  Button, Container, Icon, Text,
+  Footer, FooterTab,
+  StyleProvider,
+} from 'native-base';
+import getTheme from '../theme/components';
+import themeVars from '../theme/variables/material';
+import { translate } from "../utils/i18n";
 import Actions from '../state/Actions';
 
 class _ScreenContainer extends React.Component {
@@ -10,12 +17,45 @@ class _ScreenContainer extends React.Component {
   }
 
   render() {
-    return <React.Fragment>{this.props.children}</React.Fragment>;
+    return <StyleProvider style={getTheme(themeVars)}>
+      <Container>
+        {this.props.children}
+        {(this.props.hasFooter === undefined || this.props.hasFooter) ?
+           <Footer>
+             <FooterTab>
+               {this.props.loggedIn ?
+                 <Button vertical disabled={this.props.currentTab === 'Dashboard'} onPress={() => this.props.navigate('Dashboard')}>
+                   <Icon name="home"/>
+                   <Text>{translate("buttonDashboard")}</Text>
+                 </Button> :
+                 <Button vertical disabled={this.props.currentTab === 'Home'} onPress={() => this.props.navigate('Home')}>
+                   <Icon name="home"/>
+                   <Text>{translate("buttonHome")}</Text>
+                 </Button>
+               }
+               {this.props.loggedIn ?
+                 <Button vertical disabled={this.props.currentTab === 'Profile'} onPress={() => this.props.navigate('Profile')}>
+                   <Icon name="person"/>
+                   <Text>{translate("buttonAccount")}</Text>
+                 </Button> :
+                 <Button vertical disabled={this.props.currentTab === 'MemberBenefits'} onPress={() => this.props.navigate('MemberBenefits')}>
+                   <Icon name="person"/>
+                   <Text>{translate("buttonAccount")}</Text>
+                 </Button>
+               }
+             </FooterTab>
+           </Footer> :
+          null
+        }
+      </Container>
+    </StyleProvider>;
   }
 }
 
 const mapStateToProps = state => {
   return {
+    currentLanguage: state.appReducer.currentLanguage,
+    loggedIn: state.appReducer.loggedIn,
   }
 };
 

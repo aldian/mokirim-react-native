@@ -9,6 +9,9 @@ export default {
   buttonResetPassword: "Reset Kata Sandi",
   buttonChangePassword: "Ubah Kata Sandi",
   buttonMemberBenefits: "Masuk atau daftar untuk mendapatkan keuntungan anggota!",
+  buttonHome: "Beranda",
+  buttonAccount: "Akun",
+  buttonDashboard: "Dasbor",
 
   errorResourceNotFound: "Resource tak ditemukan.",
   errorInvalidUsernameOrPassword: "Username atau kata sandi salah.",
