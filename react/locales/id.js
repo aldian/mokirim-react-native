@@ -12,6 +12,8 @@ export default {
   buttonHome: "Beranda",
   buttonAccount: "Akun",
   buttonDashboard: "Dasbor",
+  buttonStationToStation: "Antar Station",
+  buttonDoorToDoor: "Antar Alamat",
 
   errorResourceNotFound: "Resource tak ditemukan.",
   errorInvalidUsernameOrPassword: "Username atau kata sandi salah.",
@@ -25,6 +27,8 @@ export default {
   headerProfile: "Profil",
   headerWelcome: "Selamat Datang",
   headerMemberBenefits: "Keuntungan Anggota",
+  headerStationToStation: "Antar Station",
+  headerDoorToDoor: "Antar Alamat",
 
   instructionActivate: {counting: {
     one: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
@@ -47,4 +51,6 @@ export default {
   messageAccountActivated: "Akun Anda telah berhasil diaktifkan!",
   messageLoginCancelled: "Batal masuk.",
   messagePasswordChanged: "Password telah diubah.",
+
+  sectionDeliveryOptions: "Pilihan Pengiriman",
 };

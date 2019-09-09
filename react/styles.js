@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import themeVars from './theme/variables/material';
 
 export default styles = StyleSheet.create({
   screen: {
@@ -9,7 +10,7 @@ export default styles = StyleSheet.create({
   },
 
   splashScreen: {
-    backgroundColor: '#F58223',
+    backgroundColor: themeVars.toolbarDefaultBg,
   },
 
   splashText: {

@@ -14,6 +14,7 @@ import { ContentContainer } from '../../components/ContentContainer';
 import { LoggedInHeaderMenu } from '../../components/LoggedInHeaderMenu';
 import { HomeNewsSwiper } from '../../components/HomeNewsSwiper';
 import { RoundedCornerPanel } from '../../components/RoundedCornerPanel';
+import { DeliveryOptionsMenu } from '../../components/DeliveryOptionsMenu';
 import styles from '../../styles';
 import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
@@ -33,7 +34,7 @@ class _DashboardScreen extends React.Component {
       <ContentContainer navigate={navigate} currentTab="Dashboard">
         <HomeNewsSwiper/>
         <RoundedCornerPanel>
-          <Text>Dummy Dashboard Content</Text>
+          <DeliveryOptionsMenu navigate={navigate}/>
         </RoundedCornerPanel>
       </ContentContainer>
     );

@@ -12,6 +12,8 @@ export default {
   buttonHome: "Home",
   buttonAccount: "Account",
   buttonDashboard: "Dashboard",
+  buttonStationToStation: "Station-to-Station",
+  buttonDoorToDoor: "Door-to-Door",
 
   errorResourceNotFound: "Resource not found.",
   errorInvalidUsernameOrPassword: "Invalid username or password.",
@@ -25,6 +27,8 @@ export default {
   headerProfile: "Profile",
   headerWelcome: "Welcome",
   headerMemberBenefits: "Member Benefits",
+  headerStationToStation: "Station-to-Station",
+  headerDoorToDoor: "Door-to-Door",
 
   instructionActivate: {counting: {
     one: "Please type {{count}} digit/letter activation code sent to email address %{email}.",
@@ -47,4 +51,6 @@ export default {
   messageAccountActivated: "Your account is successfully activated!",
   messageLoginCancelled: "Login cancelled.",
   messagePasswordChanged: "Password changed.",
+
+  sectionDeliveryOptions: "Delivery Options",
 };
