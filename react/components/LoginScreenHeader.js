@@ -12,7 +12,7 @@ import themeVars from '../theme/variables/material';
 class _LoginScreenHeader extends React.Component {
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
-      <Header>
+      <Header noShadow>
         <HeaderLeft>
           {this.props.submitting ?
             <Spinner/> :

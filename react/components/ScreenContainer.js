@@ -18,7 +18,7 @@ class _ScreenContainer extends React.Component {
 
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
-      <Container>
+      <Container style={[{backgroundColor: themeVars.toolbarDefaultBg}]}>
         {this.props.children}
         {(this.props.hasFooter === undefined || this.props.hasFooter) ?
            <Footer>
