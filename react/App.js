@@ -23,9 +23,11 @@ import { LoginScreen } from './screens/public-nav/LoginScreen';
 import { RegisterScreen } from './screens/public-nav/RegisterScreen';
 import { ResetPasswordScreen } from './screens/public-nav/ResetPasswordScreen';
 import { MemberBenefitsScreen } from './screens/public-nav/MemberBenefitsScreen';
+import { StationToStationScreen as PublicStationToStationScreen } from './screens/public-nav/StationToStationScreen';
 
 import { DashboardScreen } from './screens/user-nav/DashboardScreen';
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
+import { StationToStationScreen } from './screens/user-nav/StationToStationScreen';
 
 console.disableYellowBox = true
 
@@ -38,9 +40,9 @@ useScreens();
 GoogleSignin.configure();
 
 const IntroNavigator = createStackNavigator({
-  IntroWhy: {screen: IntroWhyScreen, path: 'introWhy'},
-  IntroHow: {screen: IntroHowScreen, path: 'introHow'},
-  IntroMonitoring: {screen: IntroMonitoringScreen, path: 'introMonitoring'},
+  IntroWhy: {screen: IntroWhyScreen, path: 'intro/why'},
+  IntroHow: {screen: IntroHowScreen, path: 'intro/wow'},
+  IntroMonitoring: {screen: IntroMonitoringScreen, path: 'intro/monitoring'},
 }, {
   defaultNavigationOptions: {
     header: null,
@@ -48,11 +50,12 @@ const IntroNavigator = createStackNavigator({
 });
 
 const PublicNavigator = createStackNavigator({
-  Home: {screen: HomeScreen, path: 'home'},
-  Login: {screen: LoginScreen, path: 'login'},
-  Register: {screen: RegisterScreen, path: 'register'},
-  ResetPassword: {screen: ResetPasswordScreen, path: 'resetPassword'},
-  MemberBenefits: {screen: MemberBenefitsScreen, path: 'memberBenefits'},
+  Home: {screen: HomeScreen, path: 'public/home'},
+  Login: {screen: LoginScreen, path: 'public/login'},
+  Register: {screen: RegisterScreen, path: 'public/register'},
+  ResetPassword: {screen: ResetPasswordScreen, path: 'public/resetPassword'},
+  MemberBenefits: {screen: MemberBenefitsScreen, path: 'public/memberBenefits'},
+  StationToStation: {screen: PublicStationToStationScreen, path: 'public/stationToStation'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,
@@ -60,8 +63,9 @@ const PublicNavigator = createStackNavigator({
 });
 
 const UserNavigator = createStackNavigator({
-  Dashboard: {screen: DashboardScreen, path: 'dashboard'},
-  Profile: {screen: ProfileScreen, path: 'profile'},
+  Dashboard: {screen: DashboardScreen, path: 'user/dashboard'},
+  Profile: {screen: ProfileScreen, path: 'user/profile'},
+  StationToStation: {screen: StationToStationScreen, path: 'user/stationToStation'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,
