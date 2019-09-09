@@ -3,17 +3,18 @@ import {connect} from 'react-redux';
 import { View } from 'react-native';
 //import { HeaderTitle } from 'react-navigation-stack';
 import {
+  Content,
   Button, Text,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
   Footer, FooterTab,
   StyleProvider,
 } from 'native-base';
 import { LoginButton } from 'react-native-fbsdk';
-import { Container, Content } from 'native-base';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 import { NavigationL10nText } from '../../components/NavigationL10nText';
 import { ScreenContainer } from '../../components/ScreenContainer';
+import { HomeNewsSwiper } from '../../components/HomeNewsSwiper';
 import styles from '../../styles';
 import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
@@ -22,7 +23,7 @@ class _HomeScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, theme, navigationOptions}) => ({
     //headerTitle: <HeaderTitle><NavigationL10nText textKey="headerWelcome"/></HeaderTitle>,
     header: <StyleProvider style={getTheme(themeVars)}>
-      <Header><HeaderLeft/><HeaderBody>
+      <Header noShadow><HeaderLeft/><HeaderBody>
       <HeaderTitle>{translate("headerWelcome")}</HeaderTitle>
       </HeaderBody><HeaderRight/></Header>
     </StyleProvider>,
@@ -35,8 +36,9 @@ class _HomeScreen extends React.Component {
       <ScreenContainer navigate={navigate} currentTab="Home">
         <Content>
           <Button transparent onPress={() => navigate('MemberBenefits')}>
-            <Text>{translate('buttonMemberBenefits')}</Text>
+            <Text style={[{color: 'white'}]}>{translate('buttonMemberBenefits')}</Text>
           </Button>
+          <HomeNewsSwiper/>
         </Content>
       </ScreenContainer>
     );

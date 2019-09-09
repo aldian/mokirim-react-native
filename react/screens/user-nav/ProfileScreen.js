@@ -1,13 +1,16 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { Text, View } from 'react-native';
+import { RNButton, View } from 'react-native';
 //import { HeaderTitle } from 'react-navigation-stack';
 import {
-  Button,
+  Button, Content,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
-  Icon, StyleProvider,
+  Icon, StyleProvider, Text,
 } from 'native-base';
+import { GoogleSignin } from 'react-native-google-signin';
+import { LoginButton } from 'react-native-fbsdk';
 import { translate } from "../../utils/i18n";
+import Actions from '../../state/Actions';
 import { NavigationL10nText } from '../../components/NavigationL10nText';
 import { ScreenContainer } from '../../components/ScreenContainer';
 import styles from '../../styles';
@@ -18,7 +21,7 @@ class _ProfileScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
     //headerTitle: <HeaderTitle><NavigationL10nText textKey="headerProfile"/></HeaderTitle>
     //title: translate("headerProfile")
-    header: <StyleProvider style={getTheme(themeVars)}><Header><HeaderLeft>
+    header: <StyleProvider style={getTheme(themeVars)}><Header noShadow><HeaderLeft>
       <Button transparent onPress={() => navigation.goBack()}>
         <Icon name="arrow-back" />
       </Button>
@@ -31,15 +34,36 @@ class _ProfileScreen extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <ScreenContainer navigate={navigate} currentTab={"Profile"}>
-        <View style={styles.screen}>
-          <View style={styles.content}>
+        <Content>
             <Text>DISPLAY NAME: {this.props.facebook.displayName}</Text>
             <Text>ACCESS TOKEN: {this.props.accessToken}</Text>
             <Text>FACEBOOK ACCESS TOKEN: {this.props.facebook.accessToken}</Text>
             <Text>GOOGLE ACCESS TOKEN: {this.props.google.accessToken}</Text>
             <Text>NOTIFICATION TOKEN: {this.props.notificationToken}</Text>
-          </View>
-        </View>
+
+
+           {this.props.loggedInVia === 'facebook' &&
+             <LoginButton onLogoutFinished={() => {
+               this.props.logout(this.props.currentLanguage, this.props.accessToken, 'facebook');
+               navigate('Home');
+             }}/>
+           }
+           {this.props.loggedInVia === 'google' &&
+              <RNButton title={translate('buttonLogout')} onPress={() => {
+                GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut());
+                this.props.logout(this.props.currentLanguage, this.props.accessToken);
+                navigate('Home');
+              }}/>
+           }
+           {this.props.loggedInVia === 'mokirim' &&
+             <Button
+               onPress={() => {
+                 this.props.logout(this.props.currentLanguage, this.props.accessToken);
+                 navigate('Home');
+               }}
+             ><Text>{translate('buttonLogout')}</Text></Button>
+           }
+        </Content>
       </ScreenContainer>
     );
   }
@@ -48,6 +72,7 @@ class _ProfileScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
+    loggedInVia: state.appReducer.loggedInVia,
     accessToken: state.appReducer.accessToken,
     facebook: state.appReducer.facebook,
     google: state.appReducer.google,
@@ -57,6 +82,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    logout: (languageCode, accessToken, via) => (
+      dispatch(Actions.logout(languageCode, accessToken, via))
+    ),
   }
 };
 
