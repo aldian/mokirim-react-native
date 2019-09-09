@@ -1,10 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Text as RNText} from 'react-native';
 import {Text} from 'native-base';
-import { translate } from "../utils/i18n";
-import Actions from '../state/Actions';
 import Swiper from 'react-native-swiper';
+import { translate } from "../utils/i18n";
+import themeVars from '../theme/variables/material';
+import Actions from '../state/Actions';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -14,24 +15,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#9DD6EB'
+    backgroundColor: themeVars.toolbarDefaultBg,
   },
   slide2: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#97CAE5'
+    backgroundColor: themeVars.toolbarDefaultBg,
   },
   slide3: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#92BBD9'
+    backgroundColor: themeVars.toolbarDefaultBg,
   },
   text: {
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold'
+  },
+  buttonText: {
+    fontSize: 50,
+    color: 'white',
   }
 });
 
@@ -41,7 +46,11 @@ class _HomeNewsSwiper extends React.Component {
 
   render() {
     return  (
-      <Swiper style={styles.wrapper} showsButtons={true}>
+      <Swiper
+        style={styles.wrapper} showsButtons={true} activeDotColor="white"
+        nextButton={<RNText style={styles.buttonText}>›</RNText>}
+        prevButton={<RNText style={styles.buttonText}>‹</RNText>}
+      >
         <View style={styles.slide1}>
           <Text style={styles.text}>News 1</Text>
         </View>
