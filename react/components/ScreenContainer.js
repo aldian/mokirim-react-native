@@ -25,21 +25,23 @@ class _ScreenContainer extends React.Component {
            <Footer>
              <FooterTab>
                {this.props.loggedIn ?
-                 <Button vertical disabled={this.props.currentTab === 'Dashboard'} onPress={() => this.props.navigate('Dashboard')}>
+                 <Button
+                   vertical active={this.props.currentTab === 'Dashboard'} onPress={() => this.props.navigate('Dashboard')}
+                 >
                    <Icon name="home"/>
                    <Text>{translate("buttonDashboard")}</Text>
                  </Button> :
-                 <Button vertical disabled={this.props.currentTab === 'Home'} onPress={() => this.props.navigate('Home')}>
+                 <Button vertical active={this.props.currentTab === 'Home'} onPress={() => this.props.navigate('Home')}>
                    <Icon name="home"/>
                    <Text>{translate("buttonHome")}</Text>
                  </Button>
                }
                {this.props.loggedIn ?
-                 <Button vertical disabled={this.props.currentTab === 'Profile'} onPress={() => this.props.navigate('Profile')}>
+                 <Button vertical active={this.props.currentTab === 'Profile'} onPress={() => this.props.navigate('Profile')}>
                    <Icon name="person"/>
                    <Text>{translate("buttonAccount")}</Text>
                  </Button> :
-                 <Button vertical disabled={this.props.currentTab === 'MemberBenefits'} onPress={() => this.props.navigate('MemberBenefits')}>
+                 <Button vertical active={this.props.currentTab === 'MemberBenefits'} onPress={() => this.props.navigate('MemberBenefits')}>
                    <Icon name="person"/>
                    <Text>{translate("buttonAccount")}</Text>
                  </Button>
