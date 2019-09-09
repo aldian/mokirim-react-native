@@ -5,14 +5,15 @@ import { View } from 'react-native';
 import {
   Content,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
-  StyleProvider,
+  StyleProvider, Text,
 } from 'native-base';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 import { NavigationL10nText } from '../../components/NavigationL10nText';
-import { ScreenContainer } from '../../components/ScreenContainer';
+import { ContentContainer } from '../../components/ContentContainer';
 import { LoggedInHeaderMenu } from '../../components/LoggedInHeaderMenu';
 import { HomeNewsSwiper } from '../../components/HomeNewsSwiper';
+import { RoundedCornerPanel } from '../../components/RoundedCornerPanel';
 import styles from '../../styles';
 import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
@@ -29,11 +30,12 @@ class _DashboardScreen extends React.Component {
     const {navigate} = this.props.navigation;
 
     return (
-      <ScreenContainer navigate={navigate} currentTab="Dashboard">
-        <Content>
-          <HomeNewsSwiper/>
-        </Content>
-      </ScreenContainer>
+      <ContentContainer navigate={navigate} currentTab="Dashboard">
+        <HomeNewsSwiper/>
+        <RoundedCornerPanel>
+          <Text>Dummy Dashboard Content</Text>
+        </RoundedCornerPanel>
+      </ContentContainer>
     );
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {View} from 'react-native';
 import * as RNLocalize from "react-native-localize";
 import {
   Button, Container, Icon, Text,

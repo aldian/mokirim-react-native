@@ -13,8 +13,9 @@ import { LoginButton } from 'react-native-fbsdk';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 import { NavigationL10nText } from '../../components/NavigationL10nText';
-import { ScreenContainer } from '../../components/ScreenContainer';
+import { ContentContainer } from '../../components/ContentContainer';
 import { HomeNewsSwiper } from '../../components/HomeNewsSwiper';
+import { RoundedCornerPanel } from '../../components/RoundedCornerPanel';
 import styles from '../../styles';
 import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
@@ -33,14 +34,15 @@ class _HomeScreen extends React.Component {
     const {navigate} = this.props.navigation;
 
     return (
-      <ScreenContainer navigate={navigate} currentTab="Home">
-        <Content>
-          <Button transparent onPress={() => navigate('MemberBenefits')}>
-            <Text style={[{color: 'white'}]}>{translate('buttonMemberBenefits')}</Text>
-          </Button>
-          <HomeNewsSwiper/>
-        </Content>
-      </ScreenContainer>
+      <ContentContainer navigate={navigate} currentTab="Home">
+        <Button transparent onPress={() => navigate('MemberBenefits')}>
+          <Text style={[{color: 'white'}]}>{translate('buttonMemberBenefits')}</Text>
+        </Button>
+        <HomeNewsSwiper/>
+        <RoundedCornerPanel>
+          <Text>Dummy Content</Text>
+        </RoundedCornerPanel>
+      </ContentContainer>
     );
   }
 }
