@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {View} from 'react-native';
 import {
   Button, Form, IconNB, Input, Item, Label, Spinner, Text, Toast,
 } from 'native-base';
@@ -21,8 +22,9 @@ class _ConfirmPasswordResetForm extends React.Component {
   render() {
     return  (
       <React.Fragment>
-         <Form style={{backgroundColor: 'white', borderRadius: 16, paddingBottom: 16, paddingTop: 16}}>
-            <Text>{translate("instructionReset.counting", {count: 6, email: this.props.email})}</Text>
+         <View style={{backgroundColor: 'white', borderRadius: 16, paddingBottom: 16}}>
+         <Text style={{padding: 16}}>{translate("instructionReset.counting", {count: 6, email: this.props.email})}</Text>
+         <Form>
             <Item fixedLabel error={!!this.props.errors.code}>
               <Label>{translate("labelCode")}</Label>
               <Input onChangeText={val => this.props.setCode(val)} value={this.props.code}/>
@@ -53,6 +55,7 @@ class _ConfirmPasswordResetForm extends React.Component {
              }
            </Item>
          </Form>
+         </View>
          {this.props.submitting ?
             <Spinner/> :
             <Button

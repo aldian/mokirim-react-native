@@ -19,7 +19,6 @@ class _StationToStationScreen extends React.Component {
       <ContentContainer navigate={navigate} hasFooter={false}>
         <View/>
         <RoundedCornerPanel>
-          <View style={{height: 400}}></View>
         </RoundedCornerPanel>
       </ContentContainer>
     );
