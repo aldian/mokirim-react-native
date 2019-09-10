@@ -4,6 +4,7 @@ import {
   Button, Form, Spinner, Text, IconNB, Input, Item, Label, Toast,
 } from 'native-base';
 import { translate } from "../utils/i18n";
+import themeVars from '../theme/variables/material';
 import Actions from '../state/Actions';
 import styles from '../styles';
 
@@ -16,7 +17,7 @@ class _ResetPasswordForm extends React.Component {
   render() {
     return  (
       <React.Fragment>
-        <Form>
+        <Form style={{backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
            <Item fixedLabel error={!!this.props.errors.email}>
              <Label>{translate("labelEmail")}</Label>
              <Input onChangeText={val => this.props.setEmail(val)} value={this.props.email}/>
@@ -35,7 +36,7 @@ class _ResetPasswordForm extends React.Component {
         {this.props.submitting ?
            <Spinner/> :
            <Button
-             block style={styles.submitButton}
+             block style={[styles.submitButton, {backgroundColor: themeVars.toolbarDefaultBg}]}
              onPress={() => this.props.submitForm(
                this.props.currentLanguage, this.props.email
              )}

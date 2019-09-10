@@ -7,22 +7,25 @@ import {
 } from 'native-base';
 import { translate } from "../utils/i18n";
 import getTheme from '../theme/components';
-import themeVars from '../theme/variables/material';
+//import themeVars from '../theme/variables/material';
+import themeVars from '../theme/variables/whiteHeader';
 
 class _LoginScreenHeader extends React.Component {
   render() {
+    //const whiteThemeVars = {...themeVars, toolbarBtnColor: '#222845', toolbarBtnTextColor: '#222845', toolbarDefaultBg: '#FFFFFF'};
+    //return <StyleProvider style={getTheme(whiteThemeVars)}>
     return <StyleProvider style={getTheme(themeVars)}>
-      <Header noShadow>
+      <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
         <HeaderLeft>
           {this.props.submitting ?
             <Spinner/> :
             <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back"/>
+              <Icon name="arrow-back" style={{color: themeVars.toolbarBtnColor}}/>
             </Button>
           }
        </HeaderLeft>
        <HeaderBody>
-          <HeaderTitle>{translate("headerLogin")}</HeaderTitle>
+          <HeaderTitle style={{color: themeVars.toolbarBtnTextColor}}>{translate("headerLogin")}</HeaderTitle>
         </HeaderBody>
         <HeaderRight/>
       </Header>
@@ -32,6 +35,7 @@ class _LoginScreenHeader extends React.Component {
 
 const mapStateToProps = state => {
   return {
+    currentLanguage: state.appReducer.currentLanguage,
     submitting: state.appReducer.loginForm.submitting,
   }
 };

@@ -13,7 +13,7 @@ import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-goog
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 //import { NavigationL10nText } from '../../components/NavigationL10nText';
-//import { ScreenContainer } from '../../components/ScreenContainer';
+import { ContentContainer } from '../../components/ContentContainer';
 import { LoginScreenHeader } from '../../components/LoginScreenHeader';
 import styles from '../../styles';
 import getTheme from '../../theme/components';
@@ -22,7 +22,7 @@ import themeVars from '../../theme/variables/material';
 class _LoginScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
     //headerTitle: <HeaderTitle><NavigationL10nText textKey="headerLogin"/></HeaderTitle>
-    header: <LoginScreenHeader navigation={navigation}/>,
+    header: () => <LoginScreenHeader navigation={navigation}/>,
   });
 
   componentDidMount() {
@@ -35,105 +35,107 @@ class _LoginScreen extends React.Component {
   render() {
     const {navigate} = this.props.navigation;
     return  (
-      //<ScreenContainer>
-        <StyleProvider style={getTheme(themeVars)}>
-        <Container>
-          <Content>
-            <Form>
-              <Item fixedLabel error={!!this.props.errors.username}>
-                <Label>{translate("labelEmailOrUsername")}</Label>
-                <Input onChangeText={val => this.props.setUsername(val)} value={this.props.username}/>
-                {!!this.props.errors.username ?
-                  <IconNB
-                    name="ios-close-circle"
-                    onPress={() => {
-                      this.props.setUsername('');
-                      this.props.setErrorUsername(false);
-                    }}
-                  /> :
-                  null
-                }
-              </Item>
-              <Item fixedLabel last error={!!this.props.errors.password}>
-                <Label>{translate("labelPassword")}</Label>
-                <Input
-                  secureTextEntry={true} onChangeText={val => this.props.setPassword(val)}
-                  value={this.props.password}
-                />
-                {!!this.props.errors.password ?
-                  <IconNB
-                    name="ios-close-circle"
-                    onPress={() => {
-                      this.props.setPassword('');
-                      this.props.setErrorPassword(false);
-                    }}
-                  /> :
-                  null
-                }
-              </Item>
-            </Form>
+      <ContentContainer hasFooter={false} style={{backgroundColor: '#222B45'}}>
+        <View style={{backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
+             {this.props.submitting ?
+               null :
+               <View style={styles.screen}>
+                 <View style={styles.content}>
+                   <LoginButton
+                     style={{width: 250, height: 32}}
+                     permissions={['email']}
+                     onLoginFinished={
+                       (error, result) => {
+                         if (error) {
+                           this.props.setErrorMessage(error);
+                         } else if (result.isCancelled) {
+                           Toast.show({
+                             text: translate("messageLoginCancelled"),
+                             //buttonText: "Okay"
+                           });
+                         } else {
+                           AccessToken.getCurrentAccessToken().then(
+                             (data) => {
+                               this.props.loggedInToFacebook(this.props.currentLanguage, data.accessToken);
+                               navigate('Dashboard');
+                             }
+                           )
+                         }
+                       }
+                     }
+                   />
+
+                   <GoogleSigninButton
+                     style={{ width: 250, height: 48 }}
+                     size={GoogleSigninButton.Size.Wide}
+                     color={GoogleSigninButton.Color.Dark}
+                     onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage)}
+                     disabled={false} />
+
+                 </View>
+               </View>
+             }
+             <View style={{marginTop: 16}}>
+             <Text style={{textAlign: 'center', color: '#919EAB'}}>{translate("messageOrLoginWithEmail")}</Text>
+             </View>
+             <Form>
+               <Item fixedLabel error={!!this.props.errors.username}>
+                 <Label>{translate("labelEmailOrUsername")}</Label>
+                 <Input onChangeText={val => this.props.setUsername(val)} value={this.props.username}/>
+                 {!!this.props.errors.username ?
+                   <IconNB
+                     name="ios-close-circle"
+                     onPress={() => {
+                       this.props.setUsername('');
+                       this.props.setErrorUsername(false);
+                     }}
+                   /> :
+                   null
+                 }
+               </Item>
+               <Item fixedLabel last error={!!this.props.errors.password}>
+                 <Label>{translate("labelPassword")}</Label>
+                 <Input
+                   secureTextEntry={true} onChangeText={val => this.props.setPassword(val)}
+                   value={this.props.password}
+                 />
+                 {!!this.props.errors.password ?
+                   <IconNB
+                     name="ios-close-circle"
+                     onPress={() => {
+                       this.props.setPassword('');
+                       this.props.setErrorPassword(false);
+                     }}
+                   /> :
+                   null
+                 }
+               </Item>
+             </Form>
+             <View>
+                 <Button
+                   transparent style={styles.submitButton}
+                   onPress={() => navigate('ResetPassword')}
+                 >
+                   <Text>{translate("buttonForgotPassword")}</Text>
+                 </Button>
+             </View>
+        </View>
+        <View>
             {this.props.submitting ?
               <Spinner/> :
               <React.Fragment>
                 <Button
-                  block style={styles.submitButton}
+                  block style={[styles.submitButton, {backgroundColor: themeVars.toolbarDefaultBg}]}
                   onPress={() => this.props.submitForm(
                     this.props.currentLanguage, this.props.username, this.props.password
                   )}
                 >
                   <Text>{translate("buttonLogin")}</Text>
                 </Button>
-                <Button
-                  transparent style={styles.submitButton}
-                  onPress={() => navigate('ResetPassword')}
-                >
-                  <Text>{translate("buttonForgotPassword")}</Text>
-                </Button>
               </React.Fragment>
             }
-
-            {this.props.submitting ?
-              null :
-              <View style={styles.screen}>
-                <View style={styles.content}>
-                  <LoginButton
-                    style={{width: 250, height: 32}}
-                    permissions={['email']}
-                    onLoginFinished={
-                      (error, result) => {
-                        if (error) {
-                          this.props.setErrorMessage(error);
-                        } else if (result.isCancelled) {
-                          Toast.show({
-                            text: translate("messageLoginCancelled"),
-                            //buttonText: "Okay"
-                          });
-                        } else {
-                          AccessToken.getCurrentAccessToken().then(
-                            (data) => {
-                              this.props.loggedInToFacebook(this.props.currentLanguage, data.accessToken);
-                              navigate('Dashboard');
-                            }
-                          )
-                        }
-                      }
-                    }
-                  />
-
-                  <GoogleSigninButton
-                    style={{ width: 250, height: 48 }}
-                    size={GoogleSigninButton.Size.Wide}
-                    color={GoogleSigninButton.Color.Dark}
-                    onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage)}
-                    disabled={false} />
-
-                </View>
-              </View>
-            }
-          </Content>
-        </Container>
-        </StyleProvider>
-      //</ScreenContainer>
+        </View>
+      </ContentContainer>
     )
   }
 }

@@ -51,6 +51,7 @@ export default {
   messageAccountActivated: "Akun Anda telah berhasil diaktifkan!",
   messageLoginCancelled: "Batal masuk.",
   messagePasswordChanged: "Password telah diubah.",
+  messageOrLoginWithEmail: 'Atau login dengan email',
 
   sectionDeliveryOptions: "Pilihan Pengiriman",
 };
