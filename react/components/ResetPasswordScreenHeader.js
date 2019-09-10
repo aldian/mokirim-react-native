@@ -7,22 +7,23 @@ import {
 } from 'native-base';
 import { translate } from "../utils/i18n";
 import getTheme from '../theme/components';
-import themeVars from '../theme/variables/material';
+//import themeVars from '../theme/variables/material';
+import themeVars from '../theme/variables/whiteHeader';
 
 class _ResetPasswordScreenHeader extends React.Component {
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
-      <Header>
+      <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
         <HeaderLeft>
           {this.props.submitting ?
             <Spinner/> :
             <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back"/>
+              <Icon name="arrow-back" style={{color: themeVars.toolbarBtnColor}}/>
             </Button>
           }
        </HeaderLeft>
        <HeaderBody>
-          <HeaderTitle>{translate("headerResetPassword")}</HeaderTitle>
+          <HeaderTitle style={{color: themeVars.toolbarBtnTextColor}}>{translate("headerResetPassword")}</HeaderTitle>
         </HeaderBody>
         <HeaderRight/>
       </Header>

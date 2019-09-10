@@ -5,6 +5,7 @@ import {
 } from 'native-base';
 import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
+import { ContentContainer } from '../../components/ContentContainer';
 import { RegisterScreenHeader } from '../../components/RegisterScreenHeader';
 import { RegisterForm } from '../../components/RegisterForm';
 import { ActivateForm } from '../../components/ActivateForm';
@@ -17,17 +18,13 @@ class _RegisterScreen extends React.Component {
   render() {
     const {navigate} = this.props.navigation;
     return  (
-      <StyleProvider style={getTheme(themeVars)}>
-        <Container>
-          <Content>
+      <ContentContainer hasFooter={false} style={{backgroundColor: '#222B45'}}>
             <RegisterForm/>
             {this.props.encodedUserId ?
               <ActivateForm navigate={navigate}/> :
               null
             }
-          </Content>
-        </Container>
-      </StyleProvider>
+      </ContentContainer>
     )
   }
 }

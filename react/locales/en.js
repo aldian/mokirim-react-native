@@ -51,6 +51,7 @@ export default {
   messageAccountActivated: "Your account is successfully activated!",
   messageLoginCancelled: "Login cancelled.",
   messagePasswordChanged: "Password changed.",
+  messageOrLoginWithEmail: 'Or login with email',
 
   sectionDeliveryOptions: "Delivery Options",
 };

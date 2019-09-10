@@ -21,8 +21,8 @@ class _ConfirmPasswordResetForm extends React.Component {
   render() {
     return  (
       <React.Fragment>
-         <Text>{translate("instructionReset.counting", {count: 6, email: this.props.email})}</Text>
-         <Form>
+         <Form style={{backgroundColor: 'white', borderRadius: 16, paddingBottom: 16, paddingTop: 16}}>
+            <Text>{translate("instructionReset.counting", {count: 6, email: this.props.email})}</Text>
             <Item fixedLabel error={!!this.props.errors.code}>
               <Label>{translate("labelCode")}</Label>
               <Input onChangeText={val => this.props.setCode(val)} value={this.props.code}/>
@@ -56,7 +56,7 @@ class _ConfirmPasswordResetForm extends React.Component {
          {this.props.submitting ?
             <Spinner/> :
             <Button
-              block style={styles.submitButton}
+              block style={[styles.submitButton, {backgroundColor: themeVars.toolbarDefaultBg}]}
               onPress={() => this.props.submitForm(
                 this.props.currentLanguage, this.props.encodedUserId, this.props.code, this.props.newPassword
               ).then(() => {

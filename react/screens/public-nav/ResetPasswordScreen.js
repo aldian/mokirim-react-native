@@ -5,6 +5,7 @@ import {
 } from 'native-base';
 import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
+import { ContentContainer } from '../../components/ContentContainer';
 import { ResetPasswordScreenHeader } from '../../components/ResetPasswordScreenHeader';
 import { ResetPasswordForm } from '../../components/ResetPasswordForm';
 import { ConfirmPasswordResetForm } from '../../components/ConfirmPasswordResetForm';
@@ -17,17 +18,13 @@ class _ResetPasswordScreen extends React.Component {
   render() {
     const {navigate} = this.props.navigation;
     return  (
-      <StyleProvider style={getTheme(themeVars)}>
-        <Container>
-          <Content>
+      <ContentContainer hasFooter={false} style={{backgroundColor: '#222B45'}}>
             <ResetPasswordForm/>
             {this.props.encodedUserId ?
               <ConfirmPasswordResetForm navigate={navigate}/> :
               null
             }
-          </Content>
-        </Container>
-      </StyleProvider>
+      </ContentContainer>
     )
   }
 }

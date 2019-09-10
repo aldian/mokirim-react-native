@@ -4,10 +4,10 @@ import {
   Button, Form, IconNB, Input, Item, Label, Spinner, Text, Toast,
 } from 'native-base';
 import { translate } from "../utils/i18n";
-import Actions from '../state/Actions';
 import styles from '../styles';
 import getTheme from '../theme/components';
 import themeVars from '../theme/variables/material';
+import Actions from '../state/Actions';
 
 class _ActivateForm extends React.Component {
   componentDidMount() {
@@ -19,7 +19,7 @@ class _ActivateForm extends React.Component {
     return  (
       <React.Fragment>
          <Text>{translate("instructionActivate.counting", {count: 6, email: this.props.email})}</Text>
-         <Form>
+         <Form style={{backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
             <Item fixedLabel error={!!this.props.errors.code}>
               <Label>{translate("labelCode")}</Label>
               <Input onChangeText={val => this.props.setCode(val)} value={this.props.code}/>
@@ -38,7 +38,7 @@ class _ActivateForm extends React.Component {
          {this.props.submitting ?
             <Spinner/> :
             <Button
-              block style={styles.submitButton}
+              block style={[styles.submitButton, {backgroundColor: themeVars.toolbarDefaultBg}]}
               onPress={() => this.props.submitForm(
                 this.props.currentLanguage, this.props.encodedUserId, this.props.code,
               ).then(() => {
