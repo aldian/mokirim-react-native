@@ -484,7 +484,7 @@ const _submitConfirmPasswordResetForm = submitting => ({
 
 const submitConfirmPasswordResetForm = (languageCode, encodedUserId, code, newPassword) => dispatch => {
   dispatch(_submitConfirmPasswordResetForm(true));
-  return MokirimAPI.confirmPasswordReset(languageCode, encodedUserId, code, newPassword).then(response => {
+  return MokirimAPI.confirmPasswordReset(languageCode, encodedUserId, code.toUpperCase(), newPassword).then(response => {
      if (response.ok) {
        dispatch(setConfirmPasswordResetFormErrorCode(false));
        dispatch(setConfirmPasswordResetFormCode(''));

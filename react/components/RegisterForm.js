@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {View} from 'react-native';
 import {
   Button, Form, Spinner, Text, IconNB, Input, Item, Label, Toast,
 } from 'native-base';
@@ -19,7 +20,9 @@ class _RegisterForm extends React.Component {
   render() {
     return  (
       <React.Fragment>
-        <Form style={{backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
+        <View style={{backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
+        <Text style={{color: themeVars.toolbarDefaultBg, textAlign: 'center', margin: 16, fontSize: 32, fontWeight: 'bold'}}>{translate("headerRegister")}</Text>
+        <Form>
            <Item fixedLabel error={!!this.props.errors.username}>
              <Label>{translate("labelEmail")}</Label>
              <Input onChangeText={val => this.props.setUsername(val)} value={this.props.username}/>
@@ -52,6 +55,7 @@ class _RegisterForm extends React.Component {
              }
            </Item>
         </Form>
+        </View>
         {this.props.submitting ?
            <Spinner/> :
            <Button

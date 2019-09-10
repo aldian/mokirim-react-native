@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {Image} from 'react-native';
 import {
   Button,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
@@ -11,6 +12,7 @@ import themeVars from '../theme/variables/whiteHeader';
 
 class _RegisterScreenHeader extends React.Component {
   render() {
+    //      <HeaderTitle style={{color: themeVars.toolbarBtnTextColor}}>{translate("headerRegister")}</HeaderTitle>
     return <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
         <HeaderLeft>
@@ -20,9 +22,9 @@ class _RegisterScreenHeader extends React.Component {
               <Icon name="arrow-back" style={{color: themeVars.toolbarBtnColor}}/>
             </Button>
           }
-       </HeaderLeft>
-       <HeaderBody>
-          <HeaderTitle style={{color: themeVars.toolbarBtnTextColor}}>{translate("headerRegister")}</HeaderTitle>
+        </HeaderLeft>
+        <HeaderBody>
+          <Image source={require('../img/mokirim_colored.png')} style={{flex: 1, width: 91, height: 91, resizeMode: 'contain'}}/>
         </HeaderBody>
         <HeaderRight/>
       </Header>

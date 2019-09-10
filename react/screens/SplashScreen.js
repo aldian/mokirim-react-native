@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Image } from 'react-native';
 import {
   Container, Content,
   StyleProvider, Toast,
@@ -24,7 +24,7 @@ class _SplashScreen extends React.Component {
       <StyleProvider style={getTheme(themeVars)}>
         <View style={[styles.screen, styles.splashScreen]}>
           <View style={styles.content}>
-          <Text style={styles.splashText}>MOKIRIM</Text>
+            <Image source={require('../img/mokirim_white.png')} style={{flex: 1, width: 200, height: 200, resizeMode: 'contain'}}/>
           </View>
         </View>
       </StyleProvider>

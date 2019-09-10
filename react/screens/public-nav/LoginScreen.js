@@ -37,6 +37,7 @@ class _LoginScreen extends React.Component {
     return  (
       <ContentContainer hasFooter={false} style={{backgroundColor: '#222B45'}}>
         <View style={{backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
+          <Text style={{color: themeVars.toolbarDefaultBg, textAlign: 'center', margin: 16, fontSize: 32, fontWeight: 'bold'}}>{translate("headerLogin")}</Text>
              {this.props.submitting ?
                null :
                <View style={styles.screen}>

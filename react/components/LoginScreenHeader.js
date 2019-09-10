@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {Image} from 'react-native';
 import {
   Button,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
@@ -14,6 +15,7 @@ class _LoginScreenHeader extends React.Component {
   render() {
     //const whiteThemeVars = {...themeVars, toolbarBtnColor: '#222845', toolbarBtnTextColor: '#222845', toolbarDefaultBg: '#FFFFFF'};
     //return <StyleProvider style={getTheme(whiteThemeVars)}>
+    //      <HeaderTitle style={{color: themeVars.toolbarBtnTextColor}}>{translate("headerLogin")}</HeaderTitle>
     return <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
         <HeaderLeft>
@@ -23,9 +25,9 @@ class _LoginScreenHeader extends React.Component {
               <Icon name="arrow-back" style={{color: themeVars.toolbarBtnColor}}/>
             </Button>
           }
-       </HeaderLeft>
-       <HeaderBody>
-          <HeaderTitle style={{color: themeVars.toolbarBtnTextColor}}>{translate("headerLogin")}</HeaderTitle>
+        </HeaderLeft>
+        <HeaderBody>
+          <Image source={require('../img/mokirim_colored.png')} style={{flex: 1, width: 91, height: 91, resizeMode: 'contain'}}/>
         </HeaderBody>
         <HeaderRight/>
       </Header>
