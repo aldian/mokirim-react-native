@@ -36,12 +36,11 @@ class _LoginScreen extends React.Component {
     const {navigate} = this.props.navigation;
     return  (
       <ContentContainer hasFooter={false} style={{backgroundColor: '#222B45'}}>
-        <View style={{backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
-          <Text style={{color: themeVars.toolbarDefaultBg, textAlign: 'center', margin: 16, fontSize: 32, fontWeight: 'bold'}}>{translate("headerLogin")}</Text>
+        <View style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
+             <Text style={{color: themeVars.toolbarDefaultBg, textAlign: 'center', margin: 16, fontSize: 32, fontWeight: 'bold'}}>{translate("headerLogin")}</Text>
              {this.props.submitting ?
                null :
-               <View style={styles.screen}>
-                 <View style={styles.content}>
+               <React.Fragment>
                    <LoginButton
                      style={{width: 250, height: 32}}
                      permissions={['email']}
@@ -72,14 +71,12 @@ class _LoginScreen extends React.Component {
                      color={GoogleSigninButton.Color.Dark}
                      onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage)}
                      disabled={false} />
-
-                 </View>
-               </View>
+               </React.Fragment>
              }
              <View style={{marginTop: 16}}>
-             <Text style={{textAlign: 'center', color: '#919EAB'}}>{translate("messageOrLoginWithEmail")}</Text>
+               <Text style={{textAlign: 'center', color: '#919EAB'}}>{translate("messageOrLoginWithEmail")}</Text>
              </View>
-             <Form>
+             <Form style={{alignSelf: 'stretch'}}>
                <Item fixedLabel error={!!this.props.errors.username}>
                  <Label>{translate("labelEmailOrUsername")}</Label>
                  <Input onChangeText={val => this.props.setUsername(val)} value={this.props.username}/>
@@ -112,14 +109,12 @@ class _LoginScreen extends React.Component {
                  }
                </Item>
              </Form>
-             <View>
-                 <Button
-                   transparent style={styles.submitButton}
-                   onPress={() => navigate('ResetPassword')}
-                 >
-                   <Text>{translate("buttonForgotPassword")}</Text>
-                 </Button>
-             </View>
+             <Button
+               transparent
+               onPress={() => navigate('ResetPassword')}
+             >
+               <Text>{translate("buttonForgotPassword")}</Text>
+             </Button>
         </View>
         <View>
             {this.props.submitting ?

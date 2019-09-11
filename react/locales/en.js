@@ -48,6 +48,13 @@ export default {
   labelCode: "Code",
   labelNewPassword: "New Password",
 
+  messageIntroWhyTitle: "Send package according to predefined schedule",
+  messageIntroWhyText: "Easily choose date and time of you package delivery. Sending package more easily at a lower cost.",
+  messageIntroHowTitle: "Check-in and Check-out at the nearest Station",
+  messageIntroHowText: "Choose the nearest Station for checking-in and checking-out your package.",
+  messageIntroMonitorTitle: "Monitor deliveries directly on the Mokirim app",
+  messageIntroMonitorText: "Monitor package deliveries by receiving updates that you can see on the app.",
+
   messageAccountActivated: "Your account is successfully activated!",
   messageLoginCancelled: "Login cancelled.",
   messagePasswordChanged: "Password changed.",

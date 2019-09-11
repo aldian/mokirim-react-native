@@ -103,7 +103,7 @@ class _MemberBenefitsScreen extends React.Component {
                 inactiveDotScale={0.6}
                />
             </View>
-            <View style={[{flex: 0, flexDirection: 'row', justifyContent: 'center', padding: 12}]}>
+            <View style={[{flex: 0, flexDirection: 'row', justifyContent: 'center', padding: 32}]}>
               <Button
                 style={[{margin: 4}]}
                 onPress={() => navigate('Login')}
