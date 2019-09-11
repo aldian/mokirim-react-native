@@ -33,5 +33,5 @@ export default styles = StyleSheet.create({
     margin: 5,
   },
 
-  submitButton: {margin: 15, marginLeft: 'auto', marginRight: 'auto', width: 250},
+  submitButton: {margin: 32},
 });

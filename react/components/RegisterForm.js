@@ -20,41 +20,41 @@ class _RegisterForm extends React.Component {
   render() {
     return  (
       <React.Fragment>
-        <View style={{backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
-        <Text style={{color: themeVars.toolbarDefaultBg, textAlign: 'center', margin: 16, fontSize: 32, fontWeight: 'bold'}}>{translate("headerRegister")}</Text>
-        <Form>
-           <Item fixedLabel error={!!this.props.errors.username}>
-             <Label>{translate("labelEmail")}</Label>
-             <Input onChangeText={val => this.props.setUsername(val)} value={this.props.username}/>
-             {!!this.props.errors.username ?
-               <IconNB
-                 name="ios-close-circle"
-                 onPress={() => {
-                   this.props.setUsername('');
-                   this.props.setErrorUsername(false);
-                 }}
-               /> :
-               null
-             }
-           </Item>
-           <Item fixedLabel last error={!!this.props.errors.password}>
-             <Label>{translate("labelPassword")}</Label>
-             <Input
-               secureTextEntry={true} onChangeText={val => this.props.setPassword(val)}
-               value={this.props.password}
-             />
-             {!!this.props.errors.password ?
-               <IconNB
-                 name="ios-close-circle"
-                 onPress={() => {
-                   this.props.setPassword('');
-                   this.props.setErrorPassword(false);
-                 }}
-               /> :
-               null
-             }
-           </Item>
-        </Form>
+        <View style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
+          <Text style={{color: themeVars.toolbarDefaultBg, textAlign: 'center', margin: 16, fontSize: 32, fontWeight: 'bold'}}>{translate("headerRegister")}</Text>
+          <Form style={{alignSelf: 'stretch'}}>
+             <Item fixedLabel error={!!this.props.errors.username}>
+               <Label>{translate("labelEmail")}</Label>
+               <Input onChangeText={val => this.props.setUsername(val)} value={this.props.username}/>
+               {!!this.props.errors.username ?
+                 <IconNB
+                   name="ios-close-circle"
+                   onPress={() => {
+                     this.props.setUsername('');
+                     this.props.setErrorUsername(false);
+                   }}
+                 /> :
+                 null
+               }
+             </Item>
+             <Item fixedLabel last error={!!this.props.errors.password}>
+               <Label>{translate("labelPassword")}</Label>
+               <Input
+                 secureTextEntry={true} onChangeText={val => this.props.setPassword(val)}
+                 value={this.props.password}
+               />
+               {!!this.props.errors.password ?
+                 <IconNB
+                   name="ios-close-circle"
+                   onPress={() => {
+                     this.props.setPassword('');
+                     this.props.setErrorPassword(false);
+                   }}
+                 /> :
+                 null
+               }
+             </Item>
+          </Form>
         </View>
         {this.props.submitting ?
            <Spinner/> :

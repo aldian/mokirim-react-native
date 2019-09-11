@@ -22,39 +22,39 @@ class _ConfirmPasswordResetForm extends React.Component {
   render() {
     return  (
       <React.Fragment>
-         <View style={{backgroundColor: 'white', borderRadius: 16, paddingBottom: 16}}>
-         <Text style={{padding: 16}}>{translate("instructionReset.counting", {count: 6, email: this.props.email})}</Text>
-         <Form>
-            <Item fixedLabel error={!!this.props.errors.code}>
-              <Label>{translate("labelCode")}</Label>
-              <Input onChangeText={val => this.props.setCode(val)} value={this.props.code}/>
-              {!!this.props.errors.code ?
-                <IconNB
-                  name="ios-close-circle"
-                  onPress={() => {
-                    this.props.setCode('');
-                    this.props.setErrorCode(false);
-                  }}
-                /> :
-                null
-              }
-            </Item>
+         <View style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', backgroundColor: 'white', borderRadius: 16, paddingBottom: 16}}>
+           <Text style={{padding: 16}}>{translate("instructionReset.counting", {count: 6, email: this.props.email})}</Text>
+           <Form style={{alignSelf: 'stretch'}}>
+              <Item fixedLabel error={!!this.props.errors.code}>
+                <Label>{translate("labelCode")}</Label>
+                <Input onChangeText={val => this.props.setCode(val)} value={this.props.code}/>
+                {!!this.props.errors.code ?
+                  <IconNB
+                    name="ios-close-circle"
+                    onPress={() => {
+                      this.props.setCode('');
+                      this.props.setErrorCode(false);
+                    }}
+                  /> :
+                  null
+                }
+              </Item>
 
-           <Item fixedLabel error={!!this.props.errors.newPassword}>
-             <Label>{translate("labelNewPassword")}</Label>
-             <Input secureTextEntry={true} onChangeText={val => this.props.setNewPassword(val)} value={this.props.newPassword}/>
-             {!!this.props.errors.newPassword ?
-               <IconNB
-                 name="ios-close-circle"
-                 onPress={() => {
-                   this.props.setNewPassword('');
-                   this.props.setErrorNewPassword(false);
-                 }}
-               /> :
-               null
-             }
-           </Item>
-         </Form>
+             <Item fixedLabel error={!!this.props.errors.newPassword}>
+               <Label>{translate("labelNewPassword")}</Label>
+               <Input secureTextEntry={true} onChangeText={val => this.props.setNewPassword(val)} value={this.props.newPassword}/>
+               {!!this.props.errors.newPassword ?
+                 <IconNB
+                   name="ios-close-circle"
+                   onPress={() => {
+                     this.props.setNewPassword('');
+                     this.props.setErrorNewPassword(false);
+                   }}
+                 /> :
+                 null
+               }
+             </Item>
+           </Form>
          </View>
          {this.props.submitting ?
             <Spinner/> :

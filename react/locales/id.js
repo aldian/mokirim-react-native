@@ -48,6 +48,13 @@ export default {
   labelCode: "Kode",
   labelNewPassword: "Password Baru",
 
+  messageIntroWhyTitle: "Kirim barang dengan jadwal sesuai keinginan",
+  messageIntroWhyText: "Kemudahan mengatur jadwal kirim di tanggal dan jam yang diinginkan. Kirim lebih mudah, biaya lebih hemat.",
+  messageIntroHowTitle: "Check-in dan Check-out di Station terdekat",
+  messageIntroHowText: "Pilih lokasi Station terdekat untuk kemudahan pengantaran dan pengambilan barang kiriman.",
+  messageIntroMonitorTitle: "Pantau kiriman langsung di aplikasi Mokirim",
+  messageIntroMonitorText: "Pantau detail kiriman, terima update berkala langsung di aplikasi.",
+
   messageAccountActivated: "Akun Anda telah berhasil diaktifkan!",
   messageLoginCancelled: "Batal masuk.",
   messagePasswordChanged: "Password telah diubah.",

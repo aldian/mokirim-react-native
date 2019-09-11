@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Image} from 'react-native';
 import {
-  Button,
+  Button, Text,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
   Icon, Spinner, StyleProvider,
 } from 'native-base';
@@ -26,7 +26,9 @@ class _RegisterScreenHeader extends React.Component {
         <HeaderBody>
           <Image source={require('../img/mokirim_colored.png')} style={{flex: 1, width: 91, height: 91, resizeMode: 'contain'}}/>
         </HeaderBody>
-        <HeaderRight/>
+        <HeaderRight>
+          <Button transparent onPress={() => this.props.navigation.navigate('Login')}><Text style={{color: "#222B45"}}>{translate('headerLogin')}</Text></Button>
+        </HeaderRight>
       </Header>
     </StyleProvider>
   }

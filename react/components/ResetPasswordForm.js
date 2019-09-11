@@ -18,24 +18,24 @@ class _ResetPasswordForm extends React.Component {
   render() {
     return  (
       <React.Fragment>
-        <View style={{backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
-        <Text style={{color: themeVars.toolbarDefaultBg, textAlign: 'center', margin: 16, fontSize: 32, fontWeight: 'bold'}}>{translate("headerResetPassword")}</Text>
-        <Form>
-           <Item fixedLabel error={!!this.props.errors.email}>
-             <Label>{translate("labelEmail")}</Label>
-             <Input onChangeText={val => this.props.setEmail(val)} value={this.props.email}/>
-             {!!this.props.errors.email ?
-               <IconNB
-                 name="ios-close-circle"
-                 onPress={() => {
-                   this.props.setEmail('');
-                   this.props.setErrorEmail(false);
-                 }}
-               /> :
-               null
-             }
-           </Item>
-        </Form>
+        <View style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', backgroundColor: 'white', borderBottomLeftRadius: 16, borderBottomRightRadius: 16, paddingBottom: 16}}>
+          <Text style={{color: themeVars.toolbarDefaultBg, textAlign: 'center', margin: 16, fontSize: 32, fontWeight: 'bold'}}>{translate("headerResetPassword")}</Text>
+          <Form style={{alignSelf: 'stretch'}}>
+             <Item fixedLabel error={!!this.props.errors.email}>
+               <Label>{translate("labelEmail")}</Label>
+               <Input onChangeText={val => this.props.setEmail(val)} value={this.props.email}/>
+               {!!this.props.errors.email ?
+                 <IconNB
+                   name="ios-close-circle"
+                   onPress={() => {
+                     this.props.setEmail('');
+                     this.props.setErrorEmail(false);
+                   }}
+                 /> :
+                 null
+               }
+             </Item>
+          </Form>
         </View>
         {this.props.submitting ?
            <Spinner/> :

@@ -12,7 +12,7 @@ class _DeliveryOptionsMenu extends React.Component {
   render() {
     return  (
       <React.Fragment>
-        <Text>{translate("sectionDeliveryOptions")}</Text>
+        <Text style={{marginBottom: 16, fontWeight: 'bold'}}>{translate("sectionDeliveryOptions")}</Text>
         <View style={{flex: 1, flexDirection: 'row', alignItems: 'stretch'}}>
           <Button style={{marginRight: 4, flex: 1}} onPress={() => this.props.navigate("StationToStation")}>
             <Text>{translate("buttonStationToStation")}</Text>
