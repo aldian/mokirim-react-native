@@ -2,8 +2,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { View } from 'react-native';
 import {
-  Button, Text,
+  Button, Form, Text,
 } from 'native-base';
+import themeVars from '../../theme/variables/material';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 import { StationToStationScreenHeader } from '../../components/StationToStationScreenHeader';
@@ -20,10 +21,18 @@ class _StationToStationScreen extends React.Component {
 
     return (
       <ContentContainer navigate={navigate} hasFooter={false}>
-        <Button transparent onPress={() => navigate('MemberBenefits')}>
-          <Text style={[{color: 'white'}]}>{translate('buttonMemberBenefits')}</Text>
-        </Button>
-        <RoundedCornerPanel>
+        {this.props.loggedIn ?
+          null :
+          <Button transparent style={{flex: 0}} onPress={() => navigate('MemberBenefits')}>
+           <Text style={[{color: 'white'}]}>{translate('buttonMemberBenefits')}</Text>
+          </Button>
+        }
+        <RoundedCornerPanel style={{flex: 1}}>
+          <Form>
+          </Form>
+          <Button style={{backgroundColor: themeVars.toolbarDefaultBg, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{flex: 0}}>{translate("buttonFindSchedule")}</Text>
+          </Button>
         </RoundedCornerPanel>
       </ContentContainer>
     );
@@ -33,6 +42,7 @@ class _StationToStationScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
+    loggedIn: state.appReducer.loggedIn,
   }
 };
 
