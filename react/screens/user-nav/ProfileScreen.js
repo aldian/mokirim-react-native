@@ -1,70 +1,78 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { RNButton, View } from 'react-native';
+import {View} from 'react-native';
 //import { HeaderTitle } from 'react-navigation-stack';
 import {
-  Button, Content,
+  Button,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
   Icon, StyleProvider, Text,
 } from 'native-base';
 import { GoogleSignin } from 'react-native-google-signin';
 import { LoginButton } from 'react-native-fbsdk';
 import { translate } from "../../utils/i18n";
-import Actions from '../../state/Actions';
-import { NavigationL10nText } from '../../components/NavigationL10nText';
-import { ScreenContainer } from '../../components/ScreenContainer';
-import styles from '../../styles';
 import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
+import Actions from '../../state/Actions';
+import { NavigationL10nText } from '../../components/NavigationL10nText';
+import { ContentContainer } from '../../components/ContentContainer';
+import { RoundedCornerPanel } from '../../components/RoundedCornerPanel';
 
 class _ProfileScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, navigationOptions}) => ({
     //headerTitle: <HeaderTitle><NavigationL10nText textKey="headerProfile"/></HeaderTitle>
     //title: translate("headerProfile")
-    header: <StyleProvider style={getTheme(themeVars)}><Header noShadow><HeaderLeft>
-      <Button transparent onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" />
-      </Button>
-    </HeaderLeft><HeaderBody>
-      <HeaderTitle>{translate("headerProfile")}</HeaderTitle>
-    </HeaderBody><HeaderRight/></Header></StyleProvider>,
+    header: <StyleProvider style={getTheme(themeVars)}>
+      <Header noShadow>
+        <HeaderLeft>
+          <Button transparent onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back" />
+          </Button>
+        </HeaderLeft>
+        <HeaderBody>
+          <HeaderTitle>{translate("headerProfile")}</HeaderTitle>
+        </HeaderBody>
+        <HeaderRight/>
+      </Header>
+    </StyleProvider>,
   });
 
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <ScreenContainer navigate={navigate} currentTab={"Profile"}>
-        <Content>
-            <Text>DISPLAY NAME: {this.props.facebook.displayName}</Text>
-            <Text>ACCESS TOKEN: {this.props.accessToken}</Text>
-            <Text>FACEBOOK ACCESS TOKEN: {this.props.facebook.accessToken}</Text>
-            <Text>GOOGLE ACCESS TOKEN: {this.props.google.accessToken}</Text>
-            <Text>NOTIFICATION TOKEN: {this.props.notificationToken}</Text>
+      <ContentContainer navigate={navigate} currentTab="Profile">
+        <RoundedCornerPanel style={{flex: 1, flowDirection: 'column', justifyContent: 'flex-start'}}>
+          <Text>DISPLAY NAME: {this.props.facebook.displayName}</Text>
+          <Text>ACCESS TOKEN: {this.props.accessToken}</Text>
+          <Text>FACEBOOK ACCESS TOKEN: {this.props.facebook.accessToken}</Text>
+          <Text>GOOGLE ACCESS TOKEN: {this.props.google.accessToken}</Text>
+          <Text>NOTIFICATION TOKEN: {this.props.notificationToken}</Text>
 
+          {this.props.loggedInVia === 'facebook' &&
+            <LoginButton onLogoutFinished={() => {
+              this.props.logout(this.props.currentLanguage, this.props.accessToken, 'facebook');
+              navigate('Home');
+            }}/>
+          }
 
-           {this.props.loggedInVia === 'facebook' &&
-             <LoginButton onLogoutFinished={() => {
-               this.props.logout(this.props.currentLanguage, this.props.accessToken, 'facebook');
-               navigate('Home');
-             }}/>
-           }
-           {this.props.loggedInVia === 'google' &&
-              <RNButton title={translate('buttonLogout')} onPress={() => {
-                GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut());
+          {this.props.loggedInVia === 'google' &&
+            <Button onPress={() => {
+              GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut());
+              this.props.logout(this.props.currentLanguage, this.props.accessToken);
+              navigate('Home');
+            }}><Text>{translate('buttonLogout')}</Text></Button>
+          }
+
+          {this.props.loggedInVia === 'mokirim' &&
+            <Button
+              onPress={() => {
                 this.props.logout(this.props.currentLanguage, this.props.accessToken);
                 navigate('Home');
-              }}/>
-           }
-           {this.props.loggedInVia === 'mokirim' &&
-             <Button
-               onPress={() => {
-                 this.props.logout(this.props.currentLanguage, this.props.accessToken);
-                 navigate('Home');
-               }}
-             ><Text>{translate('buttonLogout')}</Text></Button>
-           }
-        </Content>
-      </ScreenContainer>
+              }}
+            ><Text>{translate('buttonLogout')}</Text></Button>
+          }
+
+        </RoundedCornerPanel>
+      </ContentContainer>
     );
   }
 }

@@ -20,7 +20,11 @@ class _ScreenContainer extends React.Component {
   render() {
     let containerStyle = [{backgroundColor: themeVars.toolbarDefaultBg}];
     if (this.props.style) {
-      containerStyle.push(this.props.style);
+      if (Array.isArray(this.props.style)) {
+        containerStyle = [...containerStyle, ...this.props.style]
+      } else {
+        containerStyle = [...containerStyle, this.props.style];
+      }
     }
     return <StyleProvider style={getTheme(themeVars)}>
       <Container style={containerStyle}>

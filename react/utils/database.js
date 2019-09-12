@@ -26,9 +26,34 @@ const openDatabase = () => {
       //msg += "RESULT 1: " + result + " ";
       //alert(msg);
       return db.transaction(tx => {
-        return tx.executeSql(
+        tx.executeSql(
           'CREATE TABLE IF NOT EXISTS ' +
           'UserState (name TEXT PRIMARY KEY, value TEXT)'
+        );
+
+        tx.executeSql(
+         'CREATE TABLE IF NOT EXISTS ' +
+         'PostalCode (id INTEGER PRIMARY KEY, code TEXT, subdistrict INTEGER)'
+        );
+
+        tx.executeSql(
+          'CREATE TABLE IF NOT EXISTS ' +
+          'Subdistrict (id INTEGER PRIMARY KEY, name TEXT, district INTEGER)'
+        );
+
+        tx.executeSql(
+          'CREATE TABLE IF NOT EXISTS ' +
+          'District (id INTEGER PRIMARY KEY, name TEXT, city INTEGER)'
+        );
+
+        tx.executeSql(
+          'CREATE TABLE IF NOT EXISTS ' +
+          'City (id INTEGER PRIMARY KEY, name TEXT, state INTEGER)'
+        );
+
+        return tx.executeSql(
+          'CREATE TABLE IF NOT EXISTS ' +
+          'State (id INTEGER PRIMARY KEY, name TEXT, country INTEGER)'
         );
       });
     }).then(result => {
@@ -69,8 +94,149 @@ const loadUserStates = db => {
   });
 };
 
+const addSubdistrict = (db, obj) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO Subdistrict (id, name, district) VALUES (?, ?, ?)',
+        [obj.id, obj.name, obj.district]
+      );
+      resolve(1);
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const getSubdistrict = (db, id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql("SELECT id, name, district FROM Subdistrict WHERE id = ? LIMIT 1", [id]).then(([tx, results]) => {
+        resolve(results.rows);
+      });
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const addDistrict = (db, obj) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO District (id, name, city) VALUES (?, ?, ?)',
+        [obj.id, obj.name, obj.city]
+      );
+      resolve(1);
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const getDistrict = (db, id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql("SELECT id, name, city FROM District WHERE id = ? LIMIT 1", [id]).then(([tx, results]) => {
+        resolve(results.rows);
+      });
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const addCity = (db, obj) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO City (id, name, state) VALUES (?, ?, ?)',
+        [obj.id, obj.name, obj.state]
+      );
+      resolve(1);
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const getCity = (db, id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql("SELECT id, name, state FROM City WHERE id = ? LIMIT 1", [id]).then(([tx, results]) => {
+        resolve(results.rows);
+      });
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const addState = (db, obj) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO State (id, name, country) VALUES (?, ?, ?)',
+        [obj.id, obj.name, obj.country]
+      );
+      resolve(1);
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const getState = (db, id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql("SELECT id, name, country FROM State WHERE id = ? LIMIT 1", [id]).then(([tx, results]) => {
+        resolve(results.rows);
+      });
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const addPostalCode = (db, obj) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO PostalCode (id, code, subdistrict) VALUES (?, ?, ?)',
+        [obj.id, obj.code, obj.subdistrict]
+      );
+      resolve(1);
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const getPostalCode = (db, id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql("SELECT id, code, subdistrict FROM PostalCode WHERE id = ? LIMIT 1", [id]).then(([tx, results]) => {
+        resolve(results.rows);
+      });
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
 export default Database = {
   openDatabase,
   updateUserStates,
   loadUserStates,
+
+  addSubdistrict,
+  getSubdistrict,
+  addDistrict,
+  getDistrict,
+  addCity,
+  getCity,
+  addState,
+  getState,
+  addPostalCode,
+  getPostalCode,
 };

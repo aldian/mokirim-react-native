@@ -15,6 +15,14 @@ const ACTIVATE_PATH = "/auth/users/activation/";
 const RESET_PASSWORD_PATH = "/auth/users/reset_password/";
 const CONFIRM_PASSWORD_RESET_PATH = "/auth/users/reset_password_confirm/";
 
+const GET_SUBDISTRICT = "/api/subdistrict/";
+const GET_DISTRICT = "/api/district/";
+const GET_CITY = "/api/city/";
+const GET_STATE = "/api/state/";
+const GET_POSTAL_CODE = "/api/postal_code/";
+
+const SEARCH_STATIONS = "/api/stations/";
+
 const registerDevice = (languageCode, deviceId) => {
   const requestOptions = {
     method: 'POST',
@@ -132,6 +140,80 @@ const confirmPasswordReset = (languageCode, encodedUserId, activationCode, newPa
   return fetch(BASE_URL + languageCode + CONFIRM_PASSWORD_RESET_PATH, requestOptions);
 };
 
+const getSubdistrict = (languageCode, accessToken, id) => {
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: BASE_URL,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  return fetch(BASE_URL + languageCode + GET_SUBDISTRICT + id, requestOptions);
+};
+
+const getDistrict = (languageCode, accessToken, id) => {
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: BASE_URL,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  return fetch(BASE_URL + languageCode + GET_DISTRICT + id, requestOptions);
+};
+
+const getCity = (languageCode, accessToken, id) => {
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: BASE_URL,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  return fetch(BASE_URL + languageCode + GET_CITY + id, requestOptions);
+};
+
+const getState = (languageCode, accessToken, id) => {
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: BASE_URL,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  return fetch(BASE_URL + languageCode + GET_STATE + id, requestOptions);
+};
+
+const getPostalCode = (languageCode, accessToken, id) => {
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: BASE_URL,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  return fetch(BASE_URL + languageCode + GET_POSTAL_CODE + id, requestOptions);
+};
+
+const searchStations = (languageCode, accessToken, type, text) => {
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: BASE_URL,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  const queryString = qs.stringify({type, text});
+
+  return fetch(BASE_URL + languageCode + SEARCH_STATIONS + '?' + queryString, requestOptions);
+};
+
 export default {
   registerDevice,
 
@@ -145,4 +227,12 @@ export default {
 
   resetPassword,
   confirmPasswordReset,
+
+  getSubdistrict,
+  getDistrict,
+  getCity,
+  getState,
+  getPostalCode,
+
+  searchStations,
 };

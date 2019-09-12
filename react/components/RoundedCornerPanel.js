@@ -9,8 +9,16 @@ class _RoundedCornerPanel extends React.Component {
   };
 
   render() {
+    let style = [{backgroundColor: 'white', borderTopLeftRadius: 16, borderTopRightRadius: 16, padding: 16}];
+    if (this.props.style) {
+      if (Array.isArray(this.props.style)) {
+        style = [...style, ...this.props.style];
+      } else {
+        style = [...style, this.props.style];
+      }
+    }
     return  (
-      <View style={[{backgroundColor: 'white', borderTopLeftRadius: 16, borderTopRightRadius: 16, padding: 16}, this.props.style]}>
+      <View style={style}>
         {this.props.children}
       </View>
     )
