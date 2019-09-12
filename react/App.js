@@ -23,11 +23,9 @@ import { LoginScreen } from './screens/public-nav/LoginScreen';
 import { RegisterScreen } from './screens/public-nav/RegisterScreen';
 import { ResetPasswordScreen } from './screens/public-nav/ResetPasswordScreen';
 import { MemberBenefitsScreen } from './screens/public-nav/MemberBenefitsScreen';
-import { StationToStationScreen as PublicStationToStationScreen } from './screens/public-nav/StationToStationScreen';
+import { StationToStationScreen } from './screens/public-nav/StationToStationScreen';
 
-import { DashboardScreen } from './screens/user-nav/DashboardScreen';
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
-import { StationToStationScreen } from './screens/user-nav/StationToStationScreen';
 
 console.disableYellowBox = true
 
@@ -55,7 +53,7 @@ const PublicNavigator = createStackNavigator({
   Register: {screen: RegisterScreen, path: 'public/register'},
   ResetPassword: {screen: ResetPasswordScreen, path: 'public/resetPassword'},
   MemberBenefits: {screen: MemberBenefitsScreen, path: 'public/memberBenefits'},
-  StationToStation: {screen: PublicStationToStationScreen, path: 'public/stationToStation'},
+  StationToStation: {screen: StationToStationScreen, path: 'public/stationToStation'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,
@@ -63,7 +61,7 @@ const PublicNavigator = createStackNavigator({
 });
 
 const UserNavigator = createStackNavigator({
-  Dashboard: {screen: DashboardScreen, path: 'user/dashboard'},
+  Dashboard: {screen: HomeScreen, path: 'user/dashboard'},
   Profile: {screen: ProfileScreen, path: 'user/profile'},
   StationToStation: {screen: StationToStationScreen, path: 'user/stationToStation'},
 }, {

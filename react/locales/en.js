@@ -14,6 +14,7 @@ export default {
   buttonDashboard: "Dashboard",
   buttonStationToStation: "Station-to-Station",
   buttonDoorToDoor: "Door-to-Door",
+  buttonFindSchedule: "Find schedule",
 
   errorResourceNotFound: "Resource not found.",
   errorInvalidUsernameOrPassword: "Invalid username or password.",

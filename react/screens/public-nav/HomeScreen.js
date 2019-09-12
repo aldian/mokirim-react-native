@@ -14,6 +14,7 @@ import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 import { NavigationL10nText } from '../../components/NavigationL10nText';
 import { ContentContainer } from '../../components/ContentContainer';
+import { HomeScreenHeader } from '../../components/HomeScreenHeader';
 import { HomeNewsSwiper } from '../../components/HomeNewsSwiper';
 import { RoundedCornerPanel } from '../../components/RoundedCornerPanel';
 import { DeliveryOptionsMenu } from '../../components/DeliveryOptionsMenu';
@@ -24,23 +25,22 @@ import themeVars from '../../theme/variables/material';
 class _HomeScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, theme, navigationOptions}) => ({
     //headerTitle: <HeaderTitle><NavigationL10nText textKey="headerWelcome"/></HeaderTitle>,
-    header: <StyleProvider style={getTheme(themeVars)}>
-      <Header noShadow><HeaderLeft/><HeaderBody>
-      <HeaderTitle>{translate("headerWelcome")}</HeaderTitle>
-      </HeaderBody><HeaderRight/></Header>
-    </StyleProvider>,
+    header: <HomeScreenHeader/>,
   });
 
   render() {
     const {navigate} = this.props.navigation;
 
     return (
-      <ContentContainer navigate={navigate} currentTab="Home">
-        <Button transparent onPress={() => navigate('MemberBenefits')}>
-          <Text style={[{color: 'white'}]}>{translate('buttonMemberBenefits')}</Text>
-        </Button>
-        <HomeNewsSwiper/>
-        <RoundedCornerPanel>
+      <ContentContainer navigate={navigate} currentTab={this.props.loggedIn ? "Dashboard" : "Home"}>
+        {this.props.loggedIn ?
+          null :
+          <Button style={{flex: 0}} transparent onPress={() => navigate('MemberBenefits')}>
+           <Text style={[{color: 'white'}]}>{translate('buttonMemberBenefits')}</Text>
+          </Button>
+        }
+        <HomeNewsSwiper style={{flex: 0}}/>
+        <RoundedCornerPanel style={{flex: 100, flowDirection: 'column', justifyContent: 'flex-start'}}>
           <DeliveryOptionsMenu navigate={navigate}/>
         </RoundedCornerPanel>
       </ContentContainer>
@@ -51,6 +51,7 @@ class _HomeScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
+    loggedIn: state.appReducer.loggedIn,
   }
 };
 

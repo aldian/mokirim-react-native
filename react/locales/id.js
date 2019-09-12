@@ -14,6 +14,7 @@ export default {
   buttonDashboard: "Dasbor",
   buttonStationToStation: "Antar Station",
   buttonDoorToDoor: "Antar Alamat",
+  buttonFindSchedule: "Cari pengiriman",
 
   errorResourceNotFound: "Resource tak ditemukan.",
   errorInvalidUsernameOrPassword: "Username atau kata sandi salah.",
