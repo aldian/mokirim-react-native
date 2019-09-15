@@ -15,6 +15,7 @@ import Actions from '../../state/Actions';
 import { NavigationL10nText } from '../../components/NavigationL10nText';
 import { ContentContainer } from '../../components/ContentContainer';
 import { HomeScreenHeader } from '../../components/HomeScreenHeader';
+import { MemberBenefitsButton } from '../../components/MemberBenefitsButton';
 import { HomeNewsSwiper } from '../../components/HomeNewsSwiper';
 import { RoundedCornerPanel } from '../../components/RoundedCornerPanel';
 import { DeliveryOptionsMenu } from '../../components/DeliveryOptionsMenu';
@@ -35,9 +36,7 @@ class _HomeScreen extends React.Component {
       <ContentContainer navigate={navigate} currentTab={this.props.loggedIn ? "Dashboard" : "Home"}>
         {this.props.loggedIn ?
           null :
-          <Button style={{flex: 0}} transparent onPress={() => navigate('MemberBenefits')}>
-           <Text style={[{color: 'white'}]}>{translate('buttonMemberBenefits')}</Text>
-          </Button>
+          <MemberBenefitsButton style={{flex: 0}} navigate={navigate}/>
         }
         <HomeNewsSwiper style={{flex: 0}}/>
         <RoundedCornerPanel style={{flex: 100, flowDirection: 'column', justifyContent: 'flex-start'}}>

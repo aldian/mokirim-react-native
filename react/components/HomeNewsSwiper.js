@@ -45,9 +45,17 @@ class _HomeNewsSwiper extends React.Component {
   };
 
   render() {
+    let style = [styles.wrapper];
+    if (this.props.style) {
+      if (Array.isArray(this.props.style)) {
+        style = [...style, ...this.props.style];
+      } else {
+        style = [...style, this.props.style];
+      }
+    }
     return  (
       <Swiper
-        style={[styles.wrapper, this.props.style || {}]} showsButtons={false} activeDotColor="white"
+        style={style} showsButtons={false} activeDotColor="white"
         nextButton={<RNText style={styles.buttonText}>›</RNText>}
         prevButton={<RNText style={styles.buttonText}>‹</RNText>}
       >

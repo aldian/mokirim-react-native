@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { AppRegistry, FlatList, ActivityIndicator, Text, View  } from 'react-native';
-import {createStackNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
+import {createSwitchNavigator, createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 import { useScreens } from 'react-native-screens';
 import { Root } from 'native-base';
 import {Provider} from 'react-redux';
@@ -24,6 +25,7 @@ import { RegisterScreen } from './screens/public-nav/RegisterScreen';
 import { ResetPasswordScreen } from './screens/public-nav/ResetPasswordScreen';
 import { MemberBenefitsScreen } from './screens/public-nav/MemberBenefitsScreen';
 import { StationToStationScreen } from './screens/public-nav/StationToStationScreen';
+import { SearchStationScreen } from './screens/public-nav/SearchStationScreen';
 
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
 
@@ -54,6 +56,7 @@ const PublicNavigator = createStackNavigator({
   ResetPassword: {screen: ResetPasswordScreen, path: 'public/resetPassword'},
   MemberBenefits: {screen: MemberBenefitsScreen, path: 'public/memberBenefits'},
   StationToStation: {screen: StationToStationScreen, path: 'public/stationToStation'},
+  SearchStation: {screen: SearchStationScreen, path: 'public/searchStation'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,
@@ -64,6 +67,7 @@ const UserNavigator = createStackNavigator({
   Dashboard: {screen: HomeScreen, path: 'user/dashboard'},
   Profile: {screen: ProfileScreen, path: 'user/profile'},
   StationToStation: {screen: StationToStationScreen, path: 'user/stationToStation'},
+  SearchStation: {screen: SearchStationScreen, path: 'user/searchStation'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,
@@ -83,9 +87,9 @@ export default class App extends React.Component {
   render() {
     return (
       <Root>
-      <Provider store={store}>
-        <Navigation/>
-      </Provider>
+        <Provider store={store}>
+          <Navigation/>
+        </Provider>
       </Root>
     );
   }

@@ -2,13 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { View } from 'react-native';
 import {
-  Button, Form, Text,
+  Button, Form, Input, Item, Label, Text,
 } from 'native-base';
 import themeVars from '../../theme/variables/material';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 import { StationToStationScreenHeader } from '../../components/StationToStationScreenHeader';
 import { ContentContainer } from '../../components/ContentContainer';
+import { MemberBenefitsButton } from '../../components/MemberBenefitsButton';
 import { RoundedCornerPanel } from '../../components/RoundedCornerPanel';
 
 class _StationToStationScreen extends React.Component {
@@ -23,12 +24,32 @@ class _StationToStationScreen extends React.Component {
       <ContentContainer navigate={navigate} hasFooter={false}>
         {this.props.loggedIn ?
           null :
-          <Button transparent style={{flex: 0}} onPress={() => navigate('MemberBenefits')}>
-           <Text style={[{color: 'white'}]}>{translate('buttonMemberBenefits')}</Text>
-          </Button>
+          <MemberBenefitsButton style={{flex: 0}} navigate={navigate}/>
         }
-        <RoundedCornerPanel style={{flex: 1}}>
+        <RoundedCornerPanel style={{flex: 1, flexDirection: 'column'}}>
           <Form>
+            <Item stackedLabel>
+              <Label>{translate("labelOriginating")}</Label>
+              <Input
+                style={{width: '100%'}}
+                multiline={true}
+                editable={true} placeholder={translate("placeholderOriginating")}
+                placeholderTextColor="#919EAB"
+                onFocus={() => navigate('SearchStation', {isOriginating: true})}
+                value={this.props.originatingStation.text}
+              />
+            </Item>
+            <Item stackedLabel last>
+              <Label>{translate("labelDestination")}</Label>
+              <Input
+                style={{width: '100%'}}
+                multiline={true}
+                editable={true} placeholder={translate("placeholderDestination")}
+                placeholderTextColor="#919EAB"
+                onFocus={() => navigate("SearchStation", {isOriginating: false})}
+                value={this.props.destinationStation.text}
+              />
+            </Item>
           </Form>
           <Button style={{backgroundColor: themeVars.toolbarDefaultBg, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
             <Text style={{flex: 0}}>{translate("buttonFindSchedule")}</Text>
@@ -43,6 +64,8 @@ const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
     loggedIn: state.appReducer.loggedIn,
+    originatingStation: state.appReducer.findScheduleForm.originatingStation,
+    destinationStation: state.appReducer.findScheduleForm.destinationStation,
   }
 };
 

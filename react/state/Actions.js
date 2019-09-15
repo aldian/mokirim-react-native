@@ -152,9 +152,9 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
         } else if (name == 'introFinished') {
           states.introFinished = !!parseInt(value, 10);
         } else if (name == 'deviceId') {
-          states.deviceId = value;
+          states.device.id = value;
         } else if (name == 'deviceToken') {
-          states.deviceToken = value;
+          states.device.token = value;
         }
       }
       dispatch(updateAppStates(states));
@@ -165,18 +165,18 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
       } else if (!states.introFinished) {
         nextScreen = 'IntroWhy';
       }
-      if (states.deviceId) {
+      if (states.device.id) {
         return _afterSplash(dispatch, timerStart, db, states.splashShown, delay, nextScreen);
       }
 
-      states.deviceId = uuid.v4();
-      return MokirimAPI.registerDevice(states.currentLanguage, states.deviceId).then(response => {
+      states.device.id = uuid.v4();
+      return MokirimAPI.registerDevice(states.currentLanguage, states.device.id).then(response => {
         if (response.ok) {
           return response.json().then(obj => {
-            states.deviceToken = obj.token;
+            states.device.token = obj.token;
             dispatch(updateAppStates(states));
             Database.updateUserStates(
-              db, {deviceId: states.deviceId, deviceToken: states.deviceToken}
+              db, {deviceId: states.device.id, deviceToken: states.device.token}
             );
             return _afterSplash(dispatch, timerStart, db, states.splashShown, delay, nextScreen);
           });
@@ -542,6 +542,54 @@ const submitConfirmPasswordResetForm = (languageCode, encodedUserId, code, newPa
   });
 }
 
+const setFindScheduleFormOriginatingStation = place => ({
+  type: ActionCodes.SET_FIND_SCHEDULE_FORM_ORIGINATING_STATION,
+  place,
+});
+
+const setFindScheduleFormDestinationStation = place => ({
+  type: ActionCodes.SET_FIND_SCHEDULE_FORM_DESTINATION_STATION,
+  place,
+});
+
+const _searchStations = searching => ({
+  type: ActionCodes.SEARCH_STATIONS,
+  searching,
+});
+
+const searchStations = (languageCode, accessToken, type, text) => dispatch => {
+  dispatch(_searchStations(true));
+  return MokirimAPI.searchStations(languageCode, accessToken, type, text).then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      if (response.status === 404) {
+        return new Promise((resolve, reject) => reject(translate("errorResourceNotFound")));
+      } else if (response.status === 400) {
+        return response.json().then(obj => {
+          return new Promise(
+            (resolve, reject) => {
+              let texts = [];
+              if (Array.isArray(obj)) {
+                texts = [...texts, ...obj];
+              } else {
+                Object.keys(obj).forEach(key => {
+                  texts = [...texts, ...obj[key]];
+                });
+              }
+              return reject(texts.join(' - '));
+            }
+          );
+        });
+      } else {
+         return new Promise((resolve, reject) => reject("ERROR " + response.status));
+      }
+    }
+  }).finally(() => {
+    dispatch(_searchStations(false));
+  });
+};
+
 export default Actions = {
   setErrorMessage,
   introFinished,
@@ -578,4 +626,9 @@ export default Actions = {
   setConfirmPasswordResetFormNewPassword,
   setConfirmPasswordResetFormErrorNewPassword,
   submitConfirmPasswordResetForm,
+
+  setFindScheduleFormOriginatingStation,
+  setFindScheduleFormDestinationStation,
+
+  searchStations,
 }

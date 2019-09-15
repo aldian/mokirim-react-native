@@ -30,6 +30,10 @@ export default {
   headerMemberBenefits: "Member Benefits",
   headerStationToStation: "Station-to-Station",
   headerDoorToDoor: "Door-to-Door",
+  headerSearchStationOriginating: "Originating",
+  headerSearchStationDestination: "Destination",
+  headerChooseOriginatingCity: "Choose Originating Station/City",
+  headerChooseDestinationCity: "Choose Destination Station/City",
 
   instructionActivate: {counting: {
     one: "Please type {{count}} digit/letter activation code sent to email address %{email}.",
@@ -48,6 +52,8 @@ export default {
   labelPassword: "Password",
   labelCode: "Code",
   labelNewPassword: "New Password",
+  labelOriginating: "From",
+  labelDestination: "To",
 
   messageIntroWhyTitle: "Send package according to predefined schedule",
   messageIntroWhyText: "Easily choose date and time of you package delivery. Sending package more easily at a lower cost.",
@@ -55,11 +61,17 @@ export default {
   messageIntroHowText: "Choose the nearest Station for checking-in and checking-out your package.",
   messageIntroMonitorTitle: "Monitor deliveries directly on the Mokirim app",
   messageIntroMonitorText: "Monitor package deliveries by receiving updates that you can see on the app.",
+  messageNoResult: "There is no result for \"%{text}\"",
 
   messageAccountActivated: "Your account is successfully activated!",
   messageLoginCancelled: "Login cancelled.",
   messagePasswordChanged: "Password changed.",
   messageOrLoginWithEmail: 'Or login with email',
+
+  placeholderOriginating: "Choose originating station/city",
+  placeholderDestination: "Choose destination station/city",
+  placeholderSearchOriginating: "Find originating station/city",
+  placeholderSearchDestination: "Find destination station/city",
 
   sectionDeliveryOptions: "Delivery Options",
 };

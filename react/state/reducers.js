@@ -9,6 +9,10 @@ const appReducerInitialState = {
   errorMessage: '',
   notificationToken: null,
   introFinished: false,
+  device: {
+    id: null,
+    token: null,
+  },
   loggedIn: false,
   loggedInVia: null,
   loginForm: {
@@ -41,6 +45,21 @@ const appReducerInitialState = {
   encodedUserId: null,
   accessToken: null,
   email: null,
+
+  findScheduleForm: {
+    originatingStation: {
+      id: null,
+      text: '',
+    },
+    destinationStation: {
+      id: null,
+      text: '',
+    },
+  },
+
+  searchStationForm: {
+    searching: false,
+  },
 };
 
 function appReducer(state = appReducerInitialState, action = {}) {
@@ -168,6 +187,20 @@ function appReducer(state = appReducerInitialState, action = {}) {
     case ActionCodes.SUBMIT_CONFIRM_PASSWORD_RESET_FORM:
       return {
         ...state, resetPasswordForm: {...state.resetPasswordForm, submitting: action.submitting},
+      };
+
+    case ActionCodes.SET_FIND_SCHEDULE_FORM_ORIGINATING_STATION:
+      return {
+        ...state, findScheduleForm: {...state.findScheduleForm, originatingStation: action.place},
+      }
+    case ActionCodes.SET_FIND_SCHEDULE_FORM_DESTINATION_STATION:
+      return {
+        ...state, findScheduleForm: {...state.findScheduleForm, destinationStation: action.place},
+      }
+
+    case ActionCodes.SEARCH_STATIONS:
+      return {
+        ...state, searchStationForm: {...state.searchStationForm, searching: action.searching},
       };
 
     default:

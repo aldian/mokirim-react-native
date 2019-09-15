@@ -30,6 +30,10 @@ export default {
   headerMemberBenefits: "Keuntungan Anggota",
   headerStationToStation: "Antar Station",
   headerDoorToDoor: "Antar Alamat",
+  headerSearchStationOriginating: "Asal",
+  headerSearchStationDestination: "Tujuan",
+  headerChooseOriginatingCity: "Pilih Station/Kota Asal",
+  headerChooseDestinationCity: "Pilih Station/Kota Tujuan",
 
   instructionActivate: {counting: {
     one: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
@@ -48,6 +52,8 @@ export default {
   labelPassword: "Kata sandi",
   labelCode: "Kode",
   labelNewPassword: "Password Baru",
+  labelOriginating: "Asal",
+  labelDestination: "Tujuan",
 
   messageIntroWhyTitle: "Kirim barang dengan jadwal sesuai keinginan",
   messageIntroWhyText: "Kemudahan mengatur jadwal kirim di tanggal dan jam yang diinginkan. Kirim lebih mudah, biaya lebih hemat.",
@@ -55,11 +61,17 @@ export default {
   messageIntroHowText: "Pilih lokasi Station terdekat untuk kemudahan pengantaran dan pengambilan barang kiriman.",
   messageIntroMonitorTitle: "Pantau kiriman langsung di aplikasi Mokirim",
   messageIntroMonitorText: "Pantau detail kiriman, terima update berkala langsung di aplikasi.",
+  messageNoResult: "Tak ditemukan hasil untuk \"%{text}\"",
 
   messageAccountActivated: "Akun Anda telah berhasil diaktifkan!",
   messageLoginCancelled: "Batal masuk.",
   messagePasswordChanged: "Password telah diubah.",
   messageOrLoginWithEmail: 'Atau login dengan email',
+
+  placeholderOriginating: "Pilih station/kota asal",
+  placeholderDestination: "Pilih station/kota tujuan",
+  placeholderSearchOriginating: "Cari station/kota asal",
+  placeholderSearchDestination: "Cari station/kota tujuan",
 
   sectionDeliveryOptions: "Pilihan Pengiriman",
 };
