@@ -286,6 +286,8 @@ export default {
   isIphoneX,
   inputGroupRoundedBorderRadius: 30,
 
+  placeholderTextColor: "#919EAB",
+
   // iPhoneX SafeArea
   Inset: {
     portrait: {

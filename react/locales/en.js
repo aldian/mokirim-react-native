@@ -54,6 +54,7 @@ export default {
   labelNewPassword: "New Password",
   labelOriginating: "From",
   labelDestination: "To",
+  labelDepartureDate: "Departure Date",
 
   messageIntroWhyTitle: "Send package according to predefined schedule",
   messageIntroWhyText: "Easily choose date and time of you package delivery. Sending package more easily at a lower cost.",
@@ -72,6 +73,7 @@ export default {
   placeholderDestination: "Choose destination station/city",
   placeholderSearchOriginating: "Find originating station/city",
   placeholderSearchDestination: "Find destination station/city",
+  placeholderSelectDate: "Select date",
 
   sectionDeliveryOptions: "Delivery Options",
 };

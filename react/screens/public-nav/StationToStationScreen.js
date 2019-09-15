@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { View } from 'react-native';
 import {
-  Button, Form, Input, Item, Label, Text,
+  Button, DatePicker, Form, Input, Item, Label, Text,
 } from 'native-base';
 import themeVars from '../../theme/variables/material';
 import { translate } from "../../utils/i18n";
@@ -33,22 +33,40 @@ class _StationToStationScreen extends React.Component {
               <Input
                 style={{width: '100%'}}
                 multiline={true}
-                editable={true} placeholder={translate("placeholderOriginating")}
-                placeholderTextColor="#919EAB"
+                placeholder={translate("placeholderOriginating")}
+                placeholderTextColor={themeVars.placeholderTextColor}
                 onFocus={() => navigate('SearchStation', {isOriginating: true})}
                 value={this.props.originatingStation.text}
               />
             </Item>
-            <Item stackedLabel last>
+            <Item stackedLabel>
               <Label>{translate("labelDestination")}</Label>
               <Input
                 style={{width: '100%'}}
                 multiline={true}
-                editable={true} placeholder={translate("placeholderDestination")}
-                placeholderTextColor="#919EAB"
+                placeholder={translate("placeholderDestination")}
+                placeholderTextColor={themeVars.placeholderTextColor}
                 onFocus={() => navigate("SearchStation", {isOriginating: false})}
                 value={this.props.destinationStation.text}
               />
+            </Item>
+            <Item stackedLabel last>
+              <Label>{translate("labelDepartureDate")}</Label>
+              <View style={{width: '100%'}}>
+                <DatePicker
+                  defaultDate={this.props.departureDate}
+                  minimumDate={new Date()}
+                  locale={this.props.currentLanguage}
+                  timeZoneOffsetInMinutes={undefined}
+                  modalTransparent={false}
+                  animationType={"fade"}
+                  androidMode={"default"}
+                  textStyle={{paddingLeft: 4}}
+                  placeHolderText={this.props.departureDate ? null : translate("placeholderSelectDate")}
+                  placeHolderTextStyle={{color: themeVars.placeholderTextColor, paddingLeft: 4}}
+                  onDateChange={date => this.props.setDepartureDate(date)}
+                />
+              </View>
             </Item>
           </Form>
           <Button style={{backgroundColor: themeVars.toolbarDefaultBg, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
@@ -66,11 +84,13 @@ const mapStateToProps = state => {
     loggedIn: state.appReducer.loggedIn,
     originatingStation: state.appReducer.findScheduleForm.originatingStation,
     destinationStation: state.appReducer.findScheduleForm.destinationStation,
+    departureDate: state.appReducer.findScheduleForm.departureDate,
   }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    setDepartureDate: date => dispatch(Actions.setFindScheduleFormDepartureDate(date)),
   }
 };
 
