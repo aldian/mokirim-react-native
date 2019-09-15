@@ -55,6 +55,7 @@ const appReducerInitialState = {
       id: null,
       text: '',
     },
+    departureDate: null,
   },
 
   searchStationForm: {
@@ -196,6 +197,10 @@ function appReducer(state = appReducerInitialState, action = {}) {
     case ActionCodes.SET_FIND_SCHEDULE_FORM_DESTINATION_STATION:
       return {
         ...state, findScheduleForm: {...state.findScheduleForm, destinationStation: action.place},
+      }
+    case ActionCodes.SET_FIND_SCHEDULE_FORM_DEPARTURE_DATE:
+      return {
+        ...state, findScheduleForm: {...state.findScheduleForm, departureDate: action.date},
       }
 
     case ActionCodes.SEARCH_STATIONS:

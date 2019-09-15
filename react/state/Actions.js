@@ -552,6 +552,11 @@ const setFindScheduleFormDestinationStation = place => ({
   place,
 });
 
+const setFindScheduleFormDepartureDate = date => ({
+  type: ActionCodes.SET_FIND_SCHEDULE_FORM_DEPARTURE_DATE,
+  date,
+});
+
 const _searchStations = searching => ({
   type: ActionCodes.SEARCH_STATIONS,
   searching,
@@ -629,6 +634,7 @@ export default Actions = {
 
   setFindScheduleFormOriginatingStation,
   setFindScheduleFormDestinationStation,
+  setFindScheduleFormDepartureDate,
 
   searchStations,
 }

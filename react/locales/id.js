@@ -54,6 +54,7 @@ export default {
   labelNewPassword: "Password Baru",
   labelOriginating: "Asal",
   labelDestination: "Tujuan",
+  labelDepartureDate: "Tanggal Pengiriman",
 
   messageIntroWhyTitle: "Kirim barang dengan jadwal sesuai keinginan",
   messageIntroWhyText: "Kemudahan mengatur jadwal kirim di tanggal dan jam yang diinginkan. Kirim lebih mudah, biaya lebih hemat.",
@@ -72,6 +73,7 @@ export default {
   placeholderDestination: "Pilih station/kota tujuan",
   placeholderSearchOriginating: "Cari station/kota asal",
   placeholderSearchDestination: "Cari station/kota tujuan",
+  placeholderSelectDate: "Pilih tanggal",
 
   sectionDeliveryOptions: "Pilihan Pengiriman",
 };
