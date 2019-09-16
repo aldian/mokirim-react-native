@@ -41,12 +41,6 @@ class _ProfileScreen extends React.Component {
     return (
       <ContentContainer navigate={navigate} currentTab="Profile">
         <RoundedCornerPanel style={{flex: 1, flowDirection: 'column', justifyContent: 'flex-start'}}>
-          <Text>DISPLAY NAME: {this.props.facebook.displayName}</Text>
-          <Text>ACCESS TOKEN: {this.props.accessToken}</Text>
-          <Text>FACEBOOK ACCESS TOKEN: {this.props.facebook.accessToken}</Text>
-          <Text>GOOGLE ACCESS TOKEN: {this.props.google.accessToken}</Text>
-          <Text>NOTIFICATION TOKEN: {this.props.notificationToken}</Text>
-
           {this.props.loggedInVia === 'facebook' &&
             <LoginButton onLogoutFinished={() => {
               this.props.logout(this.props.currentLanguage, this.props.accessToken, 'facebook');

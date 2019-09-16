@@ -1,16 +1,19 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { View } from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {
-  Button, DatePicker, Form, Input, Item, Label, Text,
+  Button, DatePicker, Form, Icon, Input, Item, Label, Text,
 } from 'native-base';
 import themeVars from '../../theme/variables/material';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
+import Accordion, {DefaultContent as DefaultAccordionContent} from '../../components/Accordion';
 import { StationToStationScreenHeader } from '../../components/StationToStationScreenHeader';
 import { ContentContainer } from '../../components/ContentContainer';
 import { MemberBenefitsButton } from '../../components/MemberBenefitsButton';
 import { RoundedCornerPanel } from '../../components/RoundedCornerPanel';
+import ColloAccordionHeader from '../../components/ColloAccordionHeader';
+import { PackageDimensionInput } from '../../components/PackageDimensionInput';
 
 class _StationToStationScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps, theme, navigationOptions}) => ({
@@ -50,7 +53,7 @@ class _StationToStationScreen extends React.Component {
                 value={this.props.destinationStation.text}
               />
             </Item>
-            <Item stackedLabel last>
+            <Item stackedLabel>
               <Label>{translate("labelDepartureDate")}</Label>
               <View style={{width: '100%'}}>
                 <DatePicker
@@ -67,6 +70,45 @@ class _StationToStationScreen extends React.Component {
                   onDateChange={date => this.props.setDepartureDate(date)}
                 />
               </View>
+            </Item>
+            <Item stackedLabel last>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+                <Label style={{flex: 0}}>
+                  {translate("labelPackage.counting", {count: this.props.colli.length})}
+                </Label>
+                <Label style={[{flex: 0}, (this.props.totalWeight < 10 ? {color: 'red', fontWeight: 'bold'} : {})]}>
+                  {translate("labelColli.counting", {count: this.props.colli.length})}, {this.props.totalWeight} Kg{this.props.totalWeight < 10 ? " (" + translate("messagePay10K") + ")" : null}
+                </Label>
+              </View>
+              {this.props.colli.length < 2 ?
+                <View style={{width: '100%'}}>
+                  <PackageDimensionInput info={{...this.props.colli[0], index: 0}}/>
+                </View> :
+                <View style={{width: '100%', marginTop: 16, marginBottom: 16}}>
+                  <Accordion
+                    style={{borderWidth: 0}}
+                    dataArray={this.props.colli.map((collo, index) => ({...collo, index}))}
+                    animation={false}
+                    expanded={this.props.openedColloIndex}
+                    renderHeader={(item, expanded) => {
+                      return <ColloAccordionHeader
+                        expanded={expanded}
+                        info={item}
+                        onRemove={() => this.props.removeCollo(item.index)}
+                      />
+                    }}
+                    renderContent={item => <PackageDimensionInput info={item}/>}
+                    onAccordionOpen={(item, index) => this.props.setOpenedColloIndex(index)}
+                    onAccordionClose={(item, index) => this.props.setOpenedColloIndex(null)}
+                  />
+                </View>
+              }
+              {this.props.colli.length < 5 ?
+                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingTop: 16, paddingBottom: 16}}>
+                  <TouchableOpacity transparent style={{flex: 0, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}} onPress={() => {this.props.addCollo()}}><Text style={{}}><Icon type="Ionicons" name="ios-add" style={{color: themeVars.toolbarDefaultBg}}/></Text><Text style={{color: themeVars.toolbarDefaultBg}}> {translate("buttonAddCollo")}</Text></TouchableOpacity>
+                </View> :
+                null
+              }
             </Item>
           </Form>
           <Button style={{backgroundColor: themeVars.toolbarDefaultBg, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
@@ -85,12 +127,18 @@ const mapStateToProps = state => {
     originatingStation: state.appReducer.findScheduleForm.originatingStation,
     destinationStation: state.appReducer.findScheduleForm.destinationStation,
     departureDate: state.appReducer.findScheduleForm.departureDate,
+    colli: state.appReducer.findScheduleForm.colli,
+    openedColloIndex: state.appReducer.findScheduleForm.openedColloIndex,
+    totalWeight: state.appReducer.findScheduleForm.totalWeight,
   }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     setDepartureDate: date => dispatch(Actions.setFindScheduleFormDepartureDate(date)),
+    addCollo: () => dispatch(Actions.addCollo()),
+    removeCollo: index => dispatch(Actions.removeCollo(index)),
+    setOpenedColloIndex: index => dispatch(Actions.setOpenedColloIndex(index)),
   }
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Image} from 'react-native';
+import {Image, View} from 'react-native';
 import {
   Button, Text,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
@@ -13,9 +13,15 @@ import themeVars from '../theme/variables/material';
 class _HomeScreenHeader extends React.Component {
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
-      <Header noShadow><HeaderLeft/><HeaderBody>
-      <HeaderTitle>{this.props.loggedIn ? translate("headerDashboard") : translate("headerWelcome")}</HeaderTitle>
-      </HeaderBody><HeaderRight/></Header>
+      <Header noShadow>
+        <HeaderLeft>
+          <Image source={require('../img/mokirim_logo.png')} style={{flex: 1, alignSelf: 'center', width: 24, height: 24, resizeMode: 'contain'}}/>
+        </HeaderLeft>
+        <HeaderBody>
+          <HeaderTitle>{this.props.loggedIn ? translate("headerDashboard") : translate("headerWelcome")}</HeaderTitle>
+        </HeaderBody>
+        <HeaderRight/>
+      </Header>
     </StyleProvider>;
   }
 }
