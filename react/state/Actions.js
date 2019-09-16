@@ -557,6 +557,50 @@ const setFindScheduleFormDepartureDate = date => ({
   date,
 });
 
+const addCollo = () => ({
+  type: ActionCodes.ADD_COLLO,
+});
+
+const removeCollo = index => ({
+  type: ActionCodes.REMOVE_COLLO,
+  index,
+});
+
+const setOpenedColloIndex = index => ({
+  type: ActionCodes.SET_OPENED_COLLO_INDEX,
+  index,
+});
+
+const setColloWeight = (index, weight) => ({
+  type: ActionCodes.SET_COLLO_WEIGHT,
+  index,
+  weight,
+});
+
+const setColloLength = (index, length) => ({
+  type: ActionCodes.SET_COLLO_LENGTH,
+  index,
+  length,
+});
+
+const setColloWidth = (index, width) => ({
+  type: ActionCodes.SET_COLLO_WIDTH,
+  index,
+  width,
+});
+
+const setColloHeight = (index, height) => ({
+  type: ActionCodes.SET_COLLO_HEIGHT,
+  index,
+  height,
+});
+
+const incrementColloWeight = (index, weight) => ({
+  type: ActionCodes.INCREMENT_COLLO_WEIGHT,
+  index,
+  weight,
+});
+
 const _searchStations = searching => ({
   type: ActionCodes.SEARCH_STATIONS,
   searching,
@@ -635,6 +679,14 @@ export default Actions = {
   setFindScheduleFormOriginatingStation,
   setFindScheduleFormDestinationStation,
   setFindScheduleFormDepartureDate,
+  addCollo,
+  removeCollo,
+  setOpenedColloIndex,
+  setColloWeight,
+  setColloLength,
+  setColloWidth,
+  setColloHeight,
+  incrementColloWeight,
 
   searchStations,
 }

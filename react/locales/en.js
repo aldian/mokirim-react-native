@@ -14,6 +14,7 @@ export default {
   buttonDashboard: "Dashboard",
   buttonStationToStation: "Station-to-Station",
   buttonDoorToDoor: "Door-to-Door",
+  buttonAddCollo: "Add Collo",
   buttonFindSchedule: "Find schedule",
 
   errorResourceNotFound: "Resource not found.",
@@ -55,6 +56,21 @@ export default {
   labelOriginating: "From",
   labelDestination: "To",
   labelDepartureDate: "Departure Date",
+  labelPackage: {counting: {
+     one: "Package",
+     other: "Packages",
+     zero: "Packages",
+  }},
+  labelColli: {counting: {
+     one: "{{count}} Collo",
+     other: "{{count}} Colli",
+     zero: "{{count}} Colli",
+  }},
+  labelWeight: "Weight",
+  labelDimension: "Dimension",
+  labelLength: "Length",
+  labelWidth: "Width",
+  labelHeight: "Height",
 
   messageIntroWhyTitle: "Send package according to predefined schedule",
   messageIntroWhyText: "Easily choose date and time of you package delivery. Sending package more easily at a lower cost.",
@@ -68,6 +84,7 @@ export default {
   messageLoginCancelled: "Login cancelled.",
   messagePasswordChanged: "Password changed.",
   messageOrLoginWithEmail: 'Or login with email',
+  messagePay10K: 'pay 10 Kg',
 
   placeholderOriginating: "Choose originating station/city",
   placeholderDestination: "Choose destination station/city",
