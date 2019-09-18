@@ -26,6 +26,7 @@ import { ResetPasswordScreen } from './screens/public-nav/ResetPasswordScreen';
 import { MemberBenefitsScreen } from './screens/public-nav/MemberBenefitsScreen';
 import { StationToStationScreen } from './screens/public-nav/StationToStationScreen';
 import { SearchStationScreen } from './screens/public-nav/SearchStationScreen';
+import { SearchScheduleScreen } from './screens/public-nav/SearchScheduleScreen';
 
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
 
@@ -57,6 +58,7 @@ const PublicNavigator = createStackNavigator({
   MemberBenefits: {screen: MemberBenefitsScreen, path: 'public/memberBenefits'},
   StationToStation: {screen: StationToStationScreen, path: 'public/stationToStation'},
   SearchStation: {screen: SearchStationScreen, path: 'public/searchStation'},
+  SearchSchedule: {screen: SearchScheduleScreen, path: 'public/searchSchedule'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,
@@ -68,6 +70,7 @@ const UserNavigator = createStackNavigator({
   Profile: {screen: ProfileScreen, path: 'user/profile'},
   StationToStation: {screen: StationToStationScreen, path: 'user/stationToStation'},
   SearchStation: {screen: SearchStationScreen, path: 'user/searchStation'},
+  SearchSchedule: {screen: SearchScheduleScreen, path: 'user/searchSchedule'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,
@@ -94,117 +97,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-//import React, {Fragment} from 'react';
-//import {
-//  SafeAreaView,
-//  StyleSheet,
-//  ScrollView,
-//  View,
-//  Text,
-//  StatusBar,
-//} from 'react-native';
-//
-//import {
-//  Header,
-//  LearnMoreLinks,
-//  Colors,
-//  DebugInstructions,
-//  ReloadInstructions,
-//} from 'react-native/Libraries/NewAppScreen';
-//
-//const App = () => {
-//  return (
-//    <Fragment>
-//      <StatusBar barStyle="dark-content" />
-//      <SafeAreaView>
-//        <ScrollView
-//          contentInsetAdjustmentBehavior="automatic"
-//          style={styles.scrollView}>
-//          <Header />
-//          {global.HermesInternal == null ? null : (
-//            <View style={styles.engine}>
-//              <Text style={styles.footer}>Engine: Hermes</Text>
-//            </View>
-//          )}
-//          <View style={styles.body}>
-//            <View style={styles.sectionContainer}>
-//              <Text style={styles.sectionTitle}>Step One</Text>
-//              <Text style={styles.sectionDescription}>
-//                Edit <Text style={styles.highlight}>App.js</Text> to change this
-//                screen and then come back to see your edits.
-//              </Text>
-//            </View>
-//            <View style={styles.sectionContainer}>
-//              <Text style={styles.sectionTitle}>See Your Changes</Text>
-//              <Text style={styles.sectionDescription}>
-//                <ReloadInstructions />
-//              </Text>
-//            </View>
-//            <View style={styles.sectionContainer}>
-//              <Text style={styles.sectionTitle}>Debug</Text>
-//              <Text style={styles.sectionDescription}>
-//                <DebugInstructions />
-//              </Text>
-//            </View>
-//            <View style={styles.sectionContainer}>
-//              <Text style={styles.sectionTitle}>Learn More</Text>
-//              <Text style={styles.sectionDescription}>
-//                Read the docs to discover what to do next:
-//              </Text>
-//            </View>
-//            <LearnMoreLinks />
-//          </View>
-//        </ScrollView>
-//      </SafeAreaView>
-//    </Fragment>
-//  );
-//};
-//
-//const styles = StyleSheet.create({
-//  scrollView: {
-//    backgroundColor: Colors.lighter,
-//  },
-//  engine: {
-//    position: 'absolute',
-//    right: 0,
-//  },
-//  body: {
-//    backgroundColor: Colors.white,
-//  },
-//  sectionContainer: {
-//    marginTop: 32,
-//    paddingHorizontal: 24,
-//  },
-//  sectionTitle: {
-//    fontSize: 24,
-//    fontWeight: '600',
-//    color: Colors.black,
-//  },
-//  sectionDescription: {
-//    marginTop: 8,
-//    fontSize: 18,
-//    fontWeight: '400',
-//    color: Colors.dark,
-//  },
-//  highlight: {
-//    fontWeight: '700',
-//  },
-//  footer: {
-//    color: Colors.dark,
-//    fontSize: 12,
-//    fontWeight: '600',
-//    padding: 4,
-//    paddingRight: 12,
-//    textAlign: 'right',
-//  },
-//});
-//
-//export default App;

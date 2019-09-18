@@ -6,6 +6,7 @@ import {
 } from 'native-base';
 import themeVars from '../../theme/variables/material';
 import { translate } from "../../utils/i18n";
+import constants from '../../constants';
 import Actions from '../../state/Actions';
 import Accordion, {DefaultContent as DefaultAccordionContent} from '../../components/Accordion';
 import { StationToStationScreenHeader } from '../../components/StationToStationScreenHeader';
@@ -76,8 +77,8 @@ class _StationToStationScreen extends React.Component {
                 <Label style={{flex: 0}}>
                   {translate("labelPackage.counting", {count: this.props.colli.length})}
                 </Label>
-                <Label style={[{flex: 0}, (this.props.totalWeight < 10 ? {color: 'red', fontWeight: 'bold'} : {})]}>
-                  {translate("labelColli.counting", {count: this.props.colli.length})}, {this.props.totalWeight} Kg{this.props.totalWeight < 10 ? " (" + translate("messagePay10K") + ")" : null}
+                <Label style={[{flex: 0}, (this.props.totalWeight < constants.MINIMUM_PRICE_WEIGHT_KG ? {color: 'red', fontWeight: 'bold'} : {})]}>
+                  {translate("labelColli.counting", {count: this.props.colli.length})}, {this.props.totalWeight} Kg{this.props.totalWeight < constants.MINIMUM_PRICE_WEIGHT_KG ? " (" + translate("messagePay10K") + ")" : null}
                 </Label>
               </View>
               {this.props.colli.length < 2 ?
@@ -105,7 +106,10 @@ class _StationToStationScreen extends React.Component {
               }
               {this.props.colli.length < 5 ?
                 <View style={{width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingTop: 16, paddingBottom: 16}}>
-                  <TouchableOpacity transparent style={{flex: 0, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}} onPress={() => {this.props.addCollo()}}><Text style={{}}><Icon type="Ionicons" name="ios-add" style={{color: themeVars.toolbarDefaultBg}}/></Text><Text style={{color: themeVars.toolbarDefaultBg}}> {translate("buttonAddCollo")}</Text></TouchableOpacity>
+                  <TouchableOpacity disabled={!this.props.addColloButtonEnabled} transparent style={{flex: 0, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}} onPress={() => {this.props.addCollo()}}>
+                    <Text style={{}}><Icon type="Ionicons" name="ios-add" style={{color: this.props.addColloButtonEnabled ? themeVars.toolbarDefaultBg : 'gray'}}/></Text>
+                    <Text style={{color: this.props.addColloButtonEnabled ? themeVars.toolbarDefaultBg : 'gray'}}> {translate("buttonAddCollo")}</Text>
+                  </TouchableOpacity>
                 </View> :
                 null
               }
@@ -121,15 +125,20 @@ class _StationToStationScreen extends React.Component {
 }
 
 const mapStateToProps = state => {
+  const colli = state.appReducer.findScheduleForm.colli;
   return {
     currentLanguage: state.appReducer.currentLanguage,
     loggedIn: state.appReducer.loggedIn,
     originatingStation: state.appReducer.findScheduleForm.originatingStation,
     destinationStation: state.appReducer.findScheduleForm.destinationStation,
     departureDate: state.appReducer.findScheduleForm.departureDate,
-    colli: state.appReducer.findScheduleForm.colli,
+    colli,
     openedColloIndex: state.appReducer.findScheduleForm.openedColloIndex,
     totalWeight: state.appReducer.findScheduleForm.totalWeight,
+    addColloButtonEnabled: colli.every(collo => {
+      const weight = parseFloat(collo.weight);
+      return !isNaN(weight) && weight > 0;
+    }),
   }
 };
 

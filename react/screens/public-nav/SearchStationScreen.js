@@ -112,6 +112,7 @@ class _SearchStationScreen extends React.Component {
        this.setState({notFound: true});
        return;
      }
+     this.props.downloadStationDetails(true);
      results.forEach(place => {
        const postalCodePromise = Address.getPostalCode(
          this.props.currentLanguage, this.props.accessToken, place.address__postal_code
@@ -141,6 +142,7 @@ class _SearchStationScreen extends React.Component {
              postalCodeObj.code
            );
            this.setState({listData: {...this.state.listData, [place.id]: text}});
+           this.props.downloadStationDetails(false);
          });
        });
      });
@@ -163,6 +165,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     searchStations: (languageCode, accessToken, type, text) => dispatch(
       Actions.searchStations(languageCode, accessToken, type, text)
     ),
+    downloadStationDetails: downloading => dispatch(Actions.downloadStationDetails(downloading)),
   }
 };
 

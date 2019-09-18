@@ -5,7 +5,7 @@ SQLite.enablePromise(true);
 const DATABASE_NAME = "mokirim.sqlite";
 const DATABASE_VERSION = "1.0";
 const DATABASE_DISPLAY_NAME = "Mokirim Local Database";
-const DATABASE_SIZE = 33554432;
+const DATABASE_SIZE = 134217728;
 
 let msg = "";
 
@@ -13,18 +13,9 @@ const openDatabase = () => {
   return SQLite.openDatabase(
     DATABASE_NAME, DATABASE_VERSION, DATABASE_DISPLAY_NAME, DATABASE_SIZE
   ).then(db => {
-    //alert("THE DB X: " + (db === undefined || db === null));
-    //msg += "RESULT -1 ";
-    //alert(msg);
     return new Promise((resolve, reject) => {
-      resolve("BERHASIL");
-//    return db.transaction(tx => {
-//      //msg += "RESULT 0 "
-//      //alert(msg);
-//      return tx.executeSql('DROP TABLE UserState');
+      resolve(null);
     }).then(result => {
-      //msg += "RESULT 1: " + result + " ";
-      //alert(msg);
       return db.transaction(tx => {
         tx.executeSql(
           'CREATE TABLE IF NOT EXISTS ' +
@@ -57,14 +48,10 @@ const openDatabase = () => {
         );
       });
     }).then(result => {
-      //msg += "RESULT 2: " + result + " ";
-      //alert(msg);
-      //alert("THE DB:" + db);
       return db;
     });
   }).catch(error => {
-    alert("ERROR: " + msg + " " + JSON.stringify(error));
-    //alert("ERROR: " + error);
+    return new Promise((resolve, reject) => reject(error));
   });
 };
 
@@ -94,19 +81,87 @@ const loadUserStates = db => {
   });
 };
 
-const addSubdistrict = (db, obj) => {
+const insertTxRow = (tx, tableName, obj) => {
+  const keys = Object.keys(obj);
+  const fieldNames = keys.join(', ');
+  const placeholders = keys.map(key => '?').join(', ');
+  const values = keys.map(key => obj[key]);
+  const sql = `INSERT INTO ${tableName} (${fieldNames}) VALUES (${placeholders})`;
+  tx.executeSql(
+    sql,
+    values
+  );
+  //alert(sql + " " + values);
+};
+
+const updateTxRow = (tx, tableName, obj) => {
+  const keys = Object.keys(obj).filter(key => key !== 'id');
+  const fieldNames = keys.join(', ');
+  const pairs = keys.map(key => `${key} = ?`).join(', ');
+  const values = keys.map(key => obj[key]);
+  const sql = `UPDATE ${tableName} SET ${pairs} WHERE id = ?`;
+  tx.executeSql(
+    sql,
+    [...values, obj.id]
+  );
+  //alert(sql + " " + values);
+};
+
+const insertRow = (db, tableName, obj) => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
-      tx.executeSql(
-        'INSERT INTO Subdistrict (id, name, district) VALUES (?, ?, ?)',
-        [obj.id, obj.name, obj.district]
-      );
-      resolve(1);
+      try {
+        insertTxRow(tx, tableName, obj);
+        resolve(success);
+      } catch (error) {
+        reject(error);
+      }
     }).catch(error => {
       reject(error);
     });
   });
 };
+
+const updateRow = (db, tableName, obj) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      try {
+        updateTxRow(tx, tableName, obj);
+        resolve(success);
+      } catch (error) {
+        reject(error);
+      }
+    }).catch(error => {
+      reject(error);
+    });
+  });
+}
+
+const insertRows = (db, tableName, objs) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      objs.forEach(obj => {
+        tx.executeSql(`SELECT id FROM ${tableName} WHERE id = ? LIMIT 1`, [obj.id]).then(([tx2, results]) => {
+          const rows = results.rows;
+          try {
+            if (rows.length < 1) {
+              insertRow(db, tableName, obj);
+            } else {
+              updateRow(db, tableName, obj);
+            }
+            resolve(true);
+          } catch (error) {
+            reject(error);
+          }
+        });
+      });
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
+const addSubdistrict = (db, obj) => insertRow(db, 'Subdistrict', obj);
 
 const getSubdistrict = (db, id) => {
   return new Promise((resolve, reject) => {
@@ -120,19 +175,7 @@ const getSubdistrict = (db, id) => {
   });
 };
 
-const addDistrict = (db, obj) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'INSERT INTO District (id, name, city) VALUES (?, ?, ?)',
-        [obj.id, obj.name, obj.city]
-      );
-      resolve(1);
-    }).catch(error => {
-      reject(error);
-    });
-  });
-};
+const addDistrict = (db, obj) => insertRow(db, 'District', obj);
 
 const getDistrict = (db, id) => {
   return new Promise((resolve, reject) => {
@@ -146,19 +189,7 @@ const getDistrict = (db, id) => {
   });
 };
 
-const addCity = (db, obj) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'INSERT INTO City (id, name, state) VALUES (?, ?, ?)',
-        [obj.id, obj.name, obj.state]
-      );
-      resolve(1);
-    }).catch(error => {
-      reject(error);
-    });
-  });
-};
+const addCity = (db, obj) => insertRow(db, 'City', obj);
 
 const getCity = (db, id) => {
   return new Promise((resolve, reject) => {
@@ -172,19 +203,7 @@ const getCity = (db, id) => {
   });
 };
 
-const addState = (db, obj) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'INSERT INTO State (id, name, country) VALUES (?, ?, ?)',
-        [obj.id, obj.name, obj.country]
-      );
-      resolve(1);
-    }).catch(error => {
-      reject(error);
-    });
-  });
-};
+const addState = (db, obj) => insertRow(db, 'State', obj);
 
 const getState = (db, id) => {
   return new Promise((resolve, reject) => {
@@ -198,19 +217,8 @@ const getState = (db, id) => {
   });
 };
 
-const addPostalCode = (db, obj) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'INSERT INTO PostalCode (id, code, subdistrict) VALUES (?, ?, ?)',
-        [obj.id, obj.code, obj.subdistrict]
-      );
-      resolve(1);
-    }).catch(error => {
-      reject(error);
-    });
-  });
-};
+
+const addPostalCode = (db, obj) => insertRow(db, 'PostalCode', obj);
 
 const getPostalCode = (db, id) => {
   return new Promise((resolve, reject) => {
@@ -229,6 +237,7 @@ export default Database = {
   updateUserStates,
   loadUserStates,
 
+  insertRows,
   addSubdistrict,
   getSubdistrict,
   addDistrict,
