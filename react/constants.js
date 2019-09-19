@@ -1,0 +1,5 @@
+const MINIMUM_PRICE_WEIGHT_KG = 10;
+
+export default {
+  MINIMUM_PRICE_WEIGHT_KG,
+};

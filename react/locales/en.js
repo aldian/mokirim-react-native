@@ -35,6 +35,7 @@ export default {
   headerSearchStationDestination: "Destination",
   headerChooseOriginatingCity: "Choose Originating Station/City",
   headerChooseDestinationCity: "Choose Destination Station/City",
+  headerSearchSchedule: "Choose Departure Time",
 
   instructionActivate: {counting: {
     one: "Please type {{count}} digit/letter activation code sent to email address %{email}.",

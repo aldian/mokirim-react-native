@@ -104,22 +104,55 @@ const logout = (languageCode, accessToken, via) => dispatch => {
   MokirimAPI.logout(languageCode, accessToken);
 }
 
-const _afterSplash = (dispatch, timerStart, db, splashShown, delay, nextScreen) => {
-  if (delay && !splashShown) {
-    return new Promise((resolve, reject) => {
-      const timerStop = (new Date()).getTime();
-      let remainingDelay = delay - (timerStop - timerStart);
-      remainingDelay = remainingDelay > 0 ? remainingDelay : 0;
-      setTimeout(() => {
-        resolve(nextScreen);
-      }, delay);
-      dispatch(updateAppStates({splashShown: true}));
-      Database.updateUserStates(db, {splashShown: "1"});
+const downloadMasterData = (languageCode, accessToken) => dispatch => {
+  Database.openDatabase().then(db => {
+    const postalCodePromise = MokirimAPI.getPostalCode(languageCode, accessToken, null, {limit: 1000});
+    const subdistrictPromise = MokirimAPI.getSubdistrict(languageCode, accessToken, null, {limit: 1000});
+    const districtPromise = MokirimAPI.getDistrict(languageCode, accessToken, null, {limit: 1000});
+    const cityPromise = MokirimAPI.getCity(languageCode, accessToken, null, {limit: 1000});
+    const statePromise = MokirimAPI.getState(languageCode, accessToken, null, {limit: 1000});
+
+    postalCodePromise.then(response => {
+      if (response.ok) {
+        response.json().then(obj => {
+          Database.insertRows(db, 'PostalCode', obj.results);
+        });
+      }
     });
-  } else {
-    return new Promise((resolve, reject) => resolve(nextScreen));
-  }
-}
+
+    subdistrictPromise.then(response => {
+      if (response.ok) {
+        response.json().then(obj => {
+          Database.insertRows(db, 'Subdistrict', obj.results);
+        });
+      }
+    });
+
+    districtPromise.then(response => {
+       if (response.ok) {
+         response.json().then(obj => {
+           Database.insertRows(db, 'District', obj.results);
+         });
+       }
+    });
+
+    cityPromise.then(response => {
+       if (response.ok) {
+         response.json().then(obj => {
+           Database.insertRows(db, 'City', obj.results);
+         });
+       }
+    });
+
+    statePromise.then(response => {
+       if (response.ok) {
+         response.json().then(obj => {
+           Database.insertRows(db, 'State', obj.results);
+         });
+       }
+    });
+  });
+};
 
 const loadAppStatesFromDb = (appStates, delay) => dispatch => {
   const timerStart = (new Date()).getTime();
@@ -166,7 +199,7 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
         nextScreen = 'IntroWhy';
       }
       if (states.device.id) {
-        return _afterSplash(dispatch, timerStart, db, states.splashShown, delay, nextScreen);
+        return new Promise((resolve, reject) => resolve(nextScreen));
       }
 
       states.device.id = uuid.v4();
@@ -178,7 +211,7 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
             Database.updateUserStates(
               db, {deviceId: states.device.id, deviceToken: states.device.token}
             );
-            return _afterSplash(dispatch, timerStart, db, states.splashShown, delay, nextScreen);
+            return new Promise((resolve, reject) => resolve(nextScreen));
           });
         } else {
           return new Promise((resolve, reject) => reject('ERROR ' + response.status));
@@ -186,7 +219,7 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
       });
     });
   });
-}
+};
 
 const setLoginFormUsername = username => ({
   type: ActionCodes.SET_LOGIN_FORM_USERNAME,
@@ -639,13 +672,21 @@ const searchStations = (languageCode, accessToken, type, text) => dispatch => {
   });
 };
 
+const downloadStationDetails = downloading => ({
+  type: ActionCodes.SEARCH_STATIONS,
+  searching: downloading,
+});
+
 export default Actions = {
+  updateAppStates,
+
   setErrorMessage,
   introFinished,
   setCurrentLanguage,
   loggedInToFacebook,
   loggedInToMokirim,
   logout,
+  downloadMasterData,
   loadAppStatesFromDb,
 
   setLoginFormUsername,
@@ -689,4 +730,5 @@ export default Actions = {
   incrementColloWeight,
 
   searchStations,
+  downloadStationDetails,
 }

@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import constants from '../constants';
 import ActionCodes from './ActionCodes';
 
 const appReducerInitialState = {
@@ -58,9 +59,9 @@ const appReducerInitialState = {
     departureDate: null,
     openedColloIndex: 0,
     colli: [
-      {weight: null, length: null, width: null, height: null},
+      {weight: String(constants.MINIMUM_PRICE_WEIGHT_KG), length: null, width: null, height: null},
     ],
-    totalWeight: 0,
+    totalWeight: constants.MINIMUM_PRICE_WEIGHT_KG,
   },
 
   searchStationForm: {

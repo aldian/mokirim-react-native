@@ -9,11 +9,35 @@ import Actions from '../state/Actions';
 import styles from '../styles';
 import getTheme from '../theme/components';
 import themeVars from '../theme/variables/material';
+import Database from '../utils/database';
 
 class _SplashScreen extends React.Component {
   componentDidMount() {
-    this.props.loadAppStatesFromDb(this.props.states, 2000).then(nextScreen => {
-      this.props.navigation.navigate(nextScreen);
+    const timerStart = (new Date()).getTime();
+    const delay = 2000;
+
+    this.props.loadAppStatesFromDb(this.props.states, delay).then(nextScreen => {
+      const accessToken = (
+        this.props.states.accessToken || this.props.states.device.token
+      );
+      this.props.downloadMasterData(this.props.states.currentLanguage, accessToken);
+
+      if (this.props.states.splashShown) {
+        this.props.navigation.navigate(nextScreen);
+      } else {
+        this.props.updateAppStates({splashShown: true});
+
+        Database.openDatabase().then(db => {
+          Database.updateUserStates(db, {splashShown: "1"});
+        });
+
+        const timerStop = (new Date()).getTime();
+        let remainingDelay = delay - (timerStop - timerStart);
+
+        setTimeout(() => {
+          this.props.navigation.navigate(nextScreen);
+        }, remainingDelay);
+      }
     }).catch(error => {
       Toast.show({text: error, buttonText: "OK", duration: 60000});
     });
@@ -40,6 +64,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    updateAppStates: states => dispatch(Actions.updateAppStates(states)),
+    downloadMasterData: (languageCode, accessToken) => dispatch(Actions.downloadMasterData(languageCode, accessToken)),
     loadAppStatesFromDb: (states, delay) => (
       dispatch(Actions.loadAppStatesFromDb(states, delay))
     ),

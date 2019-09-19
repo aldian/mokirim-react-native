@@ -23,7 +23,10 @@ class _ResetPasswordForm extends React.Component {
           <Form style={{alignSelf: 'stretch'}}>
              <Item fixedLabel error={!!this.props.errors.email}>
                <Label>{translate("labelEmail")}</Label>
-               <Input onChangeText={val => this.props.setEmail(val)} value={this.props.email}/>
+               <Input
+                 keyboardType="email-address"
+                 onChangeText={val => this.props.setEmail(val)} value={this.props.email}
+               />
                {!!this.props.errors.email ?
                  <IconNB
                    name="ios-close-circle"

@@ -35,6 +35,7 @@ export default {
   headerSearchStationDestination: "Tujuan",
   headerChooseOriginatingCity: "Pilih Station/Kota Asal",
   headerChooseDestinationCity: "Pilih Station/Kota Tujuan",
+  headerSearchSchedule: "Pilih Jadwal Pengiriman",
 
   instructionActivate: {counting: {
     one: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
