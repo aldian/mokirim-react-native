@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 //import { HeaderTitle } from 'react-navigation-stack';
 import {
   Button,
@@ -115,6 +115,9 @@ class _LoginScreen extends React.Component {
              >
                <Text>{translate("buttonForgotPassword")}</Text>
              </Button>
+             <TouchableOpacity onPress={() => navigate('Dashboard')}>
+               <Text>{translate("buttonSkip")}</Text>
+             </TouchableOpacity>
         </View>
         <View>
             {this.props.submitting ?

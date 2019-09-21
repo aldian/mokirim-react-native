@@ -3,6 +3,7 @@ export default {
   buttonNext: "Lanjut",
   buttonLogin: "Masuk",
   buttonLogout: "Keluar",
+  buttonSkip: "Lewati",
   buttonRegister: "Daftar",
   buttonActivate: "Aktifkan",
   buttonForgotPassword: "Lupa kata sandi.",

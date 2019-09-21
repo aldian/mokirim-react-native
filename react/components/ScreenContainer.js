@@ -49,7 +49,7 @@ class _ScreenContainer extends React.Component {
                    <Icon name="person"/>
                    <Text>{translate("buttonAccount")}</Text>
                  </Button> :
-                 <Button vertical active={this.props.currentTab === 'MemberBenefits'} onPress={() => this.props.navigate('MemberBenefits')}>
+                 <Button vertical active={this.props.currentTab === 'Login'} onPress={() => this.props.navigate('Login', {hasBack: false})}>
                    <Icon name="person"/>
                    <Text>{translate("buttonAccount")}</Text>
                  </Button>

@@ -51,14 +51,10 @@ const IntroNavigator = createStackNavigator({
 });
 
 const PublicNavigator = createStackNavigator({
-  Home: {screen: HomeScreen, path: 'public/home'},
   Login: {screen: LoginScreen, path: 'public/login'},
   Register: {screen: RegisterScreen, path: 'public/register'},
   ResetPassword: {screen: ResetPasswordScreen, path: 'public/resetPassword'},
   MemberBenefits: {screen: MemberBenefitsScreen, path: 'public/memberBenefits'},
-  StationToStation: {screen: StationToStationScreen, path: 'public/stationToStation'},
-  SearchStation: {screen: SearchStationScreen, path: 'public/searchStation'},
-  SearchSchedule: {screen: SearchScheduleScreen, path: 'public/searchSchedule'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,

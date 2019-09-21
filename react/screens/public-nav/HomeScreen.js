@@ -36,7 +36,7 @@ class _HomeScreen extends React.Component {
       <ContentContainer navigate={navigate} currentTab={this.props.loggedIn ? "Dashboard" : "Home"}>
         {this.props.loggedIn ?
           null :
-          <MemberBenefitsButton style={{flex: 0}} navigate={navigate}/>
+          null//<MemberBenefitsButton style={{flex: 0}} navigate={navigate}/>
         }
         <HomeNewsSwiper style={{flex: 0}}/>
         <RoundedCornerPanel style={{flex: 100, flowDirection: 'column', justifyContent: 'flex-start'}}>

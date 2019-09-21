@@ -16,16 +16,20 @@ class _LoginScreenHeader extends React.Component {
     //const whiteThemeVars = {...themeVars, toolbarBtnColor: '#222845', toolbarBtnTextColor: '#222845', toolbarDefaultBg: '#FFFFFF'};
     //return <StyleProvider style={getTheme(whiteThemeVars)}>
     //      <HeaderTitle style={{color: themeVars.toolbarBtnTextColor}}>{translate("headerLogin")}</HeaderTitle>
+    const hasBack = this.props.navigation.getParam('hasBack', true);
     return <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
-        <HeaderLeft>
-          {this.props.submitting ?
-            <Spinner/> :
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back" style={{color: themeVars.toolbarBtnColor}}/>
-            </Button>
-          }
-        </HeaderLeft>
+        {hasBack ?
+          <HeaderLeft>
+            {this.props.submitting ?
+              <Spinner/> :
+              <Button transparent onPress={() => this.props.navigation.goBack()}>
+                <Icon name="arrow-back" style={{color: themeVars.toolbarBtnColor}}/>
+              </Button>
+            }
+          </HeaderLeft> :
+          null
+        }
         <HeaderBody>
           <Image source={require('../img/mokirim_colored.png')} style={{flex: 1, width: 91, height: 91, resizeMode: 'contain'}}/>
         </HeaderBody>

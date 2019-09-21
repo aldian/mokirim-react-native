@@ -16,14 +16,21 @@ class _SplashScreen extends React.Component {
     const timerStart = (new Date()).getTime();
     const delay = 2000;
 
-    this.props.loadAppStatesFromDb(this.props.states, delay).then(nextScreen => {
+    this.props.loadAppStatesFromDb(this.props.states, delay).then(() => {
+      let nextScreen = 'Login';
+      if (!this.props.states.introFinished) {
+        nextScreen = 'IntroWhy';
+      } else if (this.props.states.loggedIn) {
+        nextScreen = 'Dashboard';
+      }
+
       const accessToken = (
         this.props.states.accessToken || this.props.states.device.token
       );
       this.props.downloadMasterData(this.props.states.currentLanguage, accessToken);
 
       if (this.props.states.splashShown) {
-        this.props.navigation.navigate(nextScreen);
+        this.props.navigation.navigate(nextScreen, {hasBack: false});
       } else {
         this.props.updateAppStates({splashShown: true});
 
@@ -35,7 +42,7 @@ class _SplashScreen extends React.Component {
         let remainingDelay = delay - (timerStop - timerStart);
 
         setTimeout(() => {
-          this.props.navigation.navigate(nextScreen);
+          this.props.navigation.navigate(nextScreen, {hasBack: false});
         }, remainingDelay);
       }
     }).catch(error => {

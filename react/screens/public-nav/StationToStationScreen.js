@@ -28,7 +28,7 @@ class _StationToStationScreen extends React.Component {
       <ContentContainer navigate={navigate} hasFooter={false}>
         {this.props.loggedIn ?
           null :
-          <MemberBenefitsButton style={{flex: 0}} navigate={navigate}/>
+          null//<MemberBenefitsButton style={{flex: 0}} navigate={navigate}/>
         }
         <RoundedCornerPanel style={{flex: 1, flexDirection: 'column'}}>
           <Form>
