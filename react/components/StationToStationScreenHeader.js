@@ -12,12 +12,12 @@ import themeVars from '../theme/variables/material';
 class _StationToStationScreenHeader extends React.Component {
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
-      <Header noShadow>
+      <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
         <HeaderLeft>
           {this.props.submitting ?
             <Spinner/> :
             <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back"/>
+              <Icon name="arrow-back" style={{color: 'white'}}/>
             </Button>
           }
        </HeaderLeft>

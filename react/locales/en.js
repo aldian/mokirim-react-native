@@ -3,6 +3,7 @@ export default {
   buttonNext: "Next",
   buttonLogin: "Login",
   buttonLogout: "Logout",
+  buttonSkip: "Skip",
   buttonRegister: "Register",
   buttonActivate: "Activate",
   buttonForgotPassword: "I forgot my password.",

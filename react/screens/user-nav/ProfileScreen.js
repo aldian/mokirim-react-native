@@ -22,7 +22,7 @@ class _ProfileScreen extends React.Component {
     //headerTitle: <HeaderTitle><NavigationL10nText textKey="headerProfile"/></HeaderTitle>
     //title: translate("headerProfile")
     header: <StyleProvider style={getTheme(themeVars)}>
-      <Header noShadow>
+      <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
         <HeaderLeft>
           <Button transparent onPress={() => navigation.goBack()}>
             <Icon name="arrow-back" />
@@ -44,7 +44,7 @@ class _ProfileScreen extends React.Component {
           {this.props.loggedInVia === 'facebook' &&
             <LoginButton onLogoutFinished={() => {
               this.props.logout(this.props.currentLanguage, this.props.accessToken, 'facebook');
-              navigate('Home');
+              navigate('Login', {hasBack: false});
             }}/>
           }
 
@@ -52,7 +52,7 @@ class _ProfileScreen extends React.Component {
             <Button onPress={() => {
               GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut());
               this.props.logout(this.props.currentLanguage, this.props.accessToken);
-              navigate('Home');
+              navigate('Login', {hasBack: false});
             }}><Text>{translate('buttonLogout')}</Text></Button>
           }
 
@@ -60,7 +60,7 @@ class _ProfileScreen extends React.Component {
             <Button
               onPress={() => {
                 this.props.logout(this.props.currentLanguage, this.props.accessToken);
-                navigate('Home');
+                navigate('Login', {hasBack: false});
               }}
             ><Text>{translate('buttonLogout')}</Text></Button>
           }

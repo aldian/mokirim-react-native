@@ -13,7 +13,7 @@ import themeVars from '../theme/variables/material';
 class _HomeScreenHeader extends React.Component {
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
-      <Header noShadow>
+      <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
         <HeaderLeft>
           <Image source={require('../img/mokirim_logo.png')} style={{flex: 1, alignSelf: 'center', width: 24, height: 24, resizeMode: 'contain'}}/>
         </HeaderLeft>

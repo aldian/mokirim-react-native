@@ -192,14 +192,8 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
       }
       dispatch(updateAppStates(states));
 
-      let nextScreen = 'Home';
-      if (states.loggedIn) {
-        nextScreen = 'Dashboard';
-      } else if (!states.introFinished) {
-        nextScreen = 'IntroWhy';
-      }
       if (states.device.id) {
-        return new Promise((resolve, reject) => resolve(nextScreen));
+        return new Promise((resolve, reject) => resolve());
       }
 
       states.device.id = uuid.v4();
@@ -211,7 +205,7 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
             Database.updateUserStates(
               db, {deviceId: states.device.id, deviceToken: states.device.token}
             );
-            return new Promise((resolve, reject) => resolve(nextScreen));
+            return new Promise((resolve, reject) => resolve());
           });
         } else {
           return new Promise((resolve, reject) => reject('ERROR ' + response.status));
