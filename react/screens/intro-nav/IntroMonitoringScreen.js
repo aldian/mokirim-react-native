@@ -34,7 +34,7 @@ class _IntroMonitoringScreen extends React.Component {
              <Button
                style={{width: 128, flex: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}
                onPress={() => {
-                 this.props.loggedIn ? navigate('Dashboard') : navigate('Login', {hasBack: false});
+                 this.props.loggedIn ? navigate('Dashboard') : navigate('Register', {hasBack: false});
                  this.props.introFinished();
                }}
              ><Text style={{flex: 0}}>{translate('buttonNext')}</Text></Button>

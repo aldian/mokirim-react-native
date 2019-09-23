@@ -47,7 +47,9 @@ class _LoginScreen extends React.Component {
                      onLoginFinished={
                        (error, result) => {
                          if (error) {
-                           this.props.setErrorMessage(error);
+                           Toast.show({
+                              text: error,
+                           });
                          } else if (result.isCancelled) {
                            Toast.show({
                              text: translate("messageLoginCancelled"),
@@ -55,9 +57,8 @@ class _LoginScreen extends React.Component {
                            });
                          } else {
                            AccessToken.getCurrentAccessToken().then(
-                             (data) => {
-                               this.props.loggedInToFacebook(this.props.currentLanguage, data.accessToken);
-                               navigate('Dashboard');
+                             data => {
+                               this.props.loggedInToFacebook(this.props.currentLanguage, data.accessToken, this.props.profile);
                              }
                            )
                          }
@@ -69,7 +70,7 @@ class _LoginScreen extends React.Component {
                      style={{ width: 250, height: 48 }}
                      size={GoogleSigninButton.Size.Wide}
                      color={GoogleSigninButton.Color.Dark}
-                     onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage)}
+                     onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage, this.props.profile)}
                      disabled={false} />
                </React.Fragment>
              }
@@ -79,7 +80,7 @@ class _LoginScreen extends React.Component {
              <Form style={{alignSelf: 'stretch'}}>
                <Item fixedLabel error={!!this.props.errors.username}>
                  <Label>{translate("labelEmailOrUsername")}</Label>
-                 <Input onChangeText={val => this.props.setUsername(val)} value={this.props.username}/>
+                 <Input autoCapitalize="none" onChangeText={val => this.props.setUsername(val)} value={this.props.username}/>
                  {!!this.props.errors.username ?
                    <IconNB
                      name="ios-close-circle"
@@ -94,6 +95,7 @@ class _LoginScreen extends React.Component {
                <Item fixedLabel last error={!!this.props.errors.password}>
                  <Label>{translate("labelPassword")}</Label>
                  <Input
+                   autoCapitalize="none"
                    secureTextEntry={true} onChangeText={val => this.props.setPassword(val)}
                    value={this.props.password}
                  />
@@ -126,7 +128,7 @@ class _LoginScreen extends React.Component {
                 <Button
                   block style={[styles.submitButton, {backgroundColor: themeVars.toolbarDefaultBg}]}
                   onPress={() => this.props.submitForm(
-                    this.props.currentLanguage, this.props.username, this.props.password
+                    this.props.currentLanguage, this.props.username, this.props.password, this.props.profile
                   )}
                 >
                   <Text>{translate("buttonLogin")}</Text>
@@ -146,14 +148,24 @@ const mapStateToProps = state => {
     password: state.appReducer.loginForm.password,
     errors: state.appReducer.loginForm.errors,
     submitting: state.appReducer.loginForm.submitting,
+    profile: state.appReducer.editProfileForm,
   }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const {navigate} = ownProps.navigation;
   return {
-    loggedInToFacebook: (languageCode, accessToken) => dispatch(Actions.loggedInToFacebook(languageCode, accessToken)).then(response => {
+    loggedInToFacebook: (languageCode, accessToken, profile) => dispatch(Actions.loggedInToFacebook(languageCode, accessToken)).then(response => {
       if (response.ok) {
+         response.json().then(obj => {
+           dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
+             if (profile.id) {
+               navigate("Dashboard");
+             } else {
+               navigate("EditProfile", {hasBack: false});
+             }
+           });
+        });
         return; // as ok response only handled in Actions
       }
       if (response.status === 404) {
@@ -171,12 +183,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     }),
 
-    submitForm: (languageCode, username, password) => dispatch(Actions.submitLoginForm(
+    submitForm: (languageCode, username, password, profile) => dispatch(Actions.submitLoginForm(
       languageCode, username, password
     )).then(
       response => {
-        dispatch(Actions.loginFormSubmitted());
-
         if (response.ok) {
           dispatch(Actions.setLoginFormErrorUsername(false));
           dispatch(Actions.setLoginFormErrorPassword(false));
@@ -184,8 +194,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch(Actions.setLoginFormPassword(''));
 
           response.json().then(obj => {
-            dispatch(Actions.loggedInToMokirim(obj.token));
-            navigate("Dashboard");
+            dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
+              if (profile.id) {
+                navigate("Dashboard");
+              } else {
+                navigate("EditProfile", {hasBack: false});
+              }
+            });
           });
         } else {
           if (response.status === 404) {
@@ -216,22 +231,30 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             Toast.show({
               //text: translate("errorInvalidUsernameOrPassword"),
               text: "ERROR " + response.status,
+              buttonText: "OK", duration: 10000,
             });
           }
         }
       }
     ).catch(
       error => {
-         dispatch(Actions.loginFormSubmitted());
          Toast.show({
-           text: error,
+           text: error, buttonText: "OK", duration: 10000,
          });
       }
     ),
 
-    pressGoogleLogin: (navigate, languageCode) => dispatch(Actions.pressGoogleLogin(languageCode)).then(response => {
+    pressGoogleLogin: (navigate, languageCode, profile) => dispatch(Actions.pressGoogleLogin(languageCode)).then(response => {
        if (response.ok) {
-         navigate("Dashboard");
+         response.json().then(obj => {
+           dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
+             if (profile.id) {
+               navigate("Dashboard");
+             } else {
+               navigate("EditProfile", {hasBack: false});
+             }
+           });
+         });
          return; // as ok response only handled in Actions
        }
        if (response.status === 404) {

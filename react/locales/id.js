@@ -17,17 +17,22 @@ export default {
   buttonDoorToDoor: "Door-to-Door",
   buttonAddCollo: "Tambah Kiriman",
   buttonFindSchedule: "Cari pengiriman",
+  buttonUpdate: "Perbarui",
 
   errorResourceNotFound: "Resource tak ditemukan.",
   errorInvalidUsernameOrPassword: "Username atau kata sandi salah.",
   errorInvalidFacebookAccessToken: "Access token Facebook tidak valid.",
   errorInvalidGoogleAccessToken: "Access token Google tidak valid.",
+  errorFieldMayNotBeNull: "Bidang ini tidak boleh kosong.",
+  errorPasswordsDoesNotMatch: "Ulangan kata sandi tidak sama.",
+  errorUsersMustCreatePassword: "Pengguna harus punya password.",
 
   headerDashboard: "Dasbor",
   headerLogin: "Masuk",
   headerRegister: "Daftar",
   headerResetPassword: "Reset Kata Sandi",
   headerProfile: "Profil",
+  headerEditProfile: "Edit Profil",
   headerWelcome: "Selamat Datang",
   headerMemberBenefits: "Keuntungan Anggota",
   headerStationToStation: "Station-to-Station",
@@ -36,7 +41,9 @@ export default {
   headerSearchStationDestination: "Tujuan",
   headerChooseOriginatingCity: "Pilih Station/Kota Asal",
   headerChooseDestinationCity: "Pilih Station/Kota Tujuan",
+  headerChooseSubdistrict: "Pilih Desa/Kelurahan",
   headerSearchSchedule: "Pilih Jadwal Pengiriman",
+  headerSearchSubdistrict: "Pilih Desa/Kelurahan",
 
   instructionActivate: {counting: {
     one: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
@@ -51,6 +58,9 @@ export default {
 
   labelEmail: "Email",
   labelEmailOrUsername: "Email/username",
+  labelFullName: "Nama Lengkap",
+  labelPhone: 'Telpon',
+  labelAddress: 'Alamat',
   labelUsername: "Username",
   labelPassword: "Kata sandi",
   labelCode: "Kode",
@@ -73,6 +83,9 @@ export default {
   labelLength: "Panjang",
   labelWidth: "Lebar",
   labelHeight: "Tinggi",
+  labelSubdistrict: "Desa/Kelurahan",
+  labelNewPassword: "Kata Sandi Baru",
+  labelRetypeNewPassword: "Ulangi Sandi Baru",
 
   messageIntroWhyTitle: "Kirim barang dengan jadwal sesuai keinginan",
   messageIntroWhyText: "Kemudahan mengatur jadwal kirim di tanggal dan jam yang diinginkan. Kirim lebih mudah, biaya lebih hemat.",
@@ -86,6 +99,7 @@ export default {
   messageLoginCancelled: "Batal masuk.",
   messagePasswordChanged: "Password telah diubah.",
   messageOrLoginWithEmail: 'Atau login dengan email',
+  messageOrRegisterWithEmail: 'Atau daftar dengan email',
   messagePay10K: 'bayar 10 Kg',
 
   placeholderOriginating: "Pilih station/kota asal",
@@ -93,6 +107,14 @@ export default {
   placeholderSearchOriginating: "Cari station/kota asal",
   placeholderSearchDestination: "Cari station/kota tujuan",
   placeholderSelectDate: "Pilih tanggal",
+  placeholderSearchSubdistrict: "Cari desa/kelurahan",
 
   sectionDeliveryOptions: "Pilihan Pengiriman",
+
+  subdistrict: "desa/kelurahan",
+  address: "alamat",
+  phone: "telpon",
+  name: "nama",
+  email: "email",
+  new_password: "kata sandi baru",
 };

@@ -13,16 +13,20 @@ import themeVars from '../theme/variables/whiteHeader';
 class _RegisterScreenHeader extends React.Component {
   render() {
     //      <HeaderTitle style={{color: themeVars.toolbarBtnTextColor}}>{translate("headerRegister")}</HeaderTitle>
+    const hasBack = this.props.navigation.getParam('hasBack', true);
     return <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
-        <HeaderLeft>
-          {this.props.submitting ?
-            <Spinner/> :
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back" style={{color: themeVars.toolbarBtnColor}}/>
-            </Button>
-          }
-        </HeaderLeft>
+        {hasBack ?
+           <HeaderLeft>
+             {this.props.submitting ?
+               <Spinner/> :
+               <Button transparent onPress={() => this.props.navigation.goBack()}>
+                 <Icon name="arrow-back" style={{color: themeVars.toolbarBtnColor}}/>
+               </Button>
+             }
+           </HeaderLeft> :
+           null
+        }
         <HeaderBody>
           <Image source={require('../img/mokirim_colored.png')} style={{flex: 1, width: 91, height: 91, resizeMode: 'contain'}}/>
         </HeaderBody>

@@ -24,7 +24,10 @@ class _ActivateForm extends React.Component {
            <Form style={{alignSelf: 'stretch'}}>
               <Item fixedLabel error={!!this.props.errors.code}>
                 <Label>{translate("labelCode")}</Label>
-                <Input onChangeText={val => this.props.setCode(val)} value={this.props.code}/>
+                <Input
+                  autoCapitalize="characters"
+                  onChangeText={val => this.props.setCode(val)} value={this.props.code}
+                />
                 {!!this.props.errors.code ?
                   <IconNB
                     name="ios-close-circle"
@@ -44,9 +47,21 @@ class _ActivateForm extends React.Component {
               block style={[styles.submitButton, {backgroundColor: themeVars.toolbarDefaultBg}]}
               onPress={() => this.props.submitForm(
                 this.props.currentLanguage, this.props.encodedUserId, this.props.code,
-              ).then(() => {
+              ).then(response => {
                 Toast.show({text: translate('messageAccountActivated'), buttonText: "OK", duration: 10000});
-                this.props.navigate('Login');
+                if (response.status == 204) {
+                  this.props.navigate('Login');
+                } else {
+                  response.json().then(obj => {
+                    this.props.loadUserProfile(this.props.currentLanguage, obj.token, this.props.profile).then(profile => {
+                      if (profile.id) {
+                        this.props.navigate("Dashboard");
+                      } else {
+                        this.props.navigate("EditProfile", {hasBack: false});
+                      }
+                    });
+                  });
+                }
               })}
             >
               <Text>{translate("buttonActivate")}</Text>
@@ -65,6 +80,7 @@ const mapStateToProps = state => {
     code: state.appReducer.registerForm.activationCode,
     errors: state.appReducer.registerForm.errors,
     submitting: state.appReducer.registerForm.submitting,
+    profile: state.appReducer.editProfileForm,
   }
 };
 
@@ -79,6 +95,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
     setCode: code => dispatch(Actions.setActivateFormCode(code)),
     setErrorCode: error => dispatch(Actions.setActivateFormErrorCode(error)),
+    loadUserProfile: (languageCode, accessToken, profile) => dispatch(Actions.loadUserProfile(languageCode, accessToken, profile)),
   }
 };
 

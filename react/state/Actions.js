@@ -60,10 +60,12 @@ const loggedInToFacebook = (languageCode, facebookAccessToken) => dispatch => {
         Database.openDatabase().then(db => {
           return Database.updateUserStates(db, {
             accessToken: obj.token,
+            email: obj.fb.email,
+            name: obj.fb.name,
           });
         });
 
-        dispatch(updateAppStates({accessToken: obj.token}));
+        dispatch(updateAppStates({accessToken: obj.token, email: obj.fb.email, name: obj.fb.name}));
       });
     }
     return response;
@@ -80,7 +82,7 @@ const loggedInToMokirim = accessToken => dispatch => {
 
   return Database.openDatabase().then(db => {
     return Database.updateUserStates(db, {
-      loggedIn: "1", loggedInVia: "mokirim", accessToken: accessToken,
+      loggedIn: "1", loggedInVia: "mokirim", accessToken,
     });
   });
 }
@@ -174,6 +176,8 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
           states.loggedInVia = value;
         } else if (name === 'encodedUserId') {
           states.encodedUserId = value;
+        } else if (name === 'name') {
+          states.name = value;
         } else if (name === 'email') {
           states.email = value;
         } else if (name === 'accessToken') {
@@ -188,6 +192,16 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
           states.device.id = value;
         } else if (name == 'deviceToken') {
           states.device.token = value;
+        } else if (name === 'profileId') {
+          states.editProfileForm.id = parseInt(value, 10);
+        } else if (name === 'profileName') {
+          states.editProfileForm.name = value;
+        } else if (name === 'profileEmail') {
+          states.editProfileForm.email = value;
+        } else if (name === 'profilePhone') {
+          states.editProfileForm.phone = value;
+        } else if (name === 'profileAddress') {
+          states.editProfileForm.address = parseInt(value, 10);
         }
       }
       dispatch(updateAppStates(states));
@@ -242,13 +256,26 @@ const _submitLoginForm = submitting => ({
 
 const submitLoginForm = (languageCode, username, password) => dispatch => {
   dispatch(_submitLoginForm(true));
-  return MokirimAPI.login(languageCode, username, password);
-}
+  return MokirimAPI.login(languageCode, username, password).then(response => {
+    Database.openDatabase().then(db => {
+       return Database.updateUserStates(db, {
+         email: username,
+       });
+    });
 
-const loginFormSubmitted = () => ({
-  type: ActionCodes.SUBMIT_LOGIN_FORM,
-  submitting: false,
-});
+    dispatch(updateAppStates({email: username}));
+
+    const responseClone = response.clone();
+    if (responseClone.ok) {
+      responseClone.json().then(obj => {
+        dispatch(loggedInToMokirim(obj.token));
+      });
+    }
+    return response;
+  }).finally(() => {
+    dispatch(_submitLoginForm(false));
+  });
+}
 
 const _loggedInToGoogle = accessToken => ({
   type: ActionCodes.LOGGED_IN_TO_GOOGLE,
@@ -273,10 +300,11 @@ const pressGoogleLogin = languageCode => dispatch => {
              Database.openDatabase().then(db => {
                return Database.updateUserStates(db, {
                  accessToken: obj.token,
+                 email: userInfo.user.email,
                });
              });
 
-             dispatch(updateAppStates({accessToken: obj.token}));
+             dispatch(updateAppStates({accessToken: obj.token, email: userInfo.user.email}));
            });
          }
          return response;
@@ -380,14 +408,23 @@ const submitActivateForm = (languageCode, encodedUserId, code) => dispatch => {
        dispatch(setActivateFormErrorCode(false));
        dispatch(setActivateFormCode(''));
 
-       Database.openDatabase().then(db => {
-         return Database.updateUserStates(db, {
-           encodedUserId: undefined,
-           email: undefined,
+       if (response.status === 204) {
+         Database.openDatabase().then(db => {
+           return Database.updateUserStates(db, {
+             encodedUserId: undefined,
+             email: undefined,
+           });
          });
-       });
 
-       return dispatch(updateAppStates({encodedUserId: null, email: null}));
+         dispatch(updateAppStates({encodedUserId: null, email: null}));
+       } else {
+          const responseClone = response.clone();
+          responseClone.json().then(obj => {
+             dispatch(loggedInToMokirim(obj.token));
+          });
+       }
+
+       return response;
      } else {
        if (response.status === 404) {
          return new Promise((resolve, reject) => reject(translate("errorResourceNotFound")));
@@ -569,6 +606,176 @@ const submitConfirmPasswordResetForm = (languageCode, encodedUserId, code, newPa
   });
 }
 
+const setUserProfile = profile => ({
+  type: ActionCodes.SET_USER_PROFILE,
+  profile,
+});
+
+const setUserProfileError = error => ({
+  type: ActionCodes.SET_USER_PROFILE_ERROR,
+  error,
+});
+
+const _loadUserProfile = (dispatch, languageCode, accessToken) => {
+  return MokirimAPI.getProfile(languageCode, accessToken).then(response => {
+    if (response.ok) {
+      return response.json().then(obj => {
+        if (obj.count < 1) {
+          return {};
+        }
+        const profile = obj.results[0];
+        dispatch(setUserProfile(profile));
+        Database.openDatabase().then(db => {
+          return Database.updateUserStates(db, {
+            profileName: profile.name, profileEmail: profile.email, profilePhone: profile.phone,
+            ...(profile.address ? {profileAddress: String(profile.address)} : {})
+          });
+        });
+
+        return profile;
+      });
+    } else {
+      return {};
+    }
+  }).catch(error => {
+    return {};
+  });
+};
+
+const loadUserProfile = (languageCode, accessToken, profile) => dispatch => {
+  if (profile.id) {
+    return new Promise((resolve, reject) => {
+      resolve(profile);
+      _loadUserProfile(dispatch, languageCode, accessToken);
+    });
+  } else {
+    return _loadUserProfile(dispatch, languageCode, accessToken);
+  }
+};
+
+const submitEditProfileForm = (languageCode, accessToken, profile) => dispatch => new Promise((resolveProfile, rejectProfile) => {
+  let errors = {};
+  if (!profile.name) {
+     errors.name = [translate("errorFieldMayNotBeNull")];
+  }
+  if (!profile.email) {
+    errors.email = [translate("errorFieldMayNotBeNull")];
+  }
+  if (!profile.phone) {
+    errors.phone = [translate("errorFieldMayNotBeNull")];
+  }
+  if (!profile.address.name) {
+    errors.address = [translate("errorFieldMayNotBeNull")];
+  }
+  if (!profile.address.subdistrict) {
+     errors.subdistrict = [translate("errorFieldMayNotBeNull")];
+  }
+  if (profile.newPassword !== profile.retypeNewPassword) {
+    errors.new_password = [translate("errorPasswordsDoesNotMatch")];
+  }
+  if (!profile.id && !profile.newPassword && !profile.retypeNewPassword) {
+    errors.new_password = [translate("errorUsersMustCreatePassword")];
+  }
+
+  if (profile.id && profile.currentPassword && !profile.newPassword && !profile.retypePassword) {
+    errors.new_password = [translate("errorUsersMustCreatePassword")];
+  }
+
+  const passwordPromise = new Promise((resolvePassword, rejectPassword) => {
+    if (Object.keys(errors).length > 0) {
+       rejectPassword(errors);
+       return;
+    }
+
+    if (profile.id && !profile.currentPassword && !profile.newPassword && !profile.retypePassword) {
+      resolvePassword();
+      return;
+    }
+
+    MokirimAPI.setPassword(languageCode, accessToken, profile.newPassword, profile.currentPassword).then(response => {
+      if (response.ok) {
+        resolvePassword();
+      } else {
+        response.json().then(obj => {
+          rejectPassword({...errors, ...obj});
+        });
+      }
+    }).catch(error => {
+      rejectPassword(error);
+    });
+  });
+
+  const addressPromise = new Promise((resolveAddress, rejectAddress) => {
+     if (profile.address.id) {
+       resolveAddress(profile.address.id);
+     } else {
+       MokirimAPI.postAddress(languageCode, accessToken, profile.address).then(response => {
+         if (response.ok) {
+           response.json().then(obj => {
+             dispatch(setUserProfile({address: obj.id}));
+             Database.openDatabase().then(db => {
+               return Database.updateUserStates(db, {
+                 profileAddress: String(objId),
+               });
+             });
+
+             resolveAddress(obj.id);
+           });
+         } else {
+           response.json().then(obj => {
+             let adaptedObj = {...obj};
+             Object.keys(obj).filter(key => key === 'name').forEach(key => {
+               adaptedObj['address'] = adaptedObj.name;
+               delete(adaptedObj.name);
+             });
+             rejectAddress({...errors, ...adaptedObj});
+           });
+         }
+       }).catch(error => {
+         rejectAddress(error);
+       });
+     }
+  });
+
+  passwordPromise.then(() => {
+    addressPromise.then(addressId => {
+       if (Object.keys(errors).length > 0) {
+         rejectProfile(errors);
+         return;
+       }
+
+       const serverProfile = {...profile, address: addressId};
+       MokirimAPI.postProfile(languageCode, accessToken, serverProfile).then(response => {
+         if (response.ok) {
+           response.json().then(obj => {
+             resolveProfile(obj);
+
+             dispatch(setUserProfile(obj));
+             Database.openDatabase().then(db => {
+               return Database.updateUserStates(db, {
+                 profileId: String(obj.id),
+                 profileName: obj.name,
+                 profileEmail: obj.email,
+                 profilePhone: obj.phone,
+               });
+             });
+           });
+         } else {
+           response.json().then(obj => {
+             rejectProfile(obj);
+           });
+         }
+       }).catch(error => {
+         rejectProfile(error);
+       });
+    }).catch(error => {
+      rejectProfile(error);
+    });
+  }).catch(error => {
+    rejectProfile(error);
+  });
+});
+
 const setFindScheduleFormOriginatingStation = place => ({
   type: ActionCodes.SET_FIND_SCHEDULE_FORM_ORIGINATING_STATION,
   place,
@@ -671,6 +878,44 @@ const downloadStationDetails = downloading => ({
   searching: downloading,
 });
 
+const searchSubdistricts = (languageCode, accessToken,  text, config) => dispatch => {
+  dispatch(setSearchSubdistrictForm({searching: true}));
+  return MokirimAPI.searchSubdistricts(languageCode, accessToken, text, config).then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      if (response.status === 404) {
+        return new Promise((resolve, reject) => reject(translate("errorResourceNotFound")));
+      } else if (response.status === 400) {
+        return response.json().then(obj => {
+          return new Promise(
+            (resolve, reject) => {
+              let texts = [];
+              if (Array.isArray(obj)) {
+                texts = [...texts, ...obj];
+              } else {
+                Object.keys(obj).forEach(key => {
+                  texts = [...texts, ...obj[key]];
+                });
+              }
+              return reject(texts.join(' - '));
+            }
+          );
+        });
+      } else {
+         return new Promise((resolve, reject) => reject("ERROR " + response.status));
+      }
+    }
+  }).finally(() => {
+    dispatch(setSearchSubdistrictForm({searching: false}));
+  });
+};
+
+const setSearchSubdistrictForm = form => ({
+  type: ActionCodes.SET_SEARCH_SUBDISTRICT_FORM,
+  form,
+});
+
 export default Actions = {
   updateAppStates,
 
@@ -678,7 +923,6 @@ export default Actions = {
   introFinished,
   setCurrentLanguage,
   loggedInToFacebook,
-  loggedInToMokirim,
   logout,
   downloadMasterData,
   loadAppStatesFromDb,
@@ -688,7 +932,6 @@ export default Actions = {
   setLoginFormErrorUsername,
   setLoginFormErrorPassword,
   submitLoginForm,
-  loginFormSubmitted,
   pressGoogleLogin,
 
   setRegisterFormUsername,
@@ -711,6 +954,11 @@ export default Actions = {
   setConfirmPasswordResetFormErrorNewPassword,
   submitConfirmPasswordResetForm,
 
+  setUserProfile,
+  setUserProfileError,
+  loadUserProfile,
+  submitEditProfileForm,
+
   setFindScheduleFormOriginatingStation,
   setFindScheduleFormDestinationStation,
   setFindScheduleFormDepartureDate,
@@ -725,4 +973,7 @@ export default Actions = {
 
   searchStations,
   downloadStationDetails,
+
+  searchSubdistricts,
+  setSearchSubdistrictForm,
 }

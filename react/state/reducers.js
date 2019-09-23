@@ -45,7 +45,18 @@ const appReducerInitialState = {
   },
   encodedUserId: null,
   accessToken: null,
+  name: null,
   email: null,
+
+  editProfileForm: {
+    submitting: false,
+    errors: {},
+    id: null,
+    name: null,
+    email: null,
+    phone: null,
+    address: null,
+  },
 
   findScheduleForm: {
     originatingStation: {
@@ -66,6 +77,12 @@ const appReducerInitialState = {
 
   searchStationForm: {
     searching: false,
+  },
+  searchSubdistrictForm: {
+    searching: false,
+    selectedSubdistrict: null,
+    selectedPostalCode: null,
+    selectedSubdistrictText: null,
   },
 };
 
@@ -194,6 +211,15 @@ function appReducer(state = appReducerInitialState, action = {}) {
     case ActionCodes.SUBMIT_CONFIRM_PASSWORD_RESET_FORM:
       return {
         ...state, resetPasswordForm: {...state.resetPasswordForm, submitting: action.submitting},
+      };
+
+    case ActionCodes.SET_USER_PROFILE:
+      return {
+        ...state, editProfileForm: {...state.editProfileForm, ...action.profile},
+      };
+    case ActionCodes.SET_USER_PROFILE_ERROR:
+      return {
+        ...state, editProfileForm: {...state.editProfileForm, errors: {...state.editProfileForm.errors, ...action.error}},
       };
 
     case ActionCodes.SET_FIND_SCHEDULE_FORM_ORIGINATING_STATION:
@@ -347,6 +373,11 @@ function appReducer(state = appReducerInitialState, action = {}) {
     case ActionCodes.SEARCH_STATIONS:
       return {
         ...state, searchStationForm: {...state.searchStationForm, searching: action.searching},
+      };
+
+    case ActionCodes.SET_SEARCH_SUBDISTRICT_FORM:
+       return {
+         ...state, searchSubdistrictForm: {...state.searchSubdistrictForm, ...action.form},
       };
 
     default:

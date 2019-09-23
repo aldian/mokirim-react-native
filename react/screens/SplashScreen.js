@@ -17,11 +17,15 @@ class _SplashScreen extends React.Component {
     const delay = 2000;
 
     this.props.loadAppStatesFromDb(this.props.states, delay).then(() => {
-      let nextScreen = 'Login';
+      let nextScreen = 'Register';
       if (!this.props.states.introFinished) {
         nextScreen = 'IntroWhy';
       } else if (this.props.states.loggedIn) {
-        nextScreen = 'Dashboard';
+        if (this.props.states.editProfileForm.id) {
+          nextScreen = 'Dashboard';
+        } else {
+          nextScreen = 'EditProfile';
+        }
       }
 
       const accessToken = (

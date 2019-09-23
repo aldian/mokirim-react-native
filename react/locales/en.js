@@ -17,17 +17,22 @@ export default {
   buttonDoorToDoor: "Door-to-Door",
   buttonAddCollo: "Add Collo",
   buttonFindSchedule: "Find schedule",
+  buttonUpdate: "Update",
 
   errorResourceNotFound: "Resource not found.",
   errorInvalidUsernameOrPassword: "Invalid username or password.",
   errorInvalidFacebookAccessToken: "Invalid Facebook access token.",
   errorInvalidGoogleAccessToken: "Invalid Google access token.",
+  errorFieldMayNotBeNull: "This field may not be null.",
+  errorPasswordsDoesNotMatch: "Password doesn't match.",
+  errorUsersMustCreatePassword: "Users must create a password.",
 
   headerDashboard: "Dashboard",
   headerLogin: "Login",
   headerRegister: "Register",
   headerResetPassword: "Reset Password",
   headerProfile: "Profile",
+  headerEditProfile: "Edit Profile",
   headerWelcome: "Welcome",
   headerMemberBenefits: "Member Benefits",
   headerStationToStation: "Station-to-Station",
@@ -36,7 +41,9 @@ export default {
   headerSearchStationDestination: "Destination",
   headerChooseOriginatingCity: "Choose Originating Station/City",
   headerChooseDestinationCity: "Choose Destination Station/City",
+  headerChooseSubdistrict: "Choose Subdistrict",
   headerSearchSchedule: "Choose Departure Time",
+  headerSearchSubdistrict: "Choose Subdistrict",
 
   instructionActivate: {counting: {
     one: "Please type {{count}} digit/letter activation code sent to email address %{email}.",
@@ -51,6 +58,9 @@ export default {
 
   labelEmail: "Email",
   labelEmailOrUsername: "Email/username",
+  labelFullName: "Full Name",
+  labelPhone: 'Phone',
+  labelAddress: 'Address',
   labelUsername: "Username",
   labelPassword: "Password",
   labelCode: "Code",
@@ -73,6 +83,9 @@ export default {
   labelLength: "Length",
   labelWidth: "Width",
   labelHeight: "Height",
+  labelSubdistrict: "Subdistrict",
+  labelNewPassword: "New Password",
+  labelRetypeNewPassword: "Retype New Password",
 
   messageIntroWhyTitle: "Send package according to predefined schedule",
   messageIntroWhyText: "Easily choose date and time of you package delivery. Sending package more easily at a lower cost.",
@@ -86,6 +99,7 @@ export default {
   messageLoginCancelled: "Login cancelled.",
   messagePasswordChanged: "Password changed.",
   messageOrLoginWithEmail: 'Or login with email',
+  messageOrRegisterWithEmail: 'Or register with email',
   messagePay10K: 'pay 10 Kg',
 
   placeholderOriginating: "Choose originating station/city",
@@ -93,6 +107,14 @@ export default {
   placeholderSearchOriginating: "Find originating station/city",
   placeholderSearchDestination: "Find destination station/city",
   placeholderSelectDate: "Select date",
+  placeholderSearchSubdistrict: "Find subdistrict",
 
   sectionDeliveryOptions: "Delivery Options",
+
+  subdistrict: "subdistrict",
+  address: "address",
+  phone: "phone",
+  name: "nama",
+  email: "email",
+  new_password: "new password",
 };

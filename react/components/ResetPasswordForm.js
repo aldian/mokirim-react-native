@@ -24,6 +24,7 @@ class _ResetPasswordForm extends React.Component {
              <Item fixedLabel error={!!this.props.errors.email}>
                <Label>{translate("labelEmail")}</Label>
                <Input
+                 autoCapitalize="none"
                  keyboardType="email-address"
                  onChangeText={val => this.props.setEmail(val)} value={this.props.email}
                />

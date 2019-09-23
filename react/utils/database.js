@@ -24,6 +24,11 @@ const openDatabase = () => {
 
         tx.executeSql(
          'CREATE TABLE IF NOT EXISTS ' +
+         'Address (id INTEGER PRIMARY KEY, name TEXT, subdistrict INTEGER, postalCode INTEGER, latitude REAL, longitude REAL)'
+        );
+
+        tx.executeSql(
+         'CREATE TABLE IF NOT EXISTS ' +
          'PostalCode (id INTEGER PRIMARY KEY, code TEXT, subdistrict INTEGER)'
         );
 
@@ -161,6 +166,20 @@ const insertRows = (db, tableName, objs) => {
   });
 };
 
+const addAddress = (db, obj) => insertRow(db, 'Address', obj);
+
+const getAddress = (db, id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql("SELECT id, name, subdistrict, postalCode, latitude, longitude FROM Address WHERE id = ? LIMIT 1", [id]).then(([tx, results]) => {
+        resolve(results.rows);
+      });
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
 const addSubdistrict = (db, obj) => insertRow(db, 'Subdistrict', obj);
 
 const getSubdistrict = (db, id) => {
@@ -238,6 +257,8 @@ export default Database = {
   loadUserStates,
 
   insertRows,
+  addAddress,
+  getAddress,
   addSubdistrict,
   getSubdistrict,
   addDistrict,
