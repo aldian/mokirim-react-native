@@ -159,13 +159,12 @@ const setPassword = (languageCode, accessToken, newPassword, currentPassword = '
     method: 'POST',
     headers: {
       Authorization: 'Token ' + accessToken,
-      Referer: BASE_URL,
       'Content-Type': CONTENT_TYPE_URL_ENCODED,
     },
     body: qs.stringify({new_password: newPassword, current_password: currentPassword}),
   };
-
-  return fetch(BASE_URL + languageCode + SET_PASSWORD_PATH, requestOptions);
+  const url = BASE_URL + languageCode + SET_PASSWORD_PATH;
+  return fetch(url, requestOptions);
 };
 
 const getProfile = (languageCode, accessToken, id, config = null) => {
@@ -358,7 +357,6 @@ const postAddress = (languageCode, accessToken, address, config = null) => {
     method: 'POST',
     headers: {
       Authorization: 'Token ' + accessToken,
-      Referer: config.baseUrl,
       'Content-Type': CONTENT_TYPE_URL_ENCODED,
     },
     body: qs.stringify(serverAddress),

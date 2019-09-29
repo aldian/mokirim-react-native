@@ -18,6 +18,7 @@ export default {
   buttonAddCollo: "Add Collo",
   buttonFindSchedule: "Find schedule",
   buttonUpdate: "Update",
+  buttonEditProfile: "Edit Profile",
 
   errorResourceNotFound: "Resource not found.",
   errorInvalidUsernameOrPassword: "Invalid username or password.",
@@ -84,6 +85,7 @@ export default {
   labelWidth: "Width",
   labelHeight: "Height",
   labelSubdistrict: "Subdistrict",
+  labelCurrentPassword: "Current Password",
   labelNewPassword: "New Password",
   labelRetypeNewPassword: "Retype New Password",
 
@@ -101,6 +103,7 @@ export default {
   messageOrLoginWithEmail: 'Or login with email',
   messageOrRegisterWithEmail: 'Or register with email',
   messagePay10K: 'pay 10 Kg',
+  messageProfileUpdated: 'Profile successfully updated.',
 
   placeholderOriginating: "Choose originating station/city",
   placeholderDestination: "Choose destination station/city",
@@ -117,4 +120,6 @@ export default {
   name: "nama",
   email: "email",
   new_password: "new password",
+  current_password: "current password",
+  detail: "detail",
 };

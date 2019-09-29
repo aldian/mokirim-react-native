@@ -627,6 +627,7 @@ const _loadUserProfile = (dispatch, languageCode, accessToken) => {
         dispatch(setUserProfile(profile));
         Database.openDatabase().then(db => {
           return Database.updateUserStates(db, {
+            profileId: profile.id,
             profileName: profile.name, profileEmail: profile.email, profilePhone: profile.phone,
             ...(profile.address ? {profileAddress: String(profile.address)} : {})
           });

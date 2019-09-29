@@ -18,6 +18,7 @@ export default {
   buttonAddCollo: "Tambah Kiriman",
   buttonFindSchedule: "Cari pengiriman",
   buttonUpdate: "Perbarui",
+  buttonEditProfile: "Edit Profil",
 
   errorResourceNotFound: "Resource tak ditemukan.",
   errorInvalidUsernameOrPassword: "Username atau kata sandi salah.",
@@ -84,6 +85,7 @@ export default {
   labelWidth: "Lebar",
   labelHeight: "Tinggi",
   labelSubdistrict: "Desa/Kelurahan",
+  labelCurrentPassword: "Kata Sandi Sekarang",
   labelNewPassword: "Kata Sandi Baru",
   labelRetypeNewPassword: "Ulangi Sandi Baru",
 
@@ -101,6 +103,7 @@ export default {
   messageOrLoginWithEmail: 'Atau login dengan email',
   messageOrRegisterWithEmail: 'Atau daftar dengan email',
   messagePay10K: 'bayar 10 Kg',
+  messageProfileUpdated: 'Profil berhasil diubah.',
 
   placeholderOriginating: "Pilih station/kota asal",
   placeholderDestination: "Pilih station/kota tujuan",
@@ -117,4 +120,6 @@ export default {
   name: "nama",
   email: "email",
   new_password: "kata sandi baru",
+  current_password: "kata sandi sekarang",
+  detail: "detail",
 };

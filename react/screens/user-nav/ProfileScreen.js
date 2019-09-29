@@ -41,10 +41,13 @@ class _ProfileScreen extends React.Component {
     return (
       <ContentContainer navigate={navigate} currentTab="Profile">
         <RoundedCornerPanel style={{flex: 1, flowDirection: 'column', justifyContent: 'flex-start'}}>
+          <Button onPress={() => navigate("EditProfile")}>
+            <Text>{translate('buttonEditProfile')}</Text>
+          </Button>
           {this.props.loggedInVia === 'facebook' &&
             <LoginButton onLogoutFinished={() => {
               this.props.logout(this.props.currentLanguage, this.props.accessToken, 'facebook');
-              navigate('Login', {hasBack: false});
+              navigate('Register', {hasBack: false});
             }}/>
           }
 
@@ -52,7 +55,7 @@ class _ProfileScreen extends React.Component {
             <Button onPress={() => {
               GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut());
               this.props.logout(this.props.currentLanguage, this.props.accessToken);
-              navigate('Login', {hasBack: false});
+              navigate('Register', {hasBack: false});
             }}><Text>{translate('buttonLogout')}</Text></Button>
           }
 
@@ -60,7 +63,7 @@ class _ProfileScreen extends React.Component {
             <Button
               onPress={() => {
                 this.props.logout(this.props.currentLanguage, this.props.accessToken);
-                navigate('Login', {hasBack: false});
+                navigate('Register', {hasBack: false});
               }}
             ><Text>{translate('buttonLogout')}</Text></Button>
           }
