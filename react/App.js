@@ -72,6 +72,7 @@ const UserNavigator = createStackNavigator({
   Dashboard: {screen: HomeScreen, path: 'user/dashboard'},
   Profile: {screen: ProfileScreen, path: 'user/profile'},
   EditProfile: {screen: EditProfileScreen, path: 'user/editProfile'},
+  SearchSubdistrict: {screen: SearchSubdistrictScreen, path: 'user/searchSubdistrict'},
   StationToStation: {screen: StationToStationScreen, path: 'user/stationToStation'},
   SearchStation: {screen: SearchStationScreen, path: 'user/searchStation'},
   SearchSchedule: {screen: SearchScheduleScreen, path: 'user/searchSchedule'},

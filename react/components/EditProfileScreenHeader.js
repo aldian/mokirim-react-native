@@ -18,11 +18,14 @@ class _EditProfileScreenHeader extends React.Component {
      <StyleProvider style={getTheme(themeVars)}>
        <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
          <HeaderLeft>
-           {hasBack ?
-             <Button transparent onPress={() => navigation.goBack()}>
-               <Icon name="arrow-back" style={{color: 'white'}}/>
-             </Button> :
-             <Image source={require('../img/mokirim_logo.png')} style={{flex: 1, alignSelf: 'center', width: 24, height: 24, resizeMode: 'contain'}}/>
+           {this.props.profile.submitting ?
+             <Spinner/> :
+             (hasBack ?
+                <Button transparent onPress={() => this.props.navigation.goBack()}>
+                  <Icon name="arrow-back" style={{color: 'white'}}/>
+                </Button> :
+                <Image source={require('../img/mokirim_logo.png')} style={{flex: 1, alignSelf: 'center', width: 24, height: 24, resizeMode: 'contain'}}/>
+             )
            }
          </HeaderLeft>
          <HeaderBody>
@@ -38,6 +41,7 @@ class _EditProfileScreenHeader extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
+    profile: state.appReducer.editProfileForm,
   }
 };
 

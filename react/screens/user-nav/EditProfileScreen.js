@@ -41,6 +41,7 @@ class _EditProfileScreen extends React.Component {
     this.props.setErrorPhone(false);
     this.props.setErrorAddress(false);
     this.props.setErrorSubdistrict(false);
+    this.props.setErrorCurrentPassword(false);
     this.props.setErrorNewPassword(false);
 
     if (this.props.email && !this.props.profile.email) {
@@ -103,7 +104,7 @@ class _EditProfileScreen extends React.Component {
   };
 
   render() {
-    const {navigate} = this.props.navigation;
+    const {goBack, navigate} = this.props.navigation;
     return (
       <ContentContainer navigate={navigate} hasFooter={false}>
         <RoundedCornerPanel style={{flex: 1, flowDirection: 'column', justifyContent: 'flex-start'}}>
@@ -207,7 +208,29 @@ class _EditProfileScreen extends React.Component {
                }
             </Item>
 
-            <Item stackedLabel last error={!!this.props.profile.errors.new_password} style={{flexDirection: 'column', alignItems: 'stretch'}}>
+            {this.props.profile.id ?
+              <Item stackedLabel error={!!this.props.profile.errors.current_password} style={{flexDirection: 'column', alignItems: 'stretch'}}>
+                <Label style={{flex: 1}}>{translate("labelCurrentPassword")}</Label>
+                <Input
+                  style={{flex: 1}}
+                  autoCapitalize="none"
+                  secureTextEntry={true} onChangeText={val => this.setState({currentPassword: val})}
+                  value={this.state.currentPassword}
+                />
+                {!!this.props.profile.errors.current_password ?
+                   <IconNB
+                     name="ios-close-circle"
+                     onPress={() => {
+                       this.props.setErrorCurrentPassword(false);
+                     }}
+                   /> :
+                   null
+                }
+              </Item> :
+              null
+            }
+
+            <Item stackedLabel error={!!this.props.profile.errors.new_password} style={{flexDirection: 'column', alignItems: 'stretch'}}>
               <Label style={{flex: 1}}>{translate("labelNewPassword")}</Label>
               <Input
                 style={{flex: 1}}
@@ -266,10 +289,18 @@ class _EditProfileScreen extends React.Component {
                   newPassword: this.state.newPassword,
                   retypeNewPassword: this.state.retypeNewPassword,
                 }
+                this.props.setProfile({submitting: true});
                 this.props.submitForm(
                   this.props.currentLanguage, this.props.accessToken, profile
                 ).then(() => {
-                  navigate('Dashboard');
+                  Toast.show({
+                     text: translate('messageProfileUpdated'), buttonText: "OK", duration: 5000,
+                  });
+                  if (profile.id) {
+                    goBack();
+                  } else {
+                    navigate('Dashboard');
+                  }
                 }).catch(error => {
                   if (typeof(error) === 'object') {
                     let errors = [];
@@ -294,6 +325,8 @@ class _EditProfileScreen extends React.Component {
                       text: error, buttonText: "OK", duration: 10000,
                     });
                   }
+                }).finally(() => {
+                  this.props.setProfile({submitting: false});
                 });
               }}
             >
@@ -329,6 +362,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
        selectedPostalCode: obj.postalCode,
        selectedSubdistrictText: obj.text,
     })),
+    setProfile: profile => dispatch(Actions.setUserProfile(profile)),
 
     setError: obj => dispatch(Actions.setUserProfileError(obj)),
     setErrorName: error => dispatch(Actions.setUserProfileError({name: error})),
@@ -336,6 +370,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     setErrorPhone: error => dispatch(Actions.setUserProfileError({phone: error})),
     setErrorAddress: error => dispatch(Actions.setUserProfileError({address: error})),
     setErrorSubdistrict: error => dispatch(Actions.setUserProfileError({subdistrict: error})),
+    setErrorCurrentPassword: error => dispatch(Actions.setUserProfileError({current_password: error})),
     setErrorNewPassword: error => dispatch(Actions.setUserProfileError({new_password: error})),
 
     submitForm: (languageCode, accessToken, profile) => (
