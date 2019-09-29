@@ -9,7 +9,7 @@ import { translate } from "../utils/i18n";
 import getTheme from '../theme/components';
 import themeVars from '../theme/variables/material';
 
-class _SearchStationScreenHeader extends React.Component {
+class _SearchSubdistrictScreenHeader extends React.Component {
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
@@ -23,10 +23,7 @@ class _SearchStationScreenHeader extends React.Component {
         </HeaderLeft>
         <HeaderBody>
           <HeaderTitle>
-            {this.props.navigation.getParam('isOriginating') ?
-              translate("headerSearchStationOriginating") :
-              translate("headerSearchStationDestination")
-            }
+            {translate("headerSearchSubdistrict")}
           </HeaderTitle>
         </HeaderBody>
       </Header>
@@ -45,4 +42,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 };
 
-export const SearchStationScreenHeader = connect(mapStateToProps, mapDispatchToProps)(_SearchStationScreenHeader);
+export const SearchSubdistrictScreenHeader = connect(mapStateToProps, mapDispatchToProps)(_SearchSubdistrictScreenHeader);

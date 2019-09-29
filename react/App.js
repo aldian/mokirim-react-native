@@ -29,6 +29,8 @@ import { SearchStationScreen } from './screens/public-nav/SearchStationScreen';
 import { SearchScheduleScreen } from './screens/public-nav/SearchScheduleScreen';
 
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
+import { EditProfileScreen } from './screens/user-nav/EditProfileScreen';
+import { SearchSubdistrictScreen } from './screens/public-nav/SearchSubdistrictScreen';
 
 console.disableYellowBox = true
 
@@ -39,6 +41,11 @@ initNotifications(store);
 useScreens();
 
 GoogleSignin.configure();
+
+const EditProfileNavigator = createStackNavigator({
+  EditProfile: {screen: EditProfileScreen, path: 'editProfile'},
+  SearchSubdistrict: {screen: SearchSubdistrictScreen, path: 'editProfile/searchSubdistrict'},
+});
 
 const IntroNavigator = createStackNavigator({
   IntroWhy: {screen: IntroWhyScreen, path: 'intro/why'},
@@ -51,8 +58,8 @@ const IntroNavigator = createStackNavigator({
 });
 
 const PublicNavigator = createStackNavigator({
-  Login: {screen: LoginScreen, path: 'public/login'},
   Register: {screen: RegisterScreen, path: 'public/register'},
+  Login: {screen: LoginScreen, path: 'public/login'},
   ResetPassword: {screen: ResetPasswordScreen, path: 'public/resetPassword'},
   MemberBenefits: {screen: MemberBenefitsScreen, path: 'public/memberBenefits'},
 }, {
@@ -64,6 +71,7 @@ const PublicNavigator = createStackNavigator({
 const UserNavigator = createStackNavigator({
   Dashboard: {screen: HomeScreen, path: 'user/dashboard'},
   Profile: {screen: ProfileScreen, path: 'user/profile'},
+  EditProfile: {screen: EditProfileScreen, path: 'user/editProfile'},
   StationToStation: {screen: StationToStationScreen, path: 'user/stationToStation'},
   SearchStation: {screen: SearchStationScreen, path: 'user/searchStation'},
   SearchSchedule: {screen: SearchScheduleScreen, path: 'user/searchSchedule'},
@@ -77,6 +85,7 @@ const SwitchNavigator = createSwitchNavigator({
   Splash: SplashScreen,
   Intro: IntroNavigator,
   Public: PublicNavigator,
+  EditProfileNav: EditProfileNavigator,
   User: UserNavigator,
 });
 

@@ -27,7 +27,10 @@ class _ConfirmPasswordResetForm extends React.Component {
            <Form style={{alignSelf: 'stretch'}}>
               <Item fixedLabel error={!!this.props.errors.code}>
                 <Label>{translate("labelCode")}</Label>
-                <Input onChangeText={val => this.props.setCode(val)} value={this.props.code}/>
+                <Input
+                  autoCapitalize="characters"
+                  onChangeText={val => this.props.setCode(val)} value={this.props.code}
+                />
                 {!!this.props.errors.code ?
                   <IconNB
                     name="ios-close-circle"
@@ -42,7 +45,7 @@ class _ConfirmPasswordResetForm extends React.Component {
 
              <Item fixedLabel error={!!this.props.errors.newPassword}>
                <Label>{translate("labelNewPassword")}</Label>
-               <Input secureTextEntry={true} onChangeText={val => this.props.setNewPassword(val)} value={this.props.newPassword}/>
+               <Input autoCapitalize="none" secureTextEntry={true} onChangeText={val => this.props.setNewPassword(val)} value={this.props.newPassword}/>
                {!!this.props.errors.newPassword ?
                  <IconNB
                    name="ios-close-circle"

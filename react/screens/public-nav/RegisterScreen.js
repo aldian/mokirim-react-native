@@ -19,7 +19,7 @@ class _RegisterScreen extends React.Component {
     const {navigate} = this.props.navigation;
     return  (
       <ContentContainer hasFooter={false} style={{backgroundColor: '#222B45'}}>
-            <RegisterForm/>
+            <RegisterForm navigation={this.props.navigation}/>
             {this.props.encodedUserId ?
               <ActivateForm navigate={navigate}/> :
               null

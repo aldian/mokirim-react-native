@@ -1,6 +1,35 @@
 import Database from './database';
 import MokirimAPI from './MokirimAPI';
 
+const getAddress = (languageCode, accessToken, id) => {
+  return Database.openDatabase().then(db => {
+    return Database.getAddress(db, id).then(rows => {
+      if (rows.length < 1) {
+        return null;
+      }
+      return rows.item(0);
+    }).catch(err => {
+      return null;
+    }).then(row => {
+      if (row !== null) {
+        return row;
+      }
+
+      return MokirimAPI.getAddress(languageCode, accessToken, id).then(response => {
+        if (!response.ok) {
+          return null;
+        }
+        return response.json().then(obj => {
+          let frontendObj = {...obj, postalCode: obj.postal_code};
+          delete(frontendObj.postal_code);
+          Database.addAddress(db, frontendObj);
+          return frontendObj;
+        });
+      });
+    });
+  });
+};
+
 const getSubdistrict = (languageCode, accessToken, id) => {
   return Database.openDatabase().then(db => {
     return Database.getSubdistrict(db, id).then(rows => {
@@ -137,6 +166,7 @@ const getPostalCode = (languageCode, accessToken, id) => {
 };
 
 export default {
+  getAddress,
   getSubdistrict,
   getDistrict,
   getCity,

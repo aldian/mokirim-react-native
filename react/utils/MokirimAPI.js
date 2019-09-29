@@ -14,14 +14,22 @@ const ACTIVATE_PATH = "/auth/users/activation/";
 
 const RESET_PASSWORD_PATH = "/auth/users/reset_password/";
 const CONFIRM_PASSWORD_RESET_PATH = "/auth/users/reset_password_confirm/";
+const SET_PASSWORD_PATH = "/auth/users/set_password/";
 
-const GET_SUBDISTRICT = "/api/subdistrict/";
-const GET_DISTRICT = "/api/district/";
-const GET_CITY = "/api/city/";
-const GET_STATE = "/api/state/";
-const GET_POSTAL_CODE = "/api/postal_code/";
+const GET_PROFILE_PATH = "/api/person/";
+const POST_PROFILE_PATH = "/api/person/";
 
-const SEARCH_STATIONS = "/api/stations/";
+const GET_ADDRESS_PATH = "/api/address/";
+const GET_SUBDISTRICT_PATH = "/api/subdistrict/";
+const GET_DISTRICT_PATH = "/api/district/";
+const GET_CITY_PATH = "/api/city/";
+const GET_STATE_PATH = "/api/state/";
+const GET_POSTAL_CODE_PATH = "/api/postal_code/";
+
+const POST_ADDRESS_PATH = "/api/address/";
+
+const SEARCH_STATIONS_PATH = "/api/stations/";
+const SEARCH_SUBDISTRICTS_PATH = "/api/subdistrict/";
 
 const DEFAULT_CONFIG = {
   baseUrl: BASE_URL,
@@ -146,6 +154,64 @@ const confirmPasswordReset = (languageCode, encodedUserId, activationCode, newPa
   return fetch(BASE_URL + languageCode + CONFIRM_PASSWORD_RESET_PATH, requestOptions);
 };
 
+const setPassword = (languageCode, accessToken, newPassword, currentPassword = '') => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Token ' + accessToken,
+      Referer: BASE_URL,
+      'Content-Type': CONTENT_TYPE_URL_ENCODED,
+    },
+    body: qs.stringify({new_password: newPassword, current_password: currentPassword}),
+  };
+
+  return fetch(BASE_URL + languageCode + SET_PASSWORD_PATH, requestOptions);
+};
+
+const getProfile = (languageCode, accessToken, id, config = null) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: config.baseUrl,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  const url = config.baseUrl + languageCode + GET_PROFILE_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  return fetch(url, requestOptions);
+};
+
+const postProfile = (languageCode, accessToken, profile, config = null) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+
+  let serverProfile = {...profile};
+  delete(serverProfile.id);
+  delete(serverProfile.submitting);
+  delete(serverProfile.errors);
+
+  const requestOptions = {
+    method: profile.id ? 'PATCH' : 'POST',
+    headers: {
+      Referer: config.baseUrl,
+      'Content-Type': CONTENT_TYPE_URL_ENCODED,
+      Authorization: 'Token ' + accessToken,
+    },
+    body: qs.stringify(serverProfile),
+  };
+
+  return fetch(config.baseUrl + languageCode + POST_PROFILE_PATH + (profile.id ? profile.id + '/' : ''), requestOptions);
+};
+
 const get = (url, accessToken, config = null) => {
   if (config) {
     config = {...DEFAULT_CONFIG, ...config};
@@ -164,6 +230,25 @@ const get = (url, accessToken, config = null) => {
   return fetch(url, requestOptions);
 };
 
+const getAddress = (languageCode, accessToken, id, config = null) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: config.baseUrl,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  const url = config.baseUrl + languageCode + GET_ADDRESS_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  return fetch(url, requestOptions);
+};
+
 const getSubdistrict = (languageCode, accessToken, id, config = null) => {
   if (config) {
     config = {...DEFAULT_CONFIG, ...config};
@@ -179,7 +264,7 @@ const getSubdistrict = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_SUBDISTRICT + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_SUBDISTRICT_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
   return fetch(url, requestOptions);
 };
 
@@ -198,7 +283,7 @@ const getDistrict = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_DISTRICT + (id ? id + '/': '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_DISTRICT_PATH + (id ? id + '/': '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
   return fetch(url, requestOptions);
 };
 
@@ -217,7 +302,7 @@ const getCity = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_CITY + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_CITY_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
   return fetch(url, requestOptions);
 };
 
@@ -236,7 +321,7 @@ const getState = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_STATE + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_STATE_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
   return fetch(url, requestOptions);
 };
 
@@ -255,8 +340,31 @@ const getPostalCode = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_POSTAL_CODE + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const queryString = qs.stringify(config);
+  const url = config.baseUrl + languageCode + GET_POSTAL_CODE_PATH + (id ? id + '/' : '') + '?' + queryString;
   return fetch(url, requestOptions);
+};
+
+const postAddress = (languageCode, accessToken, address, config = null) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+  let serverAddress = {...address, postal_code: address.postalCode};
+  delete(serverAddress.postalCode);
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Token ' + accessToken,
+      Referer: config.baseUrl,
+      'Content-Type': CONTENT_TYPE_URL_ENCODED,
+    },
+    body: qs.stringify(serverAddress),
+  };
+
+  return fetch(config.baseUrl + languageCode + POST_ADDRESS_PATH, requestOptions);
 };
 
 const searchStations = (languageCode, accessToken, type, text) => {
@@ -270,7 +378,27 @@ const searchStations = (languageCode, accessToken, type, text) => {
 
   const queryString = qs.stringify({type, text});
 
-  return fetch(BASE_URL + languageCode + SEARCH_STATIONS + '?' + queryString, requestOptions);
+  return fetch(BASE_URL + languageCode + SEARCH_STATIONS_PATH + '?' + queryString, requestOptions);
+};
+
+const searchSubdistricts = (languageCode, accessToken, text, config = null) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: config.baseUrl,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  const queryString = qs.stringify({search: text, limit: config.limit, offset: config.offset});
+
+  return fetch(config.baseUrl + languageCode + SEARCH_SUBDISTRICTS_PATH + '?' + queryString, requestOptions);
 };
 
 export default {
@@ -286,13 +414,21 @@ export default {
 
   resetPassword,
   confirmPasswordReset,
+  setPassword,
+
+  getProfile,
+  postProfile,
 
   get,
+  getAddress,
   getSubdistrict,
   getDistrict,
   getCity,
   getState,
   getPostalCode,
 
+  postAddress,
+
   searchStations,
+  searchSubdistricts,
 };
