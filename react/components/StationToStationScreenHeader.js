@@ -33,6 +33,7 @@ class _StationToStationScreenHeader extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
+    submitting: state.appReducer.findScheduleForm.submitting,
   }
 };
 

@@ -777,6 +777,16 @@ const submitEditProfileForm = (languageCode, accessToken, profile) => dispatch =
   });
 });
 
+const setFindScheduleForm = form => ({
+  type: ActionCodes.SET_FIND_SCHEDULE_FORM,
+  form,
+});
+
+const setFindScheduleFormError = error => ({
+  type: ActionCodes.SET_FIND_SCHEDULE_FORM_ERROR,
+  error,
+});
+
 const setFindScheduleFormOriginatingStation = place => ({
   type: ActionCodes.SET_FIND_SCHEDULE_FORM_ORIGINATING_STATION,
   place,
@@ -917,6 +927,36 @@ const setSearchSubdistrictForm = form => ({
   form,
 });
 
+const findSchedule = (
+  languageCode, accessToken, originatingStation, destinationStation, departureDate,
+  totalWeight, totalVolume
+) => dispatch => {
+  return new Promise((resolveSchedule, rejectSchedule) => {
+    let errors = {};
+    if (!originatingStation) {
+      errors.originatingStation = [translate("errorFieldMayNotBeNull")];
+    }
+    if (!destinationStation) {
+      errors.destinationStation = [translate("errorFieldMayNotBeNull")];
+    }
+    if (!departureDate) {
+      errors.departureDate = [translate("errorFieldMayNotBeNull")];
+    }
+    if (Object.keys(errors).length > 0) {
+      rejectSchedule(errors);
+    }
+    MokirimAPI.getSchedule(
+       languageCode, accessToken, originatingStation, destinationStation, departureDate,
+       totalWeight, totalVolume
+    ).then(response => {
+      resolveSchedule(response);
+    }).catch(error => {
+      rejectSchedule(error);
+    });
+  });
+
+};
+
 export default Actions = {
   updateAppStates,
 
@@ -960,6 +1000,8 @@ export default Actions = {
   loadUserProfile,
   submitEditProfileForm,
 
+  setFindScheduleForm,
+  setFindScheduleFormError,
   setFindScheduleFormOriginatingStation,
   setFindScheduleFormDestinationStation,
   setFindScheduleFormDepartureDate,
@@ -977,4 +1019,6 @@ export default Actions = {
 
   searchSubdistricts,
   setSearchSubdistrictForm,
+
+  findSchedule,
 }

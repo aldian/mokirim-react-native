@@ -1,3 +1,4 @@
+import moment from 'moment';
 import qs from 'query-string';
 
 const BASE_URL = "https://mokirim.aldianfazrihady.com/";
@@ -30,6 +31,8 @@ const POST_ADDRESS_PATH = "/api/address/";
 
 const SEARCH_STATIONS_PATH = "/api/stations/";
 const SEARCH_SUBDISTRICTS_PATH = "/api/subdistrict/";
+
+const GET_SCHEDULE_PATH = "/api/schedule/";
 
 const DEFAULT_CONFIG = {
   baseUrl: BASE_URL,
@@ -399,6 +402,32 @@ const searchSubdistricts = (languageCode, accessToken, text, config = null) => {
   return fetch(config.baseUrl + languageCode + SEARCH_SUBDISTRICTS_PATH + '?' + queryString, requestOptions);
 };
 
+const getSchedule = (
+  languageCode, accessToken, originatingStation, destinationStation, departureDate,
+  totalWeight, totalVolume, config = null
+) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+
+  const requestOptions = {
+     method: 'GET',
+     headers: {
+       Referer: config.baseUrl,
+       Authorization: 'Token ' + accessToken,
+     },
+  };
+
+  const startDateStr = departureDate.toISOString().replace(/(\d)T(\d)/, "$1 $2").replace(/\D+$/, "");
+  const endDateStr = moment(departureDate).add(1, 'days').toDate().toISOString().replace(/(\d)T(\d)/, "$1 $2").replace(/\D+$/, "");
+
+  const queryString = qs.stringify({min_datetime: startDateStr, max_datetime: endDateStr});
+
+  return fetch(config.baseUrl + languageCode + GET_SCHEDULE_PATH + '?' + queryString, requestOptions);
+};
+
 export default {
   registerDevice,
 
@@ -429,4 +458,6 @@ export default {
 
   searchStations,
   searchSubdistricts,
+
+  getSchedule,
 };
