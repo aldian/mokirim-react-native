@@ -105,6 +105,7 @@ export default {
   messagePay10K: 'pay 10 Kg',
   messageProfileUpdated: 'Profile successfully updated.',
   messageScheduleNotFound: 'Schedule not found.',
+  messageHello: "Hello, %{name}",
 
   placeholderOriginating: "Choose originating station/city",
   placeholderDestination: "Choose destination station/city",

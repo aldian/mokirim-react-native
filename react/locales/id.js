@@ -105,6 +105,7 @@ export default {
   messagePay10K: 'bayar 10 Kg',
   messageProfileUpdated: 'Profil berhasil diubah.',
   messageScheduleNotFound: 'Jadwal tak ditemukan.',
+  messageHello: "Halo, %{name}",
 
   placeholderOriginating: "Pilih station/kota asal",
   placeholderDestination: "Pilih station/kota tujuan",
