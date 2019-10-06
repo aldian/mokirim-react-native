@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { AppRegistry, FlatList, ActivityIndicator, Text, View  } from 'react-native';
+import 'intl';
+import 'intl/locale-data/jsonp/en';
+import 'intl/locale-data/jsonp/id';
 import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import { useScreens } from 'react-native-screens';
@@ -7,6 +10,7 @@ import { Root } from 'native-base';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
+require('moment/locale/id.js');
 import { GoogleSignin } from 'react-native-google-signin';
 import { rootReducer } from './state/reducers';
 import { initNotifications } from './utils/notifications';
@@ -27,6 +31,7 @@ import { MemberBenefitsScreen } from './screens/public-nav/MemberBenefitsScreen'
 import { StationToStationScreen } from './screens/public-nav/StationToStationScreen';
 import { SearchStationScreen } from './screens/public-nav/SearchStationScreen';
 import { SearchScheduleScreen } from './screens/public-nav/SearchScheduleScreen';
+import { ChooseScheduleScreen } from './screens/public-nav/ChooseScheduleScreen';
 
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
 import { EditProfileScreen } from './screens/user-nav/EditProfileScreen';
@@ -76,6 +81,7 @@ const UserNavigator = createStackNavigator({
   StationToStation: {screen: StationToStationScreen, path: 'user/stationToStation'},
   SearchStation: {screen: SearchStationScreen, path: 'user/searchStation'},
   SearchSchedule: {screen: SearchScheduleScreen, path: 'user/searchSchedule'},
+  ChooseSchedule: {screen: ChooseScheduleScreen, path: 'user/chooseSchedule'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,

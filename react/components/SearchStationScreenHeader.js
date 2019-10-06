@@ -13,7 +13,7 @@ class _SearchStationScreenHeader extends React.Component {
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
-        <HeaderLeft>
+        <HeaderLeft style={{flex: 0, paddingRight: 8}}>
           {this.props.submitting ?
             <Spinner/> :
             <Button transparent onPress={() => this.props.navigation.goBack()}>

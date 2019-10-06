@@ -1,16 +1,18 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {View} from 'react-native';
 import {
   Button,
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
-  Icon, Spinner, StyleProvider,
+  Icon, Spinner, StyleProvider, Text,
 } from 'native-base';
-import { translate } from "../utils/i18n";
+import {translate, numberStr} from "../utils/i18n";
 import getTheme from '../theme/components';
 import themeVars from '../theme/variables/material';
 
-class _SearchSubdistrictScreenHeader extends React.Component {
+class _ChooseScheduleScreenHeader extends React.Component {
   render() {
+
     return <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
         <HeaderLeft style={{flex: 0, paddingRight: 8}}>
@@ -21,9 +23,10 @@ class _SearchSubdistrictScreenHeader extends React.Component {
             </Button>
           }
         </HeaderLeft>
-        <HeaderBody>
-          <HeaderTitle>
-            {translate("headerSearchSubdistrict")}
+        <HeaderBody style={{flex: 1, flexDirection: 'column', alignItems: 'flex-start'}}>
+          <HeaderTitle>{translate("headerChooseShipmentSchedule")}</HeaderTitle>
+          <HeaderTitle style={{fontSize: 11}}>
+            {translate("labelColli.counting", {count: this.props.colli.length})}, {numberStr(this.props.currentLanguage, this.props.totalWeight)} kg, {numberStr(this.props.currentLanguage, this.props.totalVolume)} cm³
           </HeaderTitle>
         </HeaderBody>
       </Header>
@@ -34,6 +37,11 @@ class _SearchSubdistrictScreenHeader extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
+    submitting: state.appReducer.chooseScheduleForm.submitting,
+
+    totalWeight: state.appReducer.findScheduleForm.totalWeight,
+    totalVolume: state.appReducer.findScheduleForm.totalVolume,
+    colli: state.appReducer.findScheduleForm.colli,
   }
 };
 
@@ -42,4 +50,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 };
 
-export const SearchSubdistrictScreenHeader = connect(mapStateToProps, mapDispatchToProps)(_SearchSubdistrictScreenHeader);
+export const ChooseScheduleScreenHeader = connect(mapStateToProps, mapDispatchToProps)(_ChooseScheduleScreenHeader);

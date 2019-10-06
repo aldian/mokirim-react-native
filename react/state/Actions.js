@@ -846,6 +846,10 @@ const incrementColloWeight = (index, weight) => ({
   weight,
 });
 
+const cleanupColli = () => ({
+  type: ActionCodes.CLEANUP_COLLI,
+});
+
 const _searchStations = searching => ({
   type: ActionCodes.SEARCH_STATIONS,
   searching,
@@ -954,8 +958,27 @@ const findSchedule = (
       rejectSchedule(error);
     });
   });
-
 };
+
+const setAvailableSchedules = schedules => ({
+  type: ActionCodes.SET_AVAILABLE_SCHEDULES,
+  schedules,
+});
+
+const addAvailableSchedules = schedules => ({
+  type: ActionCodes.ADD_AVAILABLE_SCHEDULES,
+  schedules,
+});
+
+const setMoreSchedulesURL = url => ({
+  type: ActionCodes.SET_MORE_SCHEDULES_URL,
+  url,
+});
+
+const chooseSchedule = schedule => ({
+  type: ActionCodes.CHOOSE_SCHEDULE,
+  schedule,
+});
 
 export default Actions = {
   updateAppStates,
@@ -1013,6 +1036,7 @@ export default Actions = {
   setColloWidth,
   setColloHeight,
   incrementColloWeight,
+  cleanupColli,
 
   searchStations,
   downloadStationDetails,
@@ -1021,4 +1045,9 @@ export default Actions = {
   setSearchSubdistrictForm,
 
   findSchedule,
+
+  setAvailableSchedules,
+  addAvailableSchedules,
+  setMoreSchedulesURL,
+  chooseSchedule,
 }

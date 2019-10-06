@@ -5,7 +5,7 @@ import {
   Button, DatePicker, Form, Icon, IconNB, Input, Item, Label, Spinner, Text, Toast,
 } from 'native-base';
 import themeVars from '../../theme/variables/material';
-import { translate } from "../../utils/i18n";
+import {translate, getStartingDayDate, numberStr} from "../../utils/i18n";
 import Error from '../../utils/error';
 import constants from '../../constants';
 import Actions from '../../state/Actions';
@@ -24,13 +24,13 @@ class _StationToStationScreen extends React.Component {
 
   componentDidMount() {
     if (!this.props.departureDate) {
-       this.props.setDepartureDate(new Date());
+       this.props.setDepartureDate(getStartingDayDate());
     }
   }
 
   render() {
     const {navigate} = this.props.navigation;
-    const todayDate = new Date();
+    const todayDate = getStartingDayDate();
 
     return (
       <ContentContainer navigate={navigate} hasFooter={false}>
@@ -87,7 +87,7 @@ class _StationToStationScreen extends React.Component {
                   {translate("labelPackage.counting", {count: this.props.colli.length})}
                 </Label>
                 <Label style={[{flex: 0}, (this.props.totalWeight < constants.MINIMUM_PRICE_WEIGHT_KG ? {color: 'red', fontWeight: 'bold'} : {})]}>
-                  {translate("labelColli.counting", {count: this.props.colli.length})}, {this.props.totalWeight} Kg{this.props.totalWeight < constants.MINIMUM_PRICE_WEIGHT_KG ? " (" + translate("messagePay10K") + ")" : null}
+                  {translate("labelColli.counting", {count: this.props.colli.length})}, {numberStr(this.props.currentLanguage, this.props.totalWeight)} Kg{this.props.totalWeight < constants.MINIMUM_PRICE_WEIGHT_KG ? " (" + translate("messagePay10K") + ")" : null}
                 </Label>
               </View>
               {this.props.colli.length < 2 ?
@@ -142,7 +142,9 @@ class _StationToStationScreen extends React.Component {
                            text: translate("messageScheduleNotFound"), buttonText: "OK", duration: 5000,
                          });
                        } else {
-                        alert(JSON.stringify(obj));
+                         this.props.setAvailableSchedules(obj);
+                         this.props.cleanupColli();
+                         navigate("ChooseSchedule");
                        }
                      });
                    } else {
@@ -213,6 +215,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     findSchedule: (languageCode, accessToken, originatingStation, destinationStation, departureDate, totalWeight, totalVolume) => dispatch(
       Actions.findSchedule(languageCode, accessToken, originatingStation, destinationStation, departureDate, totalWeight, totalVolume)
     ),
+    setAvailableSchedules: obj => {
+      dispatch(Actions.setAvailableSchedules(obj.results));
+      dispatch(Actions.setMoreSchedulesURL(obj.next));
+    },
+    cleanupColli: () => dispatch(Actions.cleanupColli()),
   }
 };
 

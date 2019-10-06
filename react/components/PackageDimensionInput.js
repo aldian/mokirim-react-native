@@ -12,15 +12,17 @@ class _PackageDimensionInput extends React.Component {
     if (isNaN(weight)) {
       weight = 0;
     }
-    const decrementDisabled = (weight <= 0);
+    const decrementDisabled = (weight - 1 < 0) || (weight === 0);
     return  (
       <React.Fragment>
         <Label>{translate("labelWeight")}</Label>
         <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
           <View style={{width: 80}}>
             <Item>
-              <Input keyboardType="numeric" value={this.props.info.weight} onChangeText={text => this.props.setWeight(this.props.info.index, text)}/>
-              <Text>Kg</Text>
+              <Input
+                keyboardType="numeric" value={this.props.info.weight} onChangeText={text => this.props.setWeight(this.props.info.index, text)}
+              />
+              <Text>kg</Text>
             </Item>
           </View>
           <Button
@@ -42,21 +44,21 @@ class _PackageDimensionInput extends React.Component {
           <View style={{flex: 0, width: 80}} flexDirection="column">
             <Item style={{flex: 0}}>
               <Input keyboardType="numeric" value={this.props.info.length} onChangeText={text => this.props.setLength(this.props.info.index, text)}/>
-              <Text>Cm</Text>
+              <Text>cm</Text>
             </Item>
             <Text style={{flex: 0, color: '#919EAB', fontSize: 12}}>{translate("labelLength")}</Text>
           </View>
           <View style={{flex: 0, width: 80}} flexDirection="column">
             <Item style={{flex: 0}}>
               <Input keyboardType="numeric" value={this.props.info.width} onChangeText={text => this.props.setWidth(this.props.info.index, text)}/>
-              <Text>Cm</Text>
+              <Text>cm</Text>
             </Item>
             <Text style={{flex: 0, color: '#919EAB', fontSize: 12}}>{translate("labelWidth")}</Text>
           </View>
           <View style={{flex: 0, width: 80}} flexDirection="column">
             <Item style={{flex: 0}}>
                <Input keyboardType="numeric" value={this.props.info.height} onChangeText={text => this.props.setHeight(this.props.info.index, text)}/>
-               <Text>Cm</Text>
+               <Text>cm</Text>
             </Item>
             <Text style={{flex: 0, color: '#919EAB', fontSize: 12}}>{translate("labelHeight")}</Text>
           </View>

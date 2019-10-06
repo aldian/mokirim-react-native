@@ -1,11 +1,13 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   Icon, Text,
 } from 'native-base';
+import {numberStr} from "../utils/i18n";
 import themeVars from '../theme/variables/platform';
 
-export default class ColloAccordionHeader extends React.Component {
+class _ColloAccordionHeader extends React.Component {
   render() {
     const {
       expanded,
@@ -34,7 +36,7 @@ export default class ColloAccordionHeader extends React.Component {
           <Text style={{flex: 0, color: expanded ? '#FF5A00' : 'black', fontWeight: 'bold', marginRight: 32}}>#{info.index + 1}</Text>
           {expanded ?
             null :
-            <Text style={{flex: 0}}>{info.weight || 0} Kg, {info.length || 0}x{info.width || 0}x{info.height || 0} Cm</Text>
+            <Text style={{flex: 0}}>{numberStr(this.props.currentLanguage, info.weight || 0)} kg, {numberStr(this.props.currentLanguage, info.length || 0)}x{numberStr(this.props.currentLanguage, info.width || 0)}x{numberStr(this.props.currentLanguage, info.height || 0)} cm³</Text>
           }
         </View>
         <View style={{flex: 0, width: 32, height: 32}}>
@@ -84,3 +86,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }
 });
+
+const mapStateToProps = state => {
+  return {
+    currentLanguage: state.appReducer.currentLanguage,
+  }
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(_ColloAccordionHeader);

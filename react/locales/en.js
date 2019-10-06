@@ -45,6 +45,7 @@ export default {
   headerChooseSubdistrict: "Choose Subdistrict",
   headerSearchSchedule: "Choose Departure Time",
   headerSearchSubdistrict: "Choose Subdistrict",
+  headerChooseShipmentSchedule: "Choose Shipment Schedule",
 
   instructionActivate: {counting: {
     one: "Please type {{count}} digit/letter activation code sent to email address %{email}.",
@@ -88,6 +89,11 @@ export default {
   labelCurrentPassword: "Current Password",
   labelNewPassword: "New Password",
   labelRetypeNewPassword: "Retype New Password",
+  labelAtTime: "At",
+  labelEstimate: "estimate",
+  labelCheckinDeadline: "Check-In Deadline",
+  labelTariff: "Tariff",
+  labelTotalPrice: "Total Price",
 
   messageIntroWhyTitle: "Send package according to predefined schedule",
   messageIntroWhyText: "Easily choose date and time of you package delivery. Sending package more easily at a lower cost.",
@@ -115,6 +121,11 @@ export default {
   placeholderSearchSubdistrict: "Find subdistrict",
 
   sectionDeliveryOptions: "Delivery Options",
+
+  titleOrigin: "Origin",
+  titleDestination: "Destination",
+  titleDeparture: "Departure",
+  titleArrival: "Arrival",
 
   subdistrict: "subdistrict",
   address: "address",

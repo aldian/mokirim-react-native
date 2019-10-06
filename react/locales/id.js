@@ -45,6 +45,7 @@ export default {
   headerChooseSubdistrict: "Pilih Desa/Kelurahan",
   headerSearchSchedule: "Pilih Jadwal Pengiriman",
   headerSearchSubdistrict: "Pilih Desa/Kelurahan",
+  headerChooseShipmentSchedule: "Pilih Jadwal Pengiriman",
 
   instructionActivate: {counting: {
     one: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
@@ -88,6 +89,11 @@ export default {
   labelCurrentPassword: "Kata Sandi Sekarang",
   labelNewPassword: "Kata Sandi Baru",
   labelRetypeNewPassword: "Ulangi Sandi Baru",
+  labelAtTime: "Jam",
+  labelEstimate: "estimasi",
+  labelCheckinDeadline: "Check-In Maksimal",
+  labelTariff: "Tarif",
+  labelTotalPrice: "Total Biaya",
 
   messageIntroWhyTitle: "Kirim barang dengan jadwal sesuai keinginan",
   messageIntroWhyText: "Kemudahan mengatur jadwal kirim di tanggal dan jam yang diinginkan. Kirim lebih mudah, biaya lebih hemat.",
@@ -115,6 +121,11 @@ export default {
   placeholderSearchSubdistrict: "Cari desa/kelurahan",
 
   sectionDeliveryOptions: "Pilihan Pengiriman",
+
+  titleOrigin: "Asal",
+  titleDestination: "Tujuan",
+  titleDeparture: "Berangkat",
+  titleArrival: "Tiba",
 
   subdistrict: "desa/kelurahan",
   address: "alamat",
