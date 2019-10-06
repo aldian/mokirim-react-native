@@ -20,7 +20,14 @@ class _HomeScreenHeader extends React.Component {
         <HeaderBody>
           <HeaderTitle>{this.props.loggedIn ? translate("headerDashboard") : translate("headerWelcome")}</HeaderTitle>
         </HeaderBody>
-        <HeaderRight/>
+        {(this.props.loggedIn && this.props.profile.name) ?
+          <HeaderRight>
+            <Text style={{color: 'white'}}>
+              {translate("messageHello", {name: this.props.profile.name.split(/\s+/, 1)[0]})}
+            </Text>
+          </HeaderRight> :
+          null
+        }
       </Header>
     </StyleProvider>;
   }
@@ -30,6 +37,7 @@ const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
     loggedIn: state.appReducer.loggedIn,
+    profile: state.appReducer.editProfileForm,
   }
 };
 
