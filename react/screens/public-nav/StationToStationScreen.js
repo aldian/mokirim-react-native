@@ -2,10 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {TouchableOpacity, View} from 'react-native';
 import {
-  Button, DatePicker, Form, Icon, Input, Item, Label, Text,
+  Button, DatePicker, Form, Icon, IconNB, Input, Item, Label, Spinner, Text, Toast,
 } from 'native-base';
 import themeVars from '../../theme/variables/material';
 import { translate } from "../../utils/i18n";
+import Error from '../../utils/error';
 import constants from '../../constants';
 import Actions from '../../state/Actions';
 import Accordion, {DefaultContent as DefaultAccordionContent} from '../../components/Accordion';
@@ -21,8 +22,15 @@ class _StationToStationScreen extends React.Component {
     header: <StationToStationScreenHeader navigation={navigation}/>,
   });
 
+  componentDidMount() {
+    if (!this.props.departureDate) {
+       this.props.setDepartureDate(new Date());
+    }
+  }
+
   render() {
     const {navigate} = this.props.navigation;
+    const todayDate = new Date();
 
     return (
       <ContentContainer navigate={navigate} hasFooter={false}>
@@ -32,18 +40,19 @@ class _StationToStationScreen extends React.Component {
         }
         <RoundedCornerPanel style={{flex: 1, flexDirection: 'column'}}>
           <Form>
-            <Item stackedLabel>
+            <Item stackedLabel error={!!this.props.errors.originatingStation}>
               <Label>{translate("labelOriginating")}</Label>
               <Input
-                style={{width: '100%'}}
+                style={{}}
                 multiline={true}
                 placeholder={translate("placeholderOriginating")}
                 placeholderTextColor={themeVars.placeholderTextColor}
                 onFocus={() => navigate('SearchStation', {isOriginating: true})}
                 value={this.props.originatingStation.text}
+                onChangeText={() => this.props.setError({originatingStation: false})}
               />
             </Item>
-            <Item stackedLabel>
+            <Item stackedLabel error={!!this.props.errors.destinationStation}>
               <Label>{translate("labelDestination")}</Label>
               <Input
                 style={{width: '100%'}}
@@ -52,21 +61,21 @@ class _StationToStationScreen extends React.Component {
                 placeholderTextColor={themeVars.placeholderTextColor}
                 onFocus={() => navigate("SearchStation", {isOriginating: false})}
                 value={this.props.destinationStation.text}
+                onChangeText={() => this.props.setError({destinationStation: false})}
               />
             </Item>
-            <Item stackedLabel>
+            <Item stackedLabel error={!!this.props.errors.departureDate}>
               <Label>{translate("labelDepartureDate")}</Label>
               <View style={{width: '100%'}}>
                 <DatePicker
-                  defaultDate={this.props.departureDate}
-                  minimumDate={new Date()}
+                  defaultDate={this.props.departureDate || todayDate}
+                  minimumDate={todayDate}
                   locale={this.props.currentLanguage}
                   timeZoneOffsetInMinutes={undefined}
                   modalTransparent={false}
                   animationType={"fade"}
                   androidMode={"default"}
                   textStyle={{paddingLeft: 4}}
-                  placeHolderText={this.props.departureDate ? null : translate("placeholderSelectDate")}
                   placeHolderTextStyle={{color: themeVars.placeholderTextColor, paddingLeft: 4}}
                   onDateChange={date => this.props.setDepartureDate(date)}
                 />
@@ -115,9 +124,56 @@ class _StationToStationScreen extends React.Component {
               }
             </Item>
           </Form>
-          <Button style={{backgroundColor: themeVars.toolbarDefaultBg, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{flex: 0}}>{translate("buttonFindSchedule")}</Text>
-          </Button>
+          {this.props.submitting ?
+            <Spinner/> :
+            <Button
+               style={{backgroundColor: themeVars.toolbarDefaultBg, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}
+               onPress={() => {
+                 this.props.setFindScheduleForm({submitting: true});
+                 this.props.findSchedule(
+                   this.props.currentLanguage, this.props.accessToken,
+                   this.props.originatingStation.id, this.props.destinationStation.id, this.props.departureDate,
+                   this.props.totalWeight, this.props.totalVolume
+                 ).then(response => {
+                   if (response.ok) {
+                     response.json().then(obj => {
+                       if (obj.count < 1) {
+                         Toast.show({
+                           text: translate("messageScheduleNotFound"), buttonText: "OK", duration: 5000,
+                         });
+                       } else {
+                        alert(JSON.stringify(obj));
+                       }
+                     });
+                   } else {
+                     response.json().then(obj => {
+                       Error.toastError(obj).then(keys => {
+                         keys.forEach(key => {
+                           this.props.setError({[key]: true});
+                         });
+                       });
+                     });
+                   }
+                 }).catch(error => {
+                   if (typeof(error) === 'string') {
+                     Toast.show({
+                        text: error, buttonText: "OK", duration: 5000,
+                     });
+                   } else {
+                     Error.toastError(error).then(keys => {
+                        keys.forEach(key => {
+                          this.props.setError({[key]: true});
+                        });
+                     });
+                   }
+                 }).finally(() => {
+                   this.props.setFindScheduleForm({submitting: false});
+                 });
+               }}
+            >
+               <Text style={{flex: 0}}>{translate("buttonFindSchedule")}</Text>
+            </Button>
+          }
         </RoundedCornerPanel>
       </ContentContainer>
     );
@@ -129,12 +185,16 @@ const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
     loggedIn: state.appReducer.loggedIn,
+    accessToken: state.appReducer.accessToken || state.appReducer.device.token,
+    errors: state.appReducer.findScheduleForm.errors,
+    submitting: state.appReducer.findScheduleForm.submitting,
     originatingStation: state.appReducer.findScheduleForm.originatingStation,
     destinationStation: state.appReducer.findScheduleForm.destinationStation,
     departureDate: state.appReducer.findScheduleForm.departureDate,
     colli,
     openedColloIndex: state.appReducer.findScheduleForm.openedColloIndex,
     totalWeight: state.appReducer.findScheduleForm.totalWeight,
+    totalVolume: state.appReducer.findScheduleForm.totalVolume,
     addColloButtonEnabled: colli.every(collo => {
       const weight = parseFloat(collo.weight);
       return !isNaN(weight) && weight > 0;
@@ -148,6 +208,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     addCollo: () => dispatch(Actions.addCollo()),
     removeCollo: index => dispatch(Actions.removeCollo(index)),
     setOpenedColloIndex: index => dispatch(Actions.setOpenedColloIndex(index)),
+    setFindScheduleForm: form => dispatch(Actions.setFindScheduleForm(form)),
+    setError: obj => dispatch(Actions.setFindScheduleFormError(obj)),
+    findSchedule: (languageCode, accessToken, originatingStation, destinationStation, departureDate, totalWeight, totalVolume) => dispatch(
+      Actions.findSchedule(languageCode, accessToken, originatingStation, destinationStation, departureDate, totalWeight, totalVolume)
+    ),
   }
 };
 

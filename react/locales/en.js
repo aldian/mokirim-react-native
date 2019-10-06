@@ -104,6 +104,7 @@ export default {
   messageOrRegisterWithEmail: 'Or register with email',
   messagePay10K: 'pay 10 Kg',
   messageProfileUpdated: 'Profile successfully updated.',
+  messageScheduleNotFound: 'Schedule not found.',
 
   placeholderOriginating: "Choose originating station/city",
   placeholderDestination: "Choose destination station/city",
@@ -122,4 +123,7 @@ export default {
   new_password: "new password",
   current_password: "current password",
   detail: "detail",
+  originatingStation: "Originating Station",
+  destinationStation: "Destination Station",
+  departureDate: "Departure Date",
 };

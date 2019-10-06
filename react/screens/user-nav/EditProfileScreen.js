@@ -13,6 +13,7 @@ import getTheme from '../../theme/components';
 import themeVars from '../../theme/variables/material';
 import styles from '../../styles';
 import Actions from '../../state/Actions';
+import Error from '../../utils/error';
 import Address from '../../utils/address';
 import { NavigationL10nText } from '../../components/NavigationL10nText';
 import { ContentContainer } from '../../components/ContentContainer';
@@ -302,29 +303,11 @@ class _EditProfileScreen extends React.Component {
                     navigate('Dashboard');
                   }
                 }).catch(error => {
-                  if (typeof(error) === 'object') {
-                    let errors = [];
-                    Object.keys(error).forEach(key => {
-                      const value = error[key];
-                      if (typeof(key) === 'number') {
-                        errors = [...errors, value];
-                      } else {
-                        this.props.setError({[key]: true});
-                        if (typeof(value) === 'object') {
-                          errors = [...errors, (translate(key) + ': ' + value.join(', '))];
-                        } else {
-                          errors = [...errors, (translate(key) + ": " + value)];
-                        }
-                      }
+                  Error.toastError(error).then(keys => {
+                    keys.forEach(key => {
+                      this.props.setError({[key]: true});
                     });
-                    Toast.show({
-                      text: errors.join('\n'), buttonText: "OK", duration: 10000,
-                    });
-                  } else {
-                    Toast.show({
-                      text: error, buttonText: "OK", duration: 10000,
-                    });
-                  }
+                  });
                 }).finally(() => {
                   this.props.setProfile({submitting: false});
                 });

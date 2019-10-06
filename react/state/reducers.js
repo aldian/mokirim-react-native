@@ -59,6 +59,8 @@ const appReducerInitialState = {
   },
 
   findScheduleForm: {
+    submitting: false,
+    errors: {},
     originatingStation: {
       id: null,
       text: '',
@@ -73,6 +75,7 @@ const appReducerInitialState = {
       {weight: String(constants.MINIMUM_PRICE_WEIGHT_KG), length: null, width: null, height: null},
     ],
     totalWeight: constants.MINIMUM_PRICE_WEIGHT_KG,
+    totalVolume: 0,
   },
 
   searchStationForm: {
@@ -222,6 +225,14 @@ function appReducer(state = appReducerInitialState, action = {}) {
         ...state, editProfileForm: {...state.editProfileForm, errors: {...state.editProfileForm.errors, ...action.error}},
       };
 
+    case ActionCodes.SET_FIND_SCHEDULE_FORM:
+      return {
+        ...state, findScheduleForm: {...state.findScheduleForm, ...action.form},
+      };
+    case ActionCodes.SET_FIND_SCHEDULE_FORM_ERROR:
+       return {
+         ...state, findScheduleForm: {...state.findScheduleForm, errors: {...state.findScheduleForm.errors, ...action.error}},
+       };
     case ActionCodes.SET_FIND_SCHEDULE_FORM_ORIGINATING_STATION:
       return {
         ...state, findScheduleForm: {...state.findScheduleForm, originatingStation: action.place},
@@ -303,42 +314,81 @@ function appReducer(state = appReducerInitialState, action = {}) {
         }
       };
     }
-    case ActionCodes.SET_COLLO_LENGTH:
+    case ActionCodes.SET_COLLO_LENGTH: {
+      const colli = [
+        ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
+        {...state.findScheduleForm.colli[action.index], length: action.length},
+        ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
+      ];
       return {
         ...state,
         findScheduleForm: {
-           ...state.findScheduleForm,
-           colli: [
-             ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
-             {...state.findScheduleForm.colli[action.index], length: action.length},
-             ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
-           ],
+          ...state.findScheduleForm,
+          colli,
+          totalVolume: colli.map(collo => collo.length * collo.width * collo.height).reduce((a, b) => {
+            let floatA = parseFloat(a);
+            if (isNaN(floatA)) {
+              floatA = 0;
+            }
+            let floatB = parseFloat(b);
+            if (isNaN(floatB)) {
+              floatB = 0;
+            }
+            return floatA + floatB;
+          }),
         }
       };
-    case ActionCodes.SET_COLLO_WIDTH:
+    }
+    case ActionCodes.SET_COLLO_WIDTH: {
+      const colli = [
+        ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
+        {...state.findScheduleForm.colli[action.index], width: action.width},
+        ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
+      ];
       return {
         ...state,
         findScheduleForm: {
            ...state.findScheduleForm,
-           colli: [
-             ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
-             {...state.findScheduleForm.colli[action.index], width: action.width},
-             ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
-           ],
-         }
-       };
-    case ActionCodes.SET_COLLO_HEIGHT:
+           colli,
+           totalVolume: colli.map(collo => collo.length * collo.width * collo.height).reduce((a, b) => {
+             let floatA = parseFloat(a);
+             if (isNaN(floatA)) {
+               floatA = 0;
+             }
+             let floatB = parseFloat(b);
+             if (isNaN(floatB)) {
+               floatB = 0;
+             }
+             return floatA + floatB;
+           }),
+        }
+      };
+    }
+    case ActionCodes.SET_COLLO_HEIGHT: {
+      const colli = [
+        ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
+        {...state.findScheduleForm.colli[action.index], height: action.height},
+        ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
+      ];
       return {
         ...state,
         findScheduleForm: {
-           ...state.findScheduleForm,
-           colli: [
-             ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
-             {...state.findScheduleForm.colli[action.index], height: action.height},
-             ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
-           ],
-         }
-       };
+          ...state.findScheduleForm,
+          colli,
+          totalVolume: colli.map(collo => collo.length * collo.width * collo.height).reduce((a, b) => {
+            let floatA = parseFloat(a);
+            if (isNaN(floatA)) {
+              floatA = 0;
+            }
+            let floatB = parseFloat(b);
+            if (isNaN(floatB)) {
+              floatB = 0;
+            }
+            return floatA + floatB;
+          }),
+        }
+      };
+    }
     case ActionCodes.INCREMENT_COLLO_WEIGHT: {
       let weight = parseFloat(state.findScheduleForm.colli[action.index].weight);
       if (isNaN(weight)) {

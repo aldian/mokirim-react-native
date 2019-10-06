@@ -104,6 +104,7 @@ export default {
   messageOrRegisterWithEmail: 'Atau daftar dengan email',
   messagePay10K: 'bayar 10 Kg',
   messageProfileUpdated: 'Profil berhasil diubah.',
+  messageScheduleNotFound: 'Jadwal tak ditemukan.',
 
   placeholderOriginating: "Pilih station/kota asal",
   placeholderDestination: "Pilih station/kota tujuan",
@@ -122,4 +123,7 @@ export default {
   new_password: "kata sandi baru",
   current_password: "kata sandi sekarang",
   detail: "detail",
+  originatingStation: "Station Asal",
+  destinationStation: "Station Tujuan",
+  departureDate: "Tanggal Pengiriman",
 };
