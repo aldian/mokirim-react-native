@@ -423,7 +423,7 @@ const getSchedule = (
   const startDateStr = departureDate.toISOString().replace(/(\d)T(\d)/, "$1 $2").replace(/\D+$/, "");
   const endDateStr = moment(departureDate).add(1, 'days').toDate().toISOString().replace(/(\d)T(\d)/, "$1 $2").replace(/\D+$/, "");
 
-  const queryString = qs.stringify({min_datetime: startDateStr, max_datetime: endDateStr});
+  const queryString = qs.stringify({min_datetime: startDateStr, max_datetime: endDateStr, limit: config.limit, offset: config.offset});
 
   return fetch(config.baseUrl + languageCode + GET_SCHEDULE_PATH + '?' + queryString, requestOptions);
 };

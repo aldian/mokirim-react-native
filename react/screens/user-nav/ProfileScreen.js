@@ -23,7 +23,7 @@ class _ProfileScreen extends React.Component {
     //title: translate("headerProfile")
     header: <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
-        <HeaderLeft>
+        <HeaderLeft style={{flex: 0, paddingRight: 8}}>
           <Button transparent onPress={() => navigation.goBack()}>
             <Icon name="arrow-back" style={{color: 'white'}}/>
           </Button>

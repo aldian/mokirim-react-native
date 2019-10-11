@@ -87,6 +87,13 @@ const appReducerInitialState = {
     selectedPostalCode: null,
     selectedSubdistrictText: null,
   },
+
+  chooseScheduleForm: {
+    submitting: false,
+    availableSchedules: [],
+    moreSchedulesURL: null,
+    chosenSchedule: null,
+  },
 };
 
 function appReducer(state = appReducerInitialState, action = {}) {
@@ -290,9 +297,15 @@ function appReducer(state = appReducerInitialState, action = {}) {
         }
       };
     case ActionCodes.SET_COLLO_WEIGHT: {
+      let weight = parseFloat(action.weight);
+      if (isNaN(weight) || weight >= 0) {
+        weight = action.weight;
+      } else {
+        weight = action.weight.replace(/^(\s*)-/, '$1');
+      }
       const colli = [
         ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
-        {...state.findScheduleForm.colli[action.index], weight: action.weight},
+        {...state.findScheduleForm.colli[action.index], weight},
         ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
       ];
       return {
@@ -310,14 +323,20 @@ function appReducer(state = appReducerInitialState, action = {}) {
                floatB = 0;
              }
              return floatA + floatB;
-           }),
+           }, 0),
         }
       };
     }
     case ActionCodes.SET_COLLO_LENGTH: {
+      let length = parseFloat(action.length);
+      if (isNaN(length) || length >= 0) {
+        length = action.length;
+      } else {
+        length = action.length.replace(/^(\s*)-/, '$1');
+      }
       const colli = [
         ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
-        {...state.findScheduleForm.colli[action.index], length: action.length},
+        {...state.findScheduleForm.colli[action.index], length},
         ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
       ];
       return {
@@ -335,14 +354,20 @@ function appReducer(state = appReducerInitialState, action = {}) {
               floatB = 0;
             }
             return floatA + floatB;
-          }),
+          }, 0),
         }
       };
     }
     case ActionCodes.SET_COLLO_WIDTH: {
+      let width = parseFloat(action.width);
+      if (isNaN(width) || width >= 0) {
+        width = action.width;
+      } else {
+        width = action.width.replace(/^(\s*)-/, '$1');
+      }
       const colli = [
         ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
-        {...state.findScheduleForm.colli[action.index], width: action.width},
+        {...state.findScheduleForm.colli[action.index], width},
         ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
       ];
       return {
@@ -360,14 +385,20 @@ function appReducer(state = appReducerInitialState, action = {}) {
                floatB = 0;
              }
              return floatA + floatB;
-           }),
+           }, 0),
         }
       };
     }
     case ActionCodes.SET_COLLO_HEIGHT: {
+      let height = parseFloat(action.height);
+      if (isNaN(height) || height >= 0) {
+        height = action.height;
+      } else {
+        height = action.height.replace(/^(\s*)-/, '$1');
+      }
       const colli = [
         ...state.findScheduleForm.colli.filter((el, i) => i < action.index),
-        {...state.findScheduleForm.colli[action.index], height: action.height},
+        {...state.findScheduleForm.colli[action.index], height: height},
         ...state.findScheduleForm.colli.filter((el, i) => i > action.index),
       ];
       return {
@@ -385,7 +416,7 @@ function appReducer(state = appReducerInitialState, action = {}) {
               floatB = 0;
             }
             return floatA + floatB;
-          }),
+          }, 0),
         }
       };
     }
@@ -420,6 +451,30 @@ function appReducer(state = appReducerInitialState, action = {}) {
         }
       };
     }
+    case ActionCodes.CLEANUP_COLLI: {
+      const colli = state.findScheduleForm.colli.filter(el => {
+         const weight = parseFloat(el.weight);
+         return !isNaN(weight) && weight;
+      });
+      return {
+        ...state,
+        findScheduleForm: {
+          ...state.findScheduleForm,
+          colli,
+          totalVolume: colli.map(collo => collo.length * collo.width * collo.height).reduce((a, b) => {
+             let floatA = parseFloat(a);
+             if (isNaN(floatA)) {
+               floatA = 0;
+             }
+             let floatB = parseFloat(b);
+             if (isNaN(floatB)) {
+               floatB = 0;
+             }
+             return floatA + floatB;
+          }, 0),
+        },
+      };
+    }
     case ActionCodes.SEARCH_STATIONS:
       return {
         ...state, searchStationForm: {...state.searchStationForm, searching: action.searching},
@@ -428,6 +483,32 @@ function appReducer(state = appReducerInitialState, action = {}) {
     case ActionCodes.SET_SEARCH_SUBDISTRICT_FORM:
        return {
          ...state, searchSubdistrictForm: {...state.searchSubdistrictForm, ...action.form},
+      };
+
+    case ActionCodes.SET_AVAILABLE_SCHEDULES:
+      return {
+        ...state, chooseScheduleForm: {...state.chooseScheduleForm, availableSchedules: action.schedules},
+      };
+    case ActionCodes.ADD_AVAILABLE_SCHEDULES:
+      return {
+        ...state, chooseScheduleForm: {
+          ...state.chooseScheduleForm,
+          availableSchedules: [...state.chooseScheduleForm.availableSchedules, ...action.schedules]
+        },
+      };
+    case ActionCodes.SET_MORE_SCHEDULES_URL:
+      return {
+        ...state, chooseScheduleForm: {
+          ...state.chooseScheduleForm,
+          moreSchedulesURL: action.url,
+        },
+      };
+    case ActionCodes.CHOOSE_SCHEDULE:
+      return {
+        ...state, chooseScheduleForm: {
+          ...state.chooseScheduleForm,
+          chosenSchedule: action.schedule,
+        },
       };
 
     default:
