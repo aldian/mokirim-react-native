@@ -57,7 +57,11 @@ class _ChooseScheduleScreen extends React.Component {
                 key={key} style={{borderWidth: 2, borderColor: 'gray', padding: 4, flexDirection: 'column', alignItems: 'stretch', marginBottom: 8}}
                 onPress={() => {
                   this.props.chooseSchedule(schedule);
-                  // TODO: navigate to booking details or asking for login
+                  if (this.props.loggedIn) {
+                    navigate("ShipmentDetails");
+                  } else {
+                    navigate("AskLogin");
+                  }
                 }}
               >
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: 'gray', paddingBottom: 4}}>
@@ -93,7 +97,7 @@ class _ChooseScheduleScreen extends React.Component {
 
                   <View style={{flex: 1}}>
                     <Text style={{fontSize: 12, color: 'gray', textAlign: 'right'}}>{translate('labelTotalPrice')}</Text>
-                    <Text style={{fontSize: 13, color: themeVars.toolbarDefaultBg, textAlign: 'right'}}>{moneyStr(this.props.currentLanguage, schedule.price_per_kg * this.props.totalWeight)}</Text>
+                    <Text style={{fontSize: 13, color: themeVars.toolbarDefaultBg, textAlign: 'right'}}>{moneyStr(this.props.currentLanguage, schedule.price)}</Text>
                   </View>
                 </View>
               </TouchableOpacity>

@@ -19,6 +19,8 @@ export default {
   buttonFindSchedule: "Find schedule",
   buttonUpdate: "Update",
   buttonEditProfile: "Edit Profile",
+  buttonContinue: "Continue",
+  buttonContinueToPayment: "Continue to payment",
 
   errorResourceNotFound: "Resource not found.",
   errorInvalidUsernameOrPassword: "Invalid username or password.",
@@ -46,6 +48,9 @@ export default {
   headerSearchSchedule: "Choose Departure Time",
   headerSearchSubdistrict: "Choose Subdistrict",
   headerChooseShipmentSchedule: "Choose Shipment Schedule",
+  headerShipmentDetails: "Shipment Details",
+  headerAskLogin: "Masuk",
+  headerBookingDetails: "Booking Details",
 
   instructionActivate: {counting: {
     one: "Please type {{count}} digit/letter activation code sent to email address %{email}.",
@@ -94,6 +99,8 @@ export default {
   labelCheckinDeadline: "Check-In Deadline",
   labelTariff: "Tariff",
   labelTotalPrice: "Total Price",
+  labelDescribePackageContent: "Describe Package Content",
+  labelEstimateTotalValue: "Estimate Total Value",
 
   messageIntroWhyTitle: "Send package according to predefined schedule",
   messageIntroWhyText: "Easily choose date and time of you package delivery. Sending package more easily at a lower cost.",
@@ -112,6 +119,9 @@ export default {
   messageProfileUpdated: 'Profile successfully updated.',
   messageScheduleNotFound: 'Schedule not found.',
   messageHello: "Hello, %{name}",
+  messageLoginToBookSchedule: "Please login to book a schedule",
+  messageRegisterAccountForBenefits: "Register a Mokirim account to send and monitor packages.",
+  messageDontHaveAccountYet: "Don't have a Mokirim account yet?",
 
   placeholderOriginating: "Choose originating station/city",
   placeholderDestination: "Choose destination station/city",
@@ -126,9 +136,14 @@ export default {
   titleDestination: "Destination",
   titleDeparture: "Departure",
   titleArrival: "Arrival",
+  titleDepartureTime: "Departure Time",
+  titleSender: "Sender",
+  titleReceiver: "Receiver",
+  titleContentDetails: "Content Details",
 
   subdistrict: "subdistrict",
   address: "address",
+  postal_code: "postal code",
   phone: "phone",
   name: "nama",
   email: "email",

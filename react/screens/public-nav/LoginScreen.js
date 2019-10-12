@@ -41,36 +41,11 @@ class _LoginScreen extends React.Component {
              {this.props.submitting ?
                null :
                <React.Fragment>
-                   <LoginButton
-                     style={{width: 250, height: 32}}
-                     permissions={['email']}
-                     onLoginFinished={
-                       (error, result) => {
-                         if (error) {
-                           Toast.show({
-                              text: error,
-                           });
-                         } else if (result.isCancelled) {
-                           Toast.show({
-                             text: translate("messageLoginCancelled"),
-                             //buttonText: "Okay"
-                           });
-                         } else {
-                           AccessToken.getCurrentAccessToken().then(
-                             data => {
-                               this.props.loggedInToFacebook(this.props.currentLanguage, data.accessToken, this.props.profile);
-                             }
-                           )
-                         }
-                       }
-                     }
-                   />
-
                    <GoogleSigninButton
                      style={{ width: 250, height: 48 }}
                      size={GoogleSigninButton.Size.Wide}
                      color={GoogleSigninButton.Color.Dark}
-                     onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage, this.props.profile)}
+                     onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage, this.props.profile, this.props.chosenSchedule)}
                      disabled={false} />
                </React.Fragment>
              }
@@ -128,7 +103,7 @@ class _LoginScreen extends React.Component {
                 <Button
                   block style={[styles.submitButton, {backgroundColor: themeVars.toolbarDefaultBg}]}
                   onPress={() => this.props.submitForm(
-                    this.props.currentLanguage, this.props.username, this.props.password, this.props.profile
+                    this.props.currentLanguage, this.props.username, this.props.password, this.props.profile, this.props.chosenSchedule
                   )}
                 >
                   <Text>{translate("buttonLogin")}</Text>
@@ -149,18 +124,23 @@ const mapStateToProps = state => {
     errors: state.appReducer.loginForm.errors,
     submitting: state.appReducer.loginForm.submitting,
     profile: state.appReducer.editProfileForm,
+    chosenSchedule: state.appReducer.chooseScheduleForm.chosenSchedule,
   }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const {navigate} = ownProps.navigation;
   return {
-    loggedInToFacebook: (languageCode, accessToken, profile) => dispatch(Actions.loggedInToFacebook(languageCode, accessToken)).then(response => {
+    loggedInToFacebook: (languageCode, accessToken, profile, chosenSchedule) => dispatch(Actions.loggedInToFacebook(languageCode, accessToken)).then(response => {
       if (response.ok) {
          response.json().then(obj => {
            dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
              if (profile.id) {
-               navigate("Dashboard");
+               if (chosenSchedule && chosenSchedule.id) {
+                 navigate('ShipmentDetails');
+               } else {
+                 navigate("Dashboard");
+               }
              } else {
                navigate("EditProfile", {hasBack: false});
              }
@@ -183,7 +163,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     }),
 
-    submitForm: (languageCode, username, password, profile) => dispatch(Actions.submitLoginForm(
+    submitForm: (languageCode, username, password, profile, chosenSchedule) => dispatch(Actions.submitLoginForm(
       languageCode, username, password
     )).then(
       response => {
@@ -196,7 +176,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           response.json().then(obj => {
             dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
               if (profile.id) {
-                navigate("Dashboard");
+                if (chosenSchedule && chosenSchedule.id) {
+                  navigate("ShipmentDetails");
+                } else {
+                  navigate("Dashboard");
+                }
               } else {
                 navigate("EditProfile", {hasBack: false});
               }
@@ -244,12 +228,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     ),
 
-    pressGoogleLogin: (navigate, languageCode, profile) => dispatch(Actions.pressGoogleLogin(languageCode)).then(response => {
+    pressGoogleLogin: (navigate, languageCode, profile, chosenSchedule) => dispatch(Actions.pressGoogleLogin(languageCode)).then(response => {
        if (response.ok) {
          response.json().then(obj => {
            dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
              if (profile.id) {
-               navigate("Dashboard");
+               if (chosenSchedule && chosenSchedule.id) {
+                 navigate("ShipmentDetails");
+               } else {
+                 navigate("Dashboard");
+               }
              } else {
                navigate("EditProfile", {hasBack: false});
              }

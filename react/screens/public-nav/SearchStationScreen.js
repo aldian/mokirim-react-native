@@ -6,6 +6,7 @@ import {
 } from 'native-base';
 import themeVars from '../../theme/variables/material';
 import { translate } from "../../utils/i18n";
+import Database from '../../utils/database';
 import Address from "../../utils/address";
 import Actions from '../../state/Actions';
 import { SearchStationScreenHeader } from '../../components/SearchStationScreenHeader';
@@ -62,7 +63,7 @@ class _SearchStationScreen extends React.Component {
                   isOriginating ? "checkin" : "checkout",
                   text
                 ).then(
-                  results => this.processSearchResults(results)
+                  obj => this.processSearchResults(obj.results)
                 ).catch(err => {
                   Toast.show({
                     text: error,
@@ -114,37 +115,53 @@ class _SearchStationScreen extends React.Component {
      }
      this.props.downloadStationDetails(true);
      results.forEach(place => {
-       const postalCodePromise = Address.getPostalCode(
-         this.props.currentLanguage, this.props.accessToken, place.address__postal_code
-       );
-       const subdistrictPromise = Address.getSubdistrict(
-         this.props.currentLanguage, this.props.accessToken, place.address__subdistrict
-       ).then(subdistrictObj => {
-         const districtPromise = Address.getDistrict(
-           this.props.currentLanguage, this.props.accessToken, subdistrictObj.district
-         );
-         return districtPromise.then(districtObj => ({subdistrictObj, districtObj}));
-       }).then(({subdistrictObj, districtObj}) => {
-         const cityPromise = Address.getCity(
-           this.props.currentLanguage, this.props.accessToken, districtObj.city
-         );
-         return cityPromise.then(cityObj => ({subdistrictObj, districtObj, cityObj}));
-       }).then(({subdistrictObj, districtObj, cityObj}) => {
-         const statePromise = Address.getState(
-           this.props.currentLanguage, this.props.accessToken, cityObj.state
-         );
-         return statePromise.then(stateObj => ({subdistrictObj, districtObj, cityObj, stateObj}));
-       }).then(({subdistrictObj, districtObj, cityObj, stateObj}) => {
-         postalCodePromise.then(postalCodeObj => {
-           const text = (
-             place.name + ", " + place.address__name + ", " + subdistrictObj.name + ", " +
-             districtObj.name + ", " + cityObj.name + ", " + stateObj.name + " " +
-             postalCodeObj.code
-           );
-           this.setState({listData: {...this.state.listData, [place.id]: text}});
-           this.props.downloadStationDetails(false);
+       Database.openDatabase().then(db => {
+         Database.addOrUpdateAddress(db, {
+            id: place.address,
+            name: place.address__name,
+            subdistrict: place.address__subdistrict,
+            postalCode: place.address__postal_code,
+         });
+
+         if (place.address__postal_code) {
+           Database.addOrUpdatePostalCode(db, {
+             id: place.address__postal_code, code: place.postal_code,
+             subdistrict: place.address__subdistrict
+           });
+         }
+
+         Database.addOrUpdateSubdistrict(db, {
+           id: place.address__subdistrict,
+           name: place.subdistrict_name,
+           district: place.district,
+         });
+
+         Database.addOrUpdateDistrict(db, {
+           id: place.district,
+           name: place.district_name,
+           city: place.city,
+         });
+
+         Database.addOrUpdateCity(db, {
+           id: place.city,
+           name: place.city_name,
+           state: place.state,
+         });
+
+         Database.addOrUpdateState(db, {
+           id: place.state,
+           name: place.state_name,
+           country: place.country,
          });
        });
+
+       const text = (
+          place.name + ", " + place.address__name + ", " + place.subdistrict_name + ", " +
+          place.district_name + ", " + place.city_name + ", " + place.state_name +
+          (place.postal_code ? " " + place.postal_code : "")
+       );
+       this.setState({listData: {...this.state.listData, [place.id]: text}});
+       this.props.downloadStationDetails(false);
      });
   }
 }

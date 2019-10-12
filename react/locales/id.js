@@ -19,6 +19,8 @@ export default {
   buttonFindSchedule: "Cari pengiriman",
   buttonUpdate: "Perbarui",
   buttonEditProfile: "Edit Profil",
+  buttonContinue: "Lanjutkan",
+  buttonContinueToPayment: "Lanjutkan ke pembayaran",
 
   errorResourceNotFound: "Resource tak ditemukan.",
   errorInvalidUsernameOrPassword: "Username atau kata sandi salah.",
@@ -46,6 +48,9 @@ export default {
   headerSearchSchedule: "Pilih Jadwal Pengiriman",
   headerSearchSubdistrict: "Pilih Desa/Kelurahan",
   headerChooseShipmentSchedule: "Pilih Jadwal Pengiriman",
+  headerShipmentDetails: "Detail Kiriman",
+  headerAskLogin: "Login",
+  headerBookingDetails: "Rincian Booking",
 
   instructionActivate: {counting: {
     one: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
@@ -94,6 +99,8 @@ export default {
   labelCheckinDeadline: "Check-In Maksimal",
   labelTariff: "Tarif",
   labelTotalPrice: "Total Biaya",
+  labelDescribePackageContent: "Sebutkan Isi Kiriman",
+  labelEstimateTotalValue: "Estimasi Nilai Barang",
 
   messageIntroWhyTitle: "Kirim barang dengan jadwal sesuai keinginan",
   messageIntroWhyText: "Kemudahan mengatur jadwal kirim di tanggal dan jam yang diinginkan. Kirim lebih mudah, biaya lebih hemat.",
@@ -112,6 +119,9 @@ export default {
   messageProfileUpdated: 'Profil berhasil diubah.',
   messageScheduleNotFound: 'Jadwal tak ditemukan.',
   messageHello: "Halo, %{name}",
+  messageLoginToBookSchedule: "Login untuk melanjutkan booking",
+  messageRegisterAccountForBenefits: "Daftar akun Mokirim untuk kemudahan pengiriman dan pelacakan.",
+  messageDontHaveAccountYet: "Belum punya akun Mokirim?",
 
   placeholderOriginating: "Pilih station/kota asal",
   placeholderDestination: "Pilih station/kota tujuan",
@@ -126,9 +136,14 @@ export default {
   titleDestination: "Tujuan",
   titleDeparture: "Berangkat",
   titleArrival: "Tiba",
+  titleDepartureTime: "Jam Keberangkatan",
+  titleSender: "Pengirim",
+  titleReceiver: "Penerima",
+  titleContentDetails: "Detail Isi Kiriman",
 
   subdistrict: "desa/kelurahan",
   address: "alamat",
+  postal_code: "kode pos",
   phone: "telpon",
   name: "nama",
   email: "email",

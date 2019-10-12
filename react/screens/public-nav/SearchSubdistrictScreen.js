@@ -7,6 +7,7 @@ import {
 import themeVars from '../../theme/variables/material';
 import { translate } from "../../utils/i18n";
 import MokirimAPI from "../../utils/MokirimAPI";
+import Database from '../../utils/database';
 import Address from "../../utils/address";
 import Actions from '../../state/Actions';
 import { SearchSubdistrictScreenHeader } from '../../components/SearchSubdistrictScreenHeader';
@@ -77,7 +78,10 @@ class _SearchSubdistrictScreen extends React.Component {
               data={
                 Object.keys(this.state.listData).map(key => {
                   const [subdistrict, postalCode] = key.split('-');
-                  return {key, subdistrict, postalCode, text: this.state.listData[key]};
+                  return {
+                    key, subdistrict: parseInt(subdistrict, 10),
+                    postalCode: parseInt(postalCode, 10), text: this.state.listData[key]
+                  };
                 })
               }
               keyExtractor={(item, index) => String(item.key)}
@@ -114,60 +118,51 @@ class _SearchSubdistrictScreen extends React.Component {
   }
 
   processSearchResults(results) {
+     this.setState({listData: {}});
      if (results.length < 1) {
        this.setState({notFound: true});
        return;
      }
-     this.props.downloadSubdistrictDetails(true);
      results.forEach(subdistrict => {
-       const postalCodePromise = MokirimAPI.getPostalCode(
-         this.props.currentLanguage, this.props.accessToken, null, {subdistrict__id: subdistrict.id}
-       );
+       Database.openDatabase().then(db => {
+          if (subdistrict.postalcode) {
+            Database.addOrUpdatePostalCode(db, {
+              id: subdistrict.postalcode,
+              code: subdistrict.postalcode_code,
+              subdistrict: subdistrict.id,
+            });
+          }
 
-       const districtPromise = Address.getDistrict(
-         this.props.currentLanguage, this.props.accessToken, subdistrict.district
-       ).then(districtObj => {
-         const cityPromise = Address.getCity(
-           this.props.currentLanguage, this.props.accessToken, districtObj.city
-         );
-         return cityPromise.then(cityObj => ({districtObj, cityObj}));
-       }).then(({districtObj, cityObj}) => {
-         const statePromise = Address.getState(
-           this.props.currentLanguage, this.props.accessToken, cityObj.state
-         );
-         return statePromise.then(stateObj => ({districtObj, cityObj, stateObj}));
-       }).then(({districtObj, cityObj, stateObj}) => {
-         postalCodePromise.then(response => {
-           if (response.ok) {
-             response.json().then(obj => {
-               if (obj.count < 1) {
-                 this.generateSubdistrictText(subdistrict, districtObj.name, cityObj.name, stateObj.name);
-               } else {
-                 obj.results.forEach(result => {
-                   this.generateSubdistrictText(subdistrict, districtObj.name, cityObj.name, stateObj.name, result);
-                 });
-               }
-               this.props.downloadSubdistrictDetails(false);
-             });
-           } else {
-             this.generateSubdistrictText(subdistrict, districtObj.name, cityObj.name, stateObj.name);
-             this.props.downloadSubdistrictDetails(false);
-             Toast.show({
-               text: "ERROR " + response.status,
-               buttonText: "OK",
-               duration: 5000,
-             });
-           }
-         }).catch(error => {
-           this.generateSubdistrictText(subdistrict, districtObj.name, cityObj.name, stateObj.name);
-           this.props.downloadSubdistrictDetails(false);
-           Toast.show({
-             text: error,
-             buttonText: "OK",
-             duration: 5000,
-           });
-         });
+          Database.addOrUpdateSubdistrict(db, {
+            id: subdistrict.id,
+            name: subdistrict.name,
+            district: subdistrict.district,
+          });
+
+          Database.addOrUpdateDistrict(db, {
+            id: subdistrict.district,
+            name: subdistrict.district_name,
+            city: subdistrict.city,
+          });
+
+          Database.addOrUpdateCity(db, {
+            id: subdistrict.city,
+            name: subdistrict.city_name,
+            state: subdistrict.state,
+          });
+
+          Database.addOrUpdateState(db, {
+            id: subdistrict.state,
+            name: subdistrict.state_name,
+            country: subdistrict.country,
+          });
        });
+
+       this.generateSubdistrictText(
+         {id: subdistrict.id, name: subdistrict.name}, subdistrict.district_name, subdistrict.city_name,
+         subdistrict.state_name,
+         (subdistrict.postalcode ? {id: subdistrict.postalcode, code: subdistrict.postalcode_code} : undefined),
+       );
      });
   }
 }
@@ -189,7 +184,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       selectedSubdistrictText: obj.text,
     })),
     searchSubdistricts: (languageCode, accessToken, text) => dispatch(
-      Actions.searchSubdistricts(languageCode, accessToken, text, {limit: 100})
+      Actions.searchSubdistricts(languageCode, accessToken, text, {limit: 20})
     ),
     downloadSubdistrictDetails: downloading => dispatch(Actions.setSearchSubdistrictForm({searching: downloading})),
   }

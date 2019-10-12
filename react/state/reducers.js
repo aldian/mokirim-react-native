@@ -94,6 +94,19 @@ const appReducerInitialState = {
     moreSchedulesURL: null,
     chosenSchedule: null,
   },
+
+  shipmentDetailsForm: {
+    openedSubformIndex: undefined,
+    sender: {
+      errors: {},
+    },
+    receiver: {
+      errors: {},
+    },
+    content: {
+      errors: {},
+    },
+  },
 };
 
 function appReducer(state = appReducerInitialState, action = {}) {
@@ -509,6 +522,62 @@ function appReducer(state = appReducerInitialState, action = {}) {
           ...state.chooseScheduleForm,
           chosenSchedule: action.schedule,
         },
+      };
+
+    case ActionCodes.SET_SHIPMENT_DETAILS_FORM:
+      return {
+        ...state, shipmentDetailsForm: {...state.shipmentDetailsForm, ...action.form}
+      };
+    case ActionCodes.SET_SHIPMENT_DETAILS_FORM_SENDER:
+      return {
+        ...state, shipmentDetailsForm: {
+          ...state.shipmentDetailsForm,
+          sender: {...state.shipmentDetailsForm.sender, ...action.sender}
+        }
+      };
+    case ActionCodes.SET_SHIPMENT_DETAILS_FORM_SENDER_ERROR:
+      return {
+        ...state, shipmentDetailsForm: {
+          ...state.shipmentDetailsForm,
+          sender: {
+            ...state.shipmentDetailsForm.sender,
+            errors: {...state.shipmentDetailsForm.sender.errors, ...action.error}
+          }
+        }
+      };
+    case ActionCodes.SET_SHIPMENT_DETAILS_FORM_RECEIVER:
+      return {
+        ...state, shipmentDetailsForm: {
+          ...state.shipmentDetailsForm,
+          receiver: {...state.shipmentDetailsForm.receiver, ...action.receiver}
+        }
+      };
+    case ActionCodes.SET_SHIPMENT_DETAILS_FORM_RECEIVER_ERROR:
+      return {
+        ...state, shipmentDetailsForm: {
+          ...state.shipmentDetailsForm,
+          receiver: {
+            ...state.shipmentDetailsForm.receiver,
+            errors: {...state.shipmentDetailsForm.receiver.errors, ...action.error}
+          }
+        }
+      };
+    case ActionCodes.SET_SHIPMENT_DETAILS_FORM_CONTENT:
+      return {
+        ...state, shipmentDetailsForm: {
+          ...state.shipmentDetailsForm,
+          content: {...state.shipmentDetailsForm.content, ...action.content}
+        }
+      };
+    case ActionCodes.SET_SHIPMENT_DETAILS_FORM_CONTENT_ERROR:
+      return {
+        ...state, shipmentDetailsForm: {
+          ...state.shipmentDetailsForm,
+          content: {
+            ...state.shipmentDetailsForm.content,
+            errors: {...state.shipmentDetailsForm.content.errors, ...action.error}
+          }
+        }
       };
 
     default:

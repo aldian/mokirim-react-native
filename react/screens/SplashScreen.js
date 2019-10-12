@@ -31,7 +31,6 @@ class _SplashScreen extends React.Component {
       const accessToken = (
         this.props.states.accessToken || this.props.states.device.token
       );
-      this.props.downloadMasterData(this.props.states.currentLanguage, accessToken);
 
       if (this.props.states.splashShown) {
         this.props.navigation.navigate(nextScreen, {hasBack: false});
