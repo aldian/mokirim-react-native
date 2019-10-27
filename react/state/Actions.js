@@ -707,16 +707,15 @@ const submitEditProfileForm = (languageCode, accessToken, profile) => dispatch =
   });
 
   const addressPromise = new Promise((resolveAddress, rejectAddress) => {
-     if (profile.address.id) {
-       resolveAddress(profile.address.id);
-     } else {
-       MokirimAPI.postAddress(languageCode, accessToken, profile.address).then(response => {
+       let address = profile.address;
+       delete(address.id);
+       MokirimAPI.postAddress(languageCode, accessToken, address).then(response => {
          if (response.ok) {
            response.json().then(obj => {
              dispatch(setUserProfile({address: obj.id}));
              Database.openDatabase().then(db => {
                return Database.updateUserStates(db, {
-                 profileAddress: String(objId),
+                 profileAddress: String(obj.id),
                });
              });
 
@@ -735,7 +734,6 @@ const submitEditProfileForm = (languageCode, accessToken, profile) => dispatch =
        }).catch(error => {
          rejectAddress(error);
        });
-     }
   });
 
   passwordPromise.then(() => {
@@ -980,6 +978,41 @@ const chooseSchedule = schedule => ({
   schedule,
 });
 
+const setShipmentDetailsForm = form => ({
+  type: ActionCodes.SET_SHIPMENT_DETAILS_FORM,
+  form,
+});
+
+const setShipmentDetailsFormSender = sender => ({
+  type: ActionCodes.SET_SHIPMENT_DETAILS_FORM_SENDER,
+  sender,
+});
+
+const setShipmentDetailsFormSenderError = error => ({
+  type: ActionCodes.SET_SHIPMENT_DETAILS_FORM_SENDER_ERROR,
+  error,
+});
+
+const setShipmentDetailsFormReceiver = receiver => ({
+  type: ActionCodes.SET_SHIPMENT_DETAILS_FORM_RECEIVER,
+  receiver,
+});
+
+const setShipmentDetailsFormReceiverError = error => ({
+  type: ActionCodes.SET_SHIPMENT_DETAILS_FORM_RECEIVER_ERROR,
+  error,
+});
+
+const setShipmentDetailsFormContent = content => ({
+  type: ActionCodes.SET_SHIPMENT_DETAILS_FORM_CONTENT,
+  content,
+});
+
+const setShipmentDetailsFormContentError = error => ({
+  type: ActionCodes.SET_SHIPMENT_DETAILS_FORM_CONTENT_ERROR,
+  error,
+});
+
 export default Actions = {
   updateAppStates,
 
@@ -1050,4 +1083,12 @@ export default Actions = {
   addAvailableSchedules,
   setMoreSchedulesURL,
   chooseSchedule,
+
+  setShipmentDetailsForm,
+  setShipmentDetailsFormSender,
+  setShipmentDetailsFormSenderError,
+  setShipmentDetailsFormReceiver,
+  setShipmentDetailsFormReceiverError,
+  setShipmentDetailsFormContent,
+  setShipmentDetailsFormContentError,
 }

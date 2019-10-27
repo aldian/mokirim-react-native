@@ -29,7 +29,7 @@ const GET_POSTAL_CODE_PATH = "/api/postal_code/";
 
 const POST_ADDRESS_PATH = "/api/address/";
 
-const SEARCH_STATIONS_PATH = "/api/stations/";
+const SEARCH_STATIONS_PATH = "/api/station/";
 const SEARCH_SUBDISTRICTS_PATH = "/api/subdistrict/";
 
 const GET_SCHEDULE_PATH = "/api/schedule/";
@@ -37,7 +37,7 @@ const GET_SCHEDULE_PATH = "/api/schedule/";
 const DEFAULT_CONFIG = {
   baseUrl: BASE_URL,
   offset: 0,
-  limit: 1000,
+  limit: 50,
 };
 
 const registerDevice = (languageCode, deviceId) => {
@@ -353,11 +353,15 @@ const postAddress = (languageCode, accessToken, address, config = null) => {
   } else {
     config = DEFAULT_CONFIG;
   }
-  let serverAddress = {...address, postal_code: address.postalCode};
-  delete(serverAddress.postalCode);
+  let serverAddress = {...address};
+  if (address.postalCode) {
+    serverAddress.postal_code = address.postalCode;
+    delete(serverAddress.postalCode);
+  }
+  delete(serverAddress.id);
 
   const requestOptions = {
-    method: 'POST',
+    method: address.id ? 'PATCH' : 'POST',
     headers: {
       Authorization: 'Token ' + accessToken,
       'Content-Type': CONTENT_TYPE_URL_ENCODED,
@@ -365,7 +369,7 @@ const postAddress = (languageCode, accessToken, address, config = null) => {
     body: qs.stringify(serverAddress),
   };
 
-  return fetch(config.baseUrl + languageCode + POST_ADDRESS_PATH, requestOptions);
+  return fetch(config.baseUrl + languageCode + POST_ADDRESS_PATH + (address.id ? address.id + '/' : ''), requestOptions);
 };
 
 const searchStations = (languageCode, accessToken, type, text) => {
@@ -377,7 +381,7 @@ const searchStations = (languageCode, accessToken, type, text) => {
     },
   };
 
-  const queryString = qs.stringify({type, text});
+  const queryString = qs.stringify({type, search: text});
 
   return fetch(BASE_URL + languageCode + SEARCH_STATIONS_PATH + '?' + queryString, requestOptions);
 };
@@ -420,10 +424,21 @@ const getSchedule = (
      },
   };
 
-  const startDateStr = departureDate.toISOString().replace(/(\d)T(\d)/, "$1 $2").replace(/\D+$/, "");
-  const endDateStr = moment(departureDate).add(1, 'days').toDate().toISOString().replace(/(\d)T(\d)/, "$1 $2").replace(/\D+$/, "");
+  const nowDate = new Date();
+  const departureDateOriginal = departureDate;
+  if (departureDate < nowDate) {
+    departureDate = nowDate;
+  }
 
-  const queryString = qs.stringify({min_datetime: startDateStr, max_datetime: endDateStr, limit: config.limit, offset: config.offset});
+  const startDateStr = departureDate.toISOString().replace(/(\d)T(\d)/, "$1 $2").replace(/\D+$/, "");
+  const endDateStr = moment(departureDateOriginal).add(1, 'days').toDate().toISOString().replace(/(\d)T(\d)/, "$1 $2").replace(/\D+$/, "");
+
+  const queryString = qs.stringify({
+    min_datetime: startDateStr, max_datetime: endDateStr,
+    from_place: originatingStation, to_place: destinationStation,
+    weight_kg: totalWeight,
+    limit: config.limit, offset: config.offset
+  });
 
   return fetch(config.baseUrl + languageCode + GET_SCHEDULE_PATH + '?' + queryString, requestOptions);
 };

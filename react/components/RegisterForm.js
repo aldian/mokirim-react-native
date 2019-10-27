@@ -29,31 +29,6 @@ class _RegisterForm extends React.Component {
           {this.props.submitting ?
             null :
             <React.Fragment>
-                <LoginButton
-                  style={{width: 250, height: 32}}
-                  permissions={['email']}
-                  onLoginFinished={
-                    (error, result) => {
-                      if (error) {
-                        Toast.show({
-                           text: error,
-                        });
-                      } else if (result.isCancelled) {
-                        Toast.show({
-                          text: translate("messageLoginCancelled"),
-                          //buttonText: "Okay"
-                        });
-                      } else {
-                        AccessToken.getCurrentAccessToken().then(
-                          data => {
-                            this.props.loggedInToFacebook(this.props.currentLanguage, data.accessToken, this.props.profile);
-                          }
-                        )
-                      }
-                    }
-                  }
-                />
-
                 <GoogleSigninButton
                   style={{ width: 250, height: 48 }}
                   size={GoogleSigninButton.Size.Wide}

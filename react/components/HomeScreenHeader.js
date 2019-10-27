@@ -14,7 +14,7 @@ class _HomeScreenHeader extends React.Component {
   render() {
     return <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
-        <HeaderLeft>
+        <HeaderLeft style={{flex: 0, paddingRight: 8}}>
           <Image source={require('../img/mokirim_logo.png')} style={{flex: 1, alignSelf: 'center', width: 24, height: 24, resizeMode: 'contain'}}/>
         </HeaderLeft>
         <HeaderBody>

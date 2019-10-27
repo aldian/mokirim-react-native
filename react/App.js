@@ -32,6 +32,9 @@ import { StationToStationScreen } from './screens/public-nav/StationToStationScr
 import { SearchStationScreen } from './screens/public-nav/SearchStationScreen';
 import { SearchScheduleScreen } from './screens/public-nav/SearchScheduleScreen';
 import { ChooseScheduleScreen } from './screens/public-nav/ChooseScheduleScreen';
+import { ShipmentDetailsScreen } from './screens/public-nav/ShipmentDetailsScreen';
+import { BookingDetailsScreen } from './screens/public-nav/BookingDetailsScreen';
+import { AskLoginScreen } from './screens/public-nav/AskLoginScreen';
 
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
 import { EditProfileScreen } from './screens/user-nav/EditProfileScreen';
@@ -82,6 +85,9 @@ const UserNavigator = createStackNavigator({
   SearchStation: {screen: SearchStationScreen, path: 'user/searchStation'},
   SearchSchedule: {screen: SearchScheduleScreen, path: 'user/searchSchedule'},
   ChooseSchedule: {screen: ChooseScheduleScreen, path: 'user/chooseSchedule'},
+  ShipmentDetails: {screen: ShipmentDetailsScreen, path: 'user/shipmentDetails'},
+  BookingDetails: {screen: BookingDetailsScreen, path: 'user/bookingDetails'},
+  AskLogin: {screen: AskLoginScreen, path: 'user/askLogin'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,
