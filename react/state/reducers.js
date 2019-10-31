@@ -1,8 +1,10 @@
+import uuid from 'uuid';
 import {combineReducers} from 'redux';
 import constants from '../constants';
 import ActionCodes from './ActionCodes';
 
 const appReducerInitialState = {
+  apiVValue: uuid.v4(),
   currentLanguage: undefined,
   splashShown: false,
   statesLoadedFromDb: false,
@@ -107,6 +109,21 @@ const appReducerInitialState = {
       errors: {},
     },
   },
+
+  bookingDetailsForm: {
+    submitting: false,
+  },
+
+  bookings: [
+  ],
+
+  shipmentsForm: {
+    loaded: false,
+  },
+
+  moneyTransferConfirmationForm: {
+    submitting: false,
+  },
 };
 
 function appReducer(state = appReducerInitialState, action = {}) {
@@ -114,6 +131,10 @@ function appReducer(state = appReducerInitialState, action = {}) {
     case ActionCodes.UPDATE_APP_STATES:
       return {
         ...state, ...action.states
+      };
+    case ActionCodes.UPDATE_API_V_VALUE:
+      return {
+        ...state, apiVValue: uuid.v4(),
       };
     case ActionCodes.SET_ERROR_MESSAGE:
       return {
@@ -134,17 +155,17 @@ function appReducer(state = appReducerInitialState, action = {}) {
     case ActionCodes.LOGGED_IN_TO_FACEBOOK:
       return {
         ...state, loggedIn: true, loggedInVia: 'facebook',
-        facebook: {...state.facebook, accessToken: action.accessToken}
+        facebook: {...state.facebook, accessToken: action.accessToken,}
       };
     case ActionCodes.LOGGED_IN_TO_GOOGLE:
       return {
         ...state, loggedIn: true, loggedInVia: 'google',
-        google: {...state.google, accessToken: action.accessToken}
+        google: {...state.google, accessToken: action.accessToken,}
       };
     case ActionCodes.LOGGED_IN_TO_MOKIRIM:
        return {
          ...state, loggedIn: true, loggedInVia: 'mokirim',
-         accessToken: action.accessToken,
+         accessToken: action.accessToken, apiVValue: uuid.v4(),
        };
     case ActionCodes.SET_LOGIN_FORM_USERNAME:
       return {
@@ -170,6 +191,7 @@ function appReducer(state = appReducerInitialState, action = {}) {
     case ActionCodes.LOGOUT:
       return {
         ...state, loggedIn: false, loggedInVia: null, encodedUserId: null, accessToken: null,
+        apiVValue: uuid.v4(),
         email: null,
         facebook: {...state.facebook, accessToken: null},
         google: {...state.google, accessToken: null},
@@ -580,8 +602,33 @@ function appReducer(state = appReducerInitialState, action = {}) {
         }
       };
 
+    case ActionCodes.SET_BOOKING_DETAILS_FORM:
+      return {
+        ...state, bookingDetailsForm: {
+          ...state.bookingDetailsForm,
+          ...action.form,
+        }
+      };
+
+    case ActionCodes.SET_BOOKINGS:
+      return {
+        ...state, bookings: action.bookings,
+      };
+    case ActionCodes.SET_SHIPMENTS_FORM:
+      return {
+        ...state, shipmentsForm: {...state.shipmentsForm, ...action.form},
+      };
+
     default:
       return state;
+
+    case ActionCodes.SET_MONEY_TRANSFER_CONFIRMATION_FORM:
+      return {
+        ...state, moneyTransferConfirmationForm: {
+          ...state.moneyTransferConfirmationForm,
+          ...action.form,
+        }
+      };
   }
 }
 

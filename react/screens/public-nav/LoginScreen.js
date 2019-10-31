@@ -9,7 +9,7 @@ import {
   Icon, IconNB, Spinner, StyleProvider,
 } from 'native-base';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import { translate } from "../../utils/i18n";
 import Actions from '../../state/Actions';
 //import { NavigationL10nText } from '../../components/NavigationL10nText';
@@ -45,7 +45,7 @@ class _LoginScreen extends React.Component {
                      style={{ width: 250, height: 48 }}
                      size={GoogleSigninButton.Size.Wide}
                      color={GoogleSigninButton.Color.Dark}
-                     onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage, this.props.profile, this.props.chosenSchedule)}
+                     onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage, this.props.profile, this.props.chosenSchedule, {v: this.props.apiVValue})}
                      disabled={false} />
                </React.Fragment>
              }
@@ -103,7 +103,7 @@ class _LoginScreen extends React.Component {
                 <Button
                   block style={[styles.submitButton, {backgroundColor: themeVars.toolbarDefaultBg}]}
                   onPress={() => this.props.submitForm(
-                    this.props.currentLanguage, this.props.username, this.props.password, this.props.profile, this.props.chosenSchedule
+                    this.props.currentLanguage, this.props.username, this.props.password, this.props.profile, this.props.chosenSchedule, {v: this.props.apiVValue}
                   )}
                 >
                   <Text>{translate("buttonLogin")}</Text>
@@ -125,16 +125,17 @@ const mapStateToProps = state => {
     submitting: state.appReducer.loginForm.submitting,
     profile: state.appReducer.editProfileForm,
     chosenSchedule: state.appReducer.chooseScheduleForm.chosenSchedule,
+    apiVValue: state.appReducer.apiVValue,
   }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const {navigate} = ownProps.navigation;
   return {
-    loggedInToFacebook: (languageCode, accessToken, profile, chosenSchedule) => dispatch(Actions.loggedInToFacebook(languageCode, accessToken)).then(response => {
+    loggedInToFacebook: (languageCode, accessToken, profile, chosenSchedule, config) => dispatch(Actions.loggedInToFacebook(languageCode, accessToken)).then(response => {
       if (response.ok) {
          response.json().then(obj => {
-           dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
+           dispatch(Actions.loadUserProfile(languageCode, obj.token, profile, config)).then(profile => {
              if (profile.id) {
                if (chosenSchedule && chosenSchedule.id) {
                  navigate('ShipmentDetails');
@@ -163,7 +164,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     }),
 
-    submitForm: (languageCode, username, password, profile, chosenSchedule) => dispatch(Actions.submitLoginForm(
+    submitForm: (languageCode, username, password, profile, chosenSchedule, config) => dispatch(Actions.submitLoginForm(
       languageCode, username, password
     )).then(
       response => {
@@ -174,7 +175,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch(Actions.setLoginFormPassword(''));
 
           response.json().then(obj => {
-            dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
+            dispatch(Actions.loadUserProfile(languageCode, obj.token, profile, config)).then(profile => {
               if (profile.id) {
                 if (chosenSchedule && chosenSchedule.id) {
                   navigate("ShipmentDetails");
@@ -228,10 +229,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     ),
 
-    pressGoogleLogin: (navigate, languageCode, profile, chosenSchedule) => dispatch(Actions.pressGoogleLogin(languageCode)).then(response => {
+    pressGoogleLogin: (navigate, languageCode, profile, chosenSchedule, config) => dispatch(Actions.pressGoogleLogin(languageCode)).then(response => {
        if (response.ok) {
          response.json().then(obj => {
-           dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
+           dispatch(Actions.loadUserProfile(languageCode, obj.token, profile, config)).then(profile => {
              if (profile.id) {
                if (chosenSchedule && chosenSchedule.id) {
                  navigate("ShipmentDetails");

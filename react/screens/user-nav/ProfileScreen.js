@@ -7,7 +7,7 @@ import {
   Header, Body as HeaderBody, Title as HeaderTitle, Left as HeaderLeft, Right as HeaderRight,
   Icon, StyleProvider, Text,
 } from 'native-base';
-import { GoogleSignin } from 'react-native-google-signin';
+import { GoogleSignin } from '@react-native-community/google-signin';
 import { LoginButton } from 'react-native-fbsdk';
 import { translate } from "../../utils/i18n";
 import getTheme from '../../theme/components';

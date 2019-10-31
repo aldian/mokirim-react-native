@@ -15,10 +15,13 @@ class _HomeScreenHeader extends React.Component {
     return <StyleProvider style={getTheme(themeVars)}>
       <Header noShadow style={{backgroundColor: themeVars.toolbarDefaultBg}}>
         <HeaderLeft style={{flex: 0, paddingRight: 8}}>
-          <Image source={require('../img/mokirim_logo.png')} style={{flex: 1, alignSelf: 'center', width: 24, height: 24, resizeMode: 'contain'}}/>
+          {this.props.loggedIn ?
+            <Image source={require('../img/mokirim_white.png')} style={{flex: 1, alignSelf: 'center', width: 100, height: 16, resizeMode: 'contain'}}/> :
+            <Image source={require('../img/mokirim_logo.png')} style={{flex: 1, alignSelf: 'center', width: 24, height: 24, resizeMode: 'contain'}}/>
+          }
         </HeaderLeft>
         <HeaderBody>
-          <HeaderTitle>{this.props.loggedIn ? translate("headerDashboard") : translate("headerWelcome")}</HeaderTitle>
+          <HeaderTitle>{this.props.loggedIn ? null : translate("headerWelcome")}</HeaderTitle>
         </HeaderBody>
         {(this.props.loggedIn && this.props.profile.name) ?
           <HeaderRight>

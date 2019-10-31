@@ -11,7 +11,7 @@ import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 require('moment/locale/id.js');
-import { GoogleSignin } from 'react-native-google-signin';
+import { GoogleSignin } from '@react-native-community/google-signin';
 import { rootReducer } from './state/reducers';
 import { initNotifications } from './utils/notifications';
 import { initI18n } from './utils/i18n';
@@ -34,11 +34,17 @@ import { SearchScheduleScreen } from './screens/public-nav/SearchScheduleScreen'
 import { ChooseScheduleScreen } from './screens/public-nav/ChooseScheduleScreen';
 import { ShipmentDetailsScreen } from './screens/public-nav/ShipmentDetailsScreen';
 import { BookingDetailsScreen } from './screens/public-nav/BookingDetailsScreen';
+import { PaymentScreen } from './screens/public-nav/PaymentScreen';
 import { AskLoginScreen } from './screens/public-nav/AskLoginScreen';
 
 import { ProfileScreen } from './screens/user-nav/ProfileScreen';
 import { EditProfileScreen } from './screens/user-nav/EditProfileScreen';
 import { SearchSubdistrictScreen } from './screens/public-nav/SearchSubdistrictScreen';
+
+import { BookingCreatedScreen } from './screens/public-nav/BookingCreatedScreen';
+import { ShipmentsScreen } from './screens/public-nav/ShipmentsScreen';
+import { ShipmentStatusScreen } from './screens/public-nav/ShipmentStatusScreen';
+import { MoneyTransferConfirmationScreen } from './screens/public-nav/MoneyTransferConfirmationScreen';
 
 console.disableYellowBox = true
 
@@ -87,7 +93,19 @@ const UserNavigator = createStackNavigator({
   ChooseSchedule: {screen: ChooseScheduleScreen, path: 'user/chooseSchedule'},
   ShipmentDetails: {screen: ShipmentDetailsScreen, path: 'user/shipmentDetails'},
   BookingDetails: {screen: BookingDetailsScreen, path: 'user/bookingDetails'},
+  Payment: {screen: PaymentScreen, path: 'user/payment'},
   AskLogin: {screen: AskLoginScreen, path: 'user/askLogin'},
+}, {
+  defaultNavigationOptions: {
+    header: props => <NavigationHeader {...props}/>,
+  }
+});
+
+const ShipmentsNavigator = createStackNavigator({
+  Shipments: {screen: ShipmentsScreen, path: 'user/shipments'},
+  BookingCreated: {screen: BookingCreatedScreen, path: 'user/bookingCreated/:id'},
+  ShipmentStatus: {screen: ShipmentStatusScreen, path: 'user/shipmentStatus/:id'},
+  MoneyTransferConfirmation: {screen: MoneyTransferConfirmationScreen, path: 'user/moneyTransferConfirmation/:id'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,
@@ -100,6 +118,7 @@ const SwitchNavigator = createSwitchNavigator({
   Public: PublicNavigator,
   EditProfileNav: EditProfileNavigator,
   User: UserNavigator,
+  ShipmentsNav: ShipmentsNavigator,
 });
 
 const Navigation = createAppContainer(SwitchNavigator);

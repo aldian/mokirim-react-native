@@ -81,7 +81,7 @@ class _ChooseScheduleScreen extends React.Component {
                 </View>
 
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderColor: 'gray', paddingBottom: 4}}>
-                  <Text style={{flex: 1, color: themeVars.toolbarDefaultBg, fontSize: 13}}>{translate("labelCheckinDeadline")}</Text>
+                  <Text style={{flex: 1, color: themeVars.toolbarDefaultBg, fontSize: 13}}>{translate("labelCheckInDeadline")}</Text>
 
                   <View style={{flex: 1}}>
                     <Text style={{textAlign: 'right', color: themeVars.toolbarDefaultBg, fontSize: 13}}>{getDateDisplayString(checkinTime, 0)}</Text>

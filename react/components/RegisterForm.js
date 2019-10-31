@@ -6,7 +6,7 @@ import {
 } from 'native-base';
 import uuid from 'uuid';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import { translate } from "../utils/i18n";
 import themeVars from '../theme/variables/material';
 import Actions from '../state/Actions';
@@ -33,7 +33,7 @@ class _RegisterForm extends React.Component {
                   style={{ width: 250, height: 48 }}
                   size={GoogleSigninButton.Size.Wide}
                   color={GoogleSigninButton.Color.Dark}
-                  onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage, this.props.profile)}
+                  onPress={() => this.props.pressGoogleLogin(navigate, this.props.currentLanguage, this.props.profile, {v: this.props.apiVValue})}
                   disabled={false} />
             </React.Fragment>
           }
@@ -90,16 +90,17 @@ const mapStateToProps = state => {
     errors: state.appReducer.registerForm.errors,
     submitting: state.appReducer.registerForm.submitting,
     profile: state.appReducer.editProfileForm,
+    apiVValue: state.appReducer.apiVValue,
   }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const {navigate} = ownProps.navigation;
   return {
-    loggedInToFacebook: (languageCode, accessToken, profile) => dispatch(Actions.loggedInToFacebook(languageCode, accessToken)).then(response => {
+    loggedInToFacebook: (languageCode, accessToken, profile, config) => dispatch(Actions.loggedInToFacebook(languageCode, accessToken)).then(response => {
        if (response.ok) {
           response.json().then(obj => {
-            dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
+            dispatch(Actions.loadUserProfile(languageCode, obj.token, profile, config)).then(profile => {
               if (profile.id) {
                 navigate("Dashboard");
               } else {
@@ -124,10 +125,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
        }
     }),
 
-    pressGoogleLogin: (navigate, languageCode, profile) => dispatch(Actions.pressGoogleLogin(languageCode)).then(response => {
+    pressGoogleLogin: (navigate, languageCode, profile, config) => dispatch(Actions.pressGoogleLogin(languageCode)).then(response => {
       if (response.ok) {
         response.json().then(obj => {
-          dispatch(Actions.loadUserProfile(languageCode, obj.token, profile)).then(profile => {
+          dispatch(Actions.loadUserProfile(languageCode, obj.token, profile, config)).then(profile => {
             if (profile.id) {
               navigate("Dashboard");
             } else {
