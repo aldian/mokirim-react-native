@@ -3,6 +3,8 @@ import qs from 'query-string';
 
 const BASE_URL = "https://mokirim.aldianfazrihady.com/";
 const CONTENT_TYPE_URL_ENCODED = 'application/x-www-form-urlencoded';
+const CONTENT_TYPE_JSON = 'application/json';
+const CONTENT_TYPE_MULTIPART = 'multipart/form-data';
 const DEVICE_PATH = "/api/device/";
 
 const LOGIN_PATH = "/api/login/";
@@ -33,6 +35,10 @@ const SEARCH_STATIONS_PATH = "/api/station/";
 const SEARCH_SUBDISTRICTS_PATH = "/api/subdistrict/";
 
 const GET_SCHEDULE_PATH = "/api/schedule/";
+const GET_BOOKING_PATH = "/api/booking/";
+const POST_BOOKING_PATH = "/api/booking/";
+
+const POST_BOOKING_PAYMENT_CONFIRM = "/api/booking/payment/confirm/";
 
 const DEFAULT_CONFIG = {
   baseUrl: BASE_URL,
@@ -185,7 +191,7 @@ const getProfile = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_PROFILE_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_PROFILE_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset, v: config.v || ''});
   return fetch(url, requestOptions);
 };
 
@@ -247,7 +253,7 @@ const getAddress = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_ADDRESS_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_ADDRESS_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset, v: config.v || ''});
   return fetch(url, requestOptions);
 };
 
@@ -266,7 +272,7 @@ const getSubdistrict = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_SUBDISTRICT_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_SUBDISTRICT_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset, v: config.v || ''});
   return fetch(url, requestOptions);
 };
 
@@ -285,7 +291,7 @@ const getDistrict = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_DISTRICT_PATH + (id ? id + '/': '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_DISTRICT_PATH + (id ? id + '/': '') + '?' + qs.stringify({limit: config.limit, offset: config.offset, v: config.v || ''});
   return fetch(url, requestOptions);
 };
 
@@ -304,7 +310,7 @@ const getCity = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_CITY_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_CITY_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset, v: config.v || ''});
   return fetch(url, requestOptions);
 };
 
@@ -323,7 +329,7 @@ const getState = (languageCode, accessToken, id, config = null) => {
     },
   };
 
-  const url = config.baseUrl + languageCode + GET_STATE_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset});
+  const url = config.baseUrl + languageCode + GET_STATE_PATH + (id ? id + '/' : '') + '?' + qs.stringify({limit: config.limit, offset: config.offset, v: config.v || ''});
   return fetch(url, requestOptions);
 };
 
@@ -401,7 +407,7 @@ const searchSubdistricts = (languageCode, accessToken, text, config = null) => {
     },
   };
 
-  const queryString = qs.stringify({search: text, limit: config.limit, offset: config.offset});
+  const queryString = qs.stringify({search: text, limit: config.limit, offset: config.offset, v: config.v || ''});
 
   return fetch(config.baseUrl + languageCode + SEARCH_SUBDISTRICTS_PATH + '?' + queryString, requestOptions);
 };
@@ -437,10 +443,105 @@ const getSchedule = (
     min_datetime: startDateStr, max_datetime: endDateStr,
     from_place: originatingStation, to_place: destinationStation,
     weight_kg: totalWeight,
-    limit: config.limit, offset: config.offset
+    volume_cm3: totalVolume,
+    limit: config.limit, offset: config.offset,
+    v: config.v || '',
   });
 
   return fetch(config.baseUrl + languageCode + GET_SCHEDULE_PATH + '?' + queryString, requestOptions);
+};
+
+const postBooking = (
+  languageCode, accessToken,
+  booking,
+  config = null
+) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+
+  let colli = (booking.colli || []).map(collo => ({
+    weight_kg: collo.weight || 0,
+    length_cm: collo.length || 0, width_cm: collo.width || 0, height_cm: collo.height || 0
+  }));
+  let serverBooking = {...booking, colli};
+  delete(serverBooking.id);
+
+  const requestOptions = {
+    method: booking.id ? 'PATCH' : 'POST',
+    headers: {
+      Referer: config.baseUrl,
+      'Content-Type': CONTENT_TYPE_JSON,
+      Authorization: 'Token ' + accessToken,
+    },
+    body: JSON.stringify(serverBooking),
+  };
+
+  return fetch(config.baseUrl + languageCode + POST_BOOKING_PATH + (booking.id ? booking.id + '/' : ''), requestOptions);
+};
+
+const getBooking = (
+  languageCode, accessToken,
+  config = null
+) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+
+  const requestOptions = {
+     method: 'GET',
+     headers: {
+       Referer: config.baseUrl,
+       Authorization: 'Token ' + accessToken,
+     },
+  };
+
+  let queryObj = {
+    limit: config.limit, offset: config.offset,
+  }
+  if (config.v) {
+    queryObj.v = config.v;
+  }
+  if (config.ordering) {
+    queryObj.ordering = config.ordering;
+  }
+
+  const queryString = qs.stringify(queryObj);
+
+  return fetch(config.baseUrl + languageCode + GET_BOOKING_PATH + '?' + queryString, requestOptions);
+};
+
+const postBookingPaymentConfirm = (
+  languageCode, accessToken,
+  data,
+  config = null
+) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+
+  const formData  = new FormData();
+
+  for(const name in data) {
+    formData.append(name, data[name]);
+  }
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+       Referer: config.baseUrl,
+       Authorization: 'Token ' + accessToken,
+    },
+    body: formData,
+  };
+
+  return fetch(config.baseUrl + languageCode + POST_BOOKING_PAYMENT_CONFIRM, requestOptions);
 };
 
 export default {
@@ -475,4 +576,9 @@ export default {
   searchSubdistricts,
 
   getSchedule,
+
+  postBooking,
+  getBooking,
+
+  postBookingPaymentConfirm,
 };

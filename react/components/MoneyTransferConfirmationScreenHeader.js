@@ -10,7 +10,7 @@ import {translate, numberStr} from "../utils/i18n";
 import getTheme from '../theme/components';
 import themeVars from '../theme/variables/material';
 
-class _BookingDetailsScreenHeader extends React.Component {
+class _MoneyTransferConfirmationScreenHeader extends React.Component {
   render() {
 
     return <StyleProvider style={getTheme(themeVars)}>
@@ -24,7 +24,7 @@ class _BookingDetailsScreenHeader extends React.Component {
           }
         </HeaderLeft>
         <HeaderBody>
-          <HeaderTitle>{translate("headerBookingDetails")}</HeaderTitle>
+          <HeaderTitle>{translate("headerMoneyTransferConfirmation")}</HeaderTitle>
         </HeaderBody>
       </Header>
     </StyleProvider>
@@ -34,7 +34,7 @@ class _BookingDetailsScreenHeader extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
-    submitting: state.appReducer.bookingDetailsForm.submitting,
+    submitting: state.appReducer.moneyTransferConfirmationForm.submitting,
   }
 };
 
@@ -43,4 +43,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 };
 
-export const BookingDetailsScreenHeader = connect(mapStateToProps, mapDispatchToProps)(_BookingDetailsScreenHeader);
+export const MoneyTransferConfirmationScreenHeader = connect(mapStateToProps, mapDispatchToProps)(_MoneyTransferConfirmationScreenHeader);

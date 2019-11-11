@@ -53,7 +53,7 @@ class _ActivateForm extends React.Component {
                   this.props.navigate('Login');
                 } else {
                   response.json().then(obj => {
-                    this.props.loadUserProfile(this.props.currentLanguage, obj.token, this.props.profile).then(profile => {
+                    this.props.loadUserProfile(this.props.currentLanguage, obj.token, this.props.profile, {v: this.props.apiVValue}).then(profile => {
                       if (profile.id) {
                         this.props.navigate("Dashboard");
                       } else {
@@ -81,6 +81,7 @@ const mapStateToProps = state => {
     errors: state.appReducer.registerForm.errors,
     submitting: state.appReducer.registerForm.submitting,
     profile: state.appReducer.editProfileForm,
+    apiVValue: state.appReducer.apiVValue,
   }
 };
 
@@ -95,7 +96,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
     setCode: code => dispatch(Actions.setActivateFormCode(code)),
     setErrorCode: error => dispatch(Actions.setActivateFormErrorCode(error)),
-    loadUserProfile: (languageCode, accessToken, profile) => dispatch(Actions.loadUserProfile(languageCode, accessToken, profile)),
+    loadUserProfile: (languageCode, accessToken, profile, config) => dispatch(Actions.loadUserProfile(languageCode, accessToken, profile, config)),
   }
 };
 

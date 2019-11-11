@@ -207,7 +207,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.0.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
 
-    implementation(project(":react-native-google-signin"))
+    //implementation(project(":react-native-google-signin"))
 }
 
 // Run this once to be able to run the application with BUCK

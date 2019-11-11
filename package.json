@@ -9,6 +9,8 @@
     "repl": "npx node"
   },
   "dependencies": {
+    "@react-native-community/google-signin": "^3.0.3",
+    "currency.js": "^1.2.2",
     "i18n-js": "^3.3.0",
     "intl": "^1.2.5",
     "lodash.memoize": "^4.1.2",
@@ -22,7 +24,7 @@
     "react-native-fast-image": "^7.0.2",
     "react-native-fbsdk": "^1.0.2",
     "react-native-gesture-handler": "^1.4.1",
-    "react-native-google-signin": "^2.0.0",
+    "react-native-image-picker": "^1.1.0",
     "react-native-localize": "^1.1.4",
     "react-native-push-notification": "^3.1.9",
     "react-native-screens": "^1.0.0-alpha.23",

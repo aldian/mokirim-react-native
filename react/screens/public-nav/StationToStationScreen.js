@@ -87,7 +87,7 @@ class _StationToStationScreen extends React.Component {
                   {translate("labelPackage.counting", {count: this.props.colli.length})}
                 </Label>
                 <Label style={[{flex: 0}, (this.props.totalWeight < constants.MINIMUM_PRICE_WEIGHT_KG ? {color: 'red', fontWeight: 'bold'} : {})]}>
-                  {translate("labelColli.counting", {count: this.props.colli.length})}, {numberStr(this.props.currentLanguage, this.props.totalWeight)} Kg{this.props.totalWeight < constants.MINIMUM_PRICE_WEIGHT_KG ? " (" + translate("messagePay10K") + ")" : null}
+                  {translate("labelColli.counting", {count: this.props.colli.length})}, {numberStr(this.props.currentLanguage, this.props.totalWeight)} kg{this.props.totalWeight < constants.MINIMUM_PRICE_WEIGHT_KG ? " (" + translate("messagePay10K") + ")" : null}
                 </Label>
               </View>
               {this.props.colli.length < 2 ?

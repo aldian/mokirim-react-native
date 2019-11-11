@@ -10,7 +10,7 @@ import {translate, numberStr} from "../utils/i18n";
 import getTheme from '../theme/components';
 import themeVars from '../theme/variables/material';
 
-class _BookingDetailsScreenHeader extends React.Component {
+class _ShipmentsScreenHeader extends React.Component {
   render() {
 
     return <StyleProvider style={getTheme(themeVars)}>
@@ -18,13 +18,13 @@ class _BookingDetailsScreenHeader extends React.Component {
         <HeaderLeft style={{flex: 0, paddingRight: 8}}>
           {this.props.submitting ?
             <Spinner/> :
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
+            <Button transparent onPress={() => this.props.navigation.navigate('Dashboard')}>
               <Icon name="arrow-back" style={{color: 'white'}}/>
             </Button>
           }
         </HeaderLeft>
         <HeaderBody>
-          <HeaderTitle>{translate("headerBookingDetails")}</HeaderTitle>
+          <HeaderTitle>{translate("headerMyShipments")}</HeaderTitle>
         </HeaderBody>
       </Header>
     </StyleProvider>
@@ -34,7 +34,6 @@ class _BookingDetailsScreenHeader extends React.Component {
 const mapStateToProps = state => {
   return {
     currentLanguage: state.appReducer.currentLanguage,
-    submitting: state.appReducer.bookingDetailsForm.submitting,
   }
 };
 
@@ -43,4 +42,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 };
 
-export const BookingDetailsScreenHeader = connect(mapStateToProps, mapDispatchToProps)(_BookingDetailsScreenHeader);
+export const ShipmentsScreenHeader = connect(mapStateToProps, mapDispatchToProps)(_ShipmentsScreenHeader);

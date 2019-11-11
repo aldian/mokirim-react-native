@@ -1,4 +1,4 @@
-import { GoogleSignin } from 'react-native-google-signin';
+import { GoogleSignin } from '@react-native-community/google-signin';
 import uuid from 'uuid';
 import { translate } from "../utils/i18n";
 import ActionCodes from './ActionCodes';
@@ -8,6 +8,10 @@ import MokirimAPI from '../utils/MokirimAPI';
 const updateAppStates = states => ({
   type: ActionCodes.UPDATE_APP_STATES,
   states,
+});
+
+const updateAPIVValue = () => ({
+  type: ActionCodes.UPDATE_API_V_VALUE,
 });
 
 const setErrorMessage = message => ({
@@ -44,7 +48,7 @@ const _loggedInToFacebook = accessToken => ({
   accessToken,
 });
 
-const loggedInToFacebook = (languageCode, facebookAccessToken) => dispatch => {
+const loggedInToFacebook = (languageCode, facebookAccessToken, v) => dispatch => {
   dispatch(_loggedInToFacebook(facebookAccessToken));
 
   Database.openDatabase().then(db => {
@@ -53,7 +57,7 @@ const loggedInToFacebook = (languageCode, facebookAccessToken) => dispatch => {
     });
   });
 
-  return MokirimAPI.loginWithFacebook(languageCode, facebookAccessToken).then(response => {
+  return MokirimAPI.loginWithFacebook(languageCode, facebookAccessToken, {v}).then(response => {
     const responseClone = response.clone();
     if (responseClone.ok) {
       responseClone.json().then(obj => {
@@ -91,7 +95,7 @@ const _logout = () => ({
   type: ActionCodes.LOGOUT,
 });
 
-const logout = (languageCode, accessToken, via) => dispatch => {
+const logout = (languageCode, accessToken, via, v) => dispatch => {
   dispatch(_logout());
 
   Database.openDatabase().then(db => {
@@ -103,16 +107,16 @@ const logout = (languageCode, accessToken, via) => dispatch => {
     });
   });
 
-  MokirimAPI.logout(languageCode, accessToken);
+  MokirimAPI.logout(languageCode, accessToken, {v});
 }
 
-const downloadMasterData = (languageCode, accessToken) => dispatch => {
+const downloadMasterData = (languageCode, accessToken, v) => dispatch => {
   Database.openDatabase().then(db => {
-    const postalCodePromise = MokirimAPI.getPostalCode(languageCode, accessToken, null, {limit: 1000});
-    const subdistrictPromise = MokirimAPI.getSubdistrict(languageCode, accessToken, null, {limit: 1000});
-    const districtPromise = MokirimAPI.getDistrict(languageCode, accessToken, null, {limit: 1000});
-    const cityPromise = MokirimAPI.getCity(languageCode, accessToken, null, {limit: 1000});
-    const statePromise = MokirimAPI.getState(languageCode, accessToken, null, {limit: 1000});
+    const postalCodePromise = MokirimAPI.getPostalCode(languageCode, accessToken, null, {limit: 1000, v});
+    const subdistrictPromise = MokirimAPI.getSubdistrict(languageCode, accessToken, null, {limit: 1000, v});
+    const districtPromise = MokirimAPI.getDistrict(languageCode, accessToken, null, {limit: 1000, v});
+    const cityPromise = MokirimAPI.getCity(languageCode, accessToken, null, {limit: 1000, v});
+    const statePromise = MokirimAPI.getState(languageCode, accessToken, null, {limit: 1000, v});
 
     postalCodePromise.then(response => {
       if (response.ok) {
@@ -156,7 +160,7 @@ const downloadMasterData = (languageCode, accessToken) => dispatch => {
   });
 };
 
-const loadAppStatesFromDb = (appStates, delay) => dispatch => {
+const loadAppStatesFromDb = (appStates, delay, v) => dispatch => {
   const timerStart = (new Date()).getTime();
   dispatch(updateAppStates({loadingStatesFromDb: true}));
 
@@ -211,7 +215,7 @@ const loadAppStatesFromDb = (appStates, delay) => dispatch => {
       }
 
       states.device.id = uuid.v4();
-      return MokirimAPI.registerDevice(states.currentLanguage, states.device.id).then(response => {
+      return MokirimAPI.registerDevice(states.currentLanguage, states.device.id, {v}).then(response => {
         if (response.ok) {
           return response.json().then(obj => {
             states.device.token = obj.token;
@@ -254,9 +258,9 @@ const _submitLoginForm = submitting => ({
   submitting,
 });
 
-const submitLoginForm = (languageCode, username, password) => dispatch => {
+const submitLoginForm = (languageCode, username, password, v) => dispatch => {
   dispatch(_submitLoginForm(true));
-  return MokirimAPI.login(languageCode, username, password).then(response => {
+  return MokirimAPI.login(languageCode, username, password, {v}).then(response => {
     Database.openDatabase().then(db => {
        return Database.updateUserStates(db, {
          email: username,
@@ -282,7 +286,7 @@ const _loggedInToGoogle = accessToken => ({
   accessToken,
 });
 
-const pressGoogleLogin = languageCode => dispatch => {
+const pressGoogleLogin = (languageCode, v) => dispatch => {
   return GoogleSignin.hasPlayServices().then(() => GoogleSignin.signIn()).then(userInfo => {
     return GoogleSignin.getTokens().then(tokens => {
       dispatch(_loggedInToGoogle(tokens.accessToken));
@@ -293,7 +297,7 @@ const pressGoogleLogin = languageCode => dispatch => {
          });
        });
 
-       return MokirimAPI.loginWithGoogle(languageCode, tokens.accessToken).then(response => {
+       return MokirimAPI.loginWithGoogle(languageCode, tokens.accessToken, {v}).then(response => {
          const responseClone = response.clone();
          if (responseClone.ok) {
            responseClone.json().then(obj => {
@@ -338,9 +342,9 @@ const _submitRegisterForm = submitting => ({
   submitting,
 });
 
-const submitRegisterForm = (languageCode, username, password) => dispatch => {
+const submitRegisterForm = (languageCode, username, password, v) => dispatch => {
   dispatch(_submitRegisterForm(true));
-  return MokirimAPI.register(languageCode, username, password).then(response => {
+  return MokirimAPI.register(languageCode, username, password, {v}).then(response => {
      if (response.ok) {
        dispatch(setRegisterFormErrorUsername(false));
        dispatch(setRegisterFormErrorPassword(false));
@@ -401,9 +405,9 @@ const setActivateFormErrorCode = error => ({
   error,
 });
 
-const submitActivateForm = (languageCode, encodedUserId, code) => dispatch => {
+const submitActivateForm = (languageCode, encodedUserId, code, v) => dispatch => {
   dispatch(_submitRegisterForm(true));
-  return MokirimAPI.activate(languageCode, encodedUserId, code.toUpperCase()).then(response => {
+  return MokirimAPI.activate(languageCode, encodedUserId, code.toUpperCase(), {v}).then(response => {
      if (response.ok) {
        dispatch(setActivateFormErrorCode(false));
        dispatch(setActivateFormCode(''));
@@ -472,9 +476,9 @@ const _submitResetPasswordForm = submitting => ({
   submitting,
 });
 
-const submitResetPasswordForm = (languageCode, email) => dispatch => {
+const submitResetPasswordForm = (languageCode, email, v) => dispatch => {
   dispatch(_submitResetPasswordForm(true));
-  return MokirimAPI.resetPassword(languageCode, email).then(response => {
+  return MokirimAPI.resetPassword(languageCode, email, {v}).then(response => {
      if (response.ok) {
        dispatch(setResetPasswordFormErrorEmail(false));
        dispatch(setResetPasswordFormEmail(''));
@@ -546,9 +550,9 @@ const _submitConfirmPasswordResetForm = submitting => ({
   submitting,
 });
 
-const submitConfirmPasswordResetForm = (languageCode, encodedUserId, code, newPassword) => dispatch => {
+const submitConfirmPasswordResetForm = (languageCode, encodedUserId, code, newPassword, v) => dispatch => {
   dispatch(_submitConfirmPasswordResetForm(true));
-  return MokirimAPI.confirmPasswordReset(languageCode, encodedUserId, code.toUpperCase(), newPassword).then(response => {
+  return MokirimAPI.confirmPasswordReset(languageCode, encodedUserId, code.toUpperCase(), newPassword, {v}).then(response => {
      if (response.ok) {
        dispatch(setConfirmPasswordResetFormErrorCode(false));
        dispatch(setConfirmPasswordResetFormCode(''));
@@ -616,8 +620,8 @@ const setUserProfileError = error => ({
   error,
 });
 
-const _loadUserProfile = (dispatch, languageCode, accessToken) => {
-  return MokirimAPI.getProfile(languageCode, accessToken).then(response => {
+const _loadUserProfile = (dispatch, languageCode, accessToken, v) => {
+  return MokirimAPI.getProfile(languageCode, accessToken, undefined, {v}).then(response => {
     if (response.ok) {
       return response.json().then(obj => {
         if (obj.count < 1) {
@@ -654,7 +658,7 @@ const loadUserProfile = (languageCode, accessToken, profile) => dispatch => {
   }
 };
 
-const submitEditProfileForm = (languageCode, accessToken, profile) => dispatch => new Promise((resolveProfile, rejectProfile) => {
+const submitEditProfileForm = (languageCode, accessToken, profile, v) => dispatch => new Promise((resolveProfile, rejectProfile) => {
   let errors = {};
   if (!profile.name) {
      errors.name = [translate("errorFieldMayNotBeNull")];
@@ -693,7 +697,7 @@ const submitEditProfileForm = (languageCode, accessToken, profile) => dispatch =
       return;
     }
 
-    MokirimAPI.setPassword(languageCode, accessToken, profile.newPassword, profile.currentPassword).then(response => {
+    MokirimAPI.setPassword(languageCode, accessToken, profile.newPassword, profile.currentPassword, {v}).then(response => {
       if (response.ok) {
         resolvePassword();
       } else {
@@ -709,7 +713,7 @@ const submitEditProfileForm = (languageCode, accessToken, profile) => dispatch =
   const addressPromise = new Promise((resolveAddress, rejectAddress) => {
        let address = profile.address;
        delete(address.id);
-       MokirimAPI.postAddress(languageCode, accessToken, address).then(response => {
+       MokirimAPI.postAddress(languageCode, accessToken, address, {v}).then(response => {
          if (response.ok) {
            response.json().then(obj => {
              dispatch(setUserProfile({address: obj.id}));
@@ -744,7 +748,7 @@ const submitEditProfileForm = (languageCode, accessToken, profile) => dispatch =
        }
 
        const serverProfile = {...profile, address: addressId};
-       MokirimAPI.postProfile(languageCode, accessToken, serverProfile).then(response => {
+       MokirimAPI.postProfile(languageCode, accessToken, serverProfile, {v}).then(response => {
          if (response.ok) {
            response.json().then(obj => {
              resolveProfile(obj);
@@ -853,9 +857,9 @@ const _searchStations = searching => ({
   searching,
 });
 
-const searchStations = (languageCode, accessToken, type, text) => dispatch => {
+const searchStations = (languageCode, accessToken, type, text, v) => dispatch => {
   dispatch(_searchStations(true));
-  return MokirimAPI.searchStations(languageCode, accessToken, type, text).then(response => {
+  return MokirimAPI.searchStations(languageCode, accessToken, type, text, {v}).then(response => {
     if (response.ok) {
       return response.json();
     } else {
@@ -870,7 +874,7 @@ const searchStations = (languageCode, accessToken, type, text) => dispatch => {
                 texts = [...texts, ...obj];
               } else {
                 Object.keys(obj).forEach(key => {
-                  texts = [...texts, ...obj[key]];
+                  texts = [...texts, ...obj[key].map(text => (key + ": " + text))];
                 });
               }
               return reject(texts.join(' - '));
@@ -908,7 +912,7 @@ const searchSubdistricts = (languageCode, accessToken,  text, config) => dispatc
                 texts = [...texts, ...obj];
               } else {
                 Object.keys(obj).forEach(key => {
-                  texts = [...texts, ...obj[key]];
+                  texts = [...texts, ...obj[key].map(text => (key + ": " + text))];
                 });
               }
               return reject(texts.join(' - '));
@@ -931,7 +935,7 @@ const setSearchSubdistrictForm = form => ({
 
 const findSchedule = (
   languageCode, accessToken, originatingStation, destinationStation, departureDate,
-  totalWeight, totalVolume
+  totalWeight, totalVolume, v
 ) => dispatch => {
   return new Promise((resolveSchedule, rejectSchedule) => {
     let errors = {};
@@ -949,7 +953,7 @@ const findSchedule = (
     }
     MokirimAPI.getSchedule(
        languageCode, accessToken, originatingStation, destinationStation, departureDate,
-       totalWeight, totalVolume
+       totalWeight, totalVolume, {v}
     ).then(response => {
       resolveSchedule(response);
     }).catch(error => {
@@ -1013,8 +1017,113 @@ const setShipmentDetailsFormContentError = error => ({
   error,
 });
 
+const setBookingDetailsForm = form => ({
+  type: ActionCodes.SET_BOOKING_DETAILS_FORM,
+  form,
+});
+
+const loadBookings = (languageCode, accessToken, config) => dispatch => {
+  return new Promise((resolveBookings, rejectBookings) => {
+    MokirimAPI.getBooking(
+      languageCode, accessToken, config
+    ).then(response => {
+      if (response.ok) {
+        response.json().then(obj => {
+          resolveBookings(obj);
+        })
+      } else {
+        response.json().then(obj => {
+          let texts = [];
+          if (Array.isArray(obj)) {
+            texts = [...texts, ...obj];
+          } else {
+            Object.keys(obj).forEach(key => {
+              texts = [...texts, ...obj[key].map(text => (key + ": " + text))];
+            });
+          }
+          rejectBookings(texts.join('\n'));
+        });
+      }
+    }).catch(error => {
+      rejectBookings(error);
+    });
+  });
+};
+
+const setBookings = bookings => ({
+  type: ActionCodes.SET_BOOKINGS,
+  bookings,
+});
+
+const setShipmentsForm = form => ({
+  type: ActionCodes.SET_SHIPMENTS_FORM,
+  form,
+});
+
+const submitCreateBookingForm = (languageCode, accessToken, booking, v) => dispatch => {
+  return new Promise((resolveBooking, rejectBooking) => {
+    MokirimAPI.postBooking(
+       languageCode, accessToken, booking, {v}
+    ).then(response => {
+       if (response.ok) {
+         response.json().then(obj => {
+           resolveBooking(obj);
+         })
+       } else {
+         response.json().then(obj => {
+           let texts = [];
+           if (Array.isArray(obj)) {
+             texts = [...texts, ...obj];
+           } else {
+             Object.keys(obj).forEach(key => {
+               texts = [...texts, ...obj[key].map(text => (key + ": " + text))];
+             });
+           }
+           rejectBooking(texts.join('\n'));
+         });
+       }
+    }).catch(error => {
+       rejectBooking(error);
+    });
+  });
+};
+
+const setMoneyTransferConfirmationForm = form => ({
+  type: ActionCodes.SET_MONEY_TRANSFER_CONFIRMATION_FORM,
+  form,
+});
+
+const submitConfirmBookingPaymentForm = (languageCode, accessToken, data) => dispatch => {
+  return new Promise((resolveBooking, rejectBooking) => {
+    MokirimAPI.postBookingPaymentConfirm(
+       languageCode, accessToken, data
+    ).then(response => {
+       if (response.ok) {
+         response.json().then(obj => {
+           resolveBooking(obj);
+         })
+       } else {
+         response.json().then(obj => {
+           let texts = [];
+           if (Array.isArray(obj)) {
+             texts = [...texts, ...obj];
+           } else {
+             Object.keys(obj).forEach(key => {
+               texts = [...texts, ...obj[key].map(text => (key + ": " + text))];
+             });
+           }
+           rejectBooking(texts.join('\n'));
+         });
+       }
+    }).catch(error => {
+       rejectBooking(error);
+    });
+  });
+};
+
 export default Actions = {
   updateAppStates,
+  updateAPIVValue,
 
   setErrorMessage,
   introFinished,
@@ -1091,4 +1200,14 @@ export default Actions = {
   setShipmentDetailsFormReceiverError,
   setShipmentDetailsFormContent,
   setShipmentDetailsFormContentError,
+
+  setBookingDetailsForm,
+
+  loadBookings,
+  setBookings,
+  setShipmentsForm,
+  submitCreateBookingForm,
+
+  setMoneyTransferConfirmationForm,
+  submitConfirmBookingPaymentForm,
 }
