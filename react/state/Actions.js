@@ -1076,7 +1076,13 @@ const submitCreateBookingForm = (languageCode, accessToken, booking, v) => dispa
              texts = [...texts, ...obj];
            } else {
              Object.keys(obj).forEach(key => {
-               texts = [...texts, ...obj[key].map(text => (key + ": " + text))];
+               if (Array.isArray(obj[key])) {
+                 texts = [...texts, ...(obj[key].map(text => `${key}: ${text}`))];
+               } else {
+                 Object.keys(obj[key]).forEach(key2 => {
+                  texts = [...texts, ...(obj[key][key2].map(text => `${key} ${key2}: ${text}`))];
+                 });
+               }
              });
            }
            rejectBooking(texts.join('\n'));

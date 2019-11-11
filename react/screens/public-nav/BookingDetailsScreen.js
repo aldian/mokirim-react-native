@@ -154,6 +154,10 @@ class _BookingDetailsScreen extends React.Component {
                 this.props.submitCreateBookingForm(this.props.currentLanguage, this.props.accessToken, {
                   schedule: this.props.schedule.id,
                   colli: this.props.colli,
+                  from_person: this.props.sender,
+                  to_person: this.props.receiver,
+                  content_description: this.props.content.description || '',
+                  content_value_estimate: this.props.content.valueIDR || '0.00',
                 }).then(booking => {
                   this.props.setBookingDetailsForm({submitting: true});
                   this.props.loadBookings(
@@ -162,6 +166,12 @@ class _BookingDetailsScreen extends React.Component {
                   ).then(obj => {
                     this.props.setBookings(obj.results);
                     navigate("BookingCreated", {id: booking.id});
+                  }).catch(error => {
+                    Toast.show({
+                      text: error,
+                      buttonText: "OK",
+                      duration: 5000,
+                    });
                   }).finally(() => {
                     this.props.setBookingDetailsForm({submitting: false});
                   });
@@ -215,6 +225,7 @@ const mapStateToProps = state => {
 
     sender: state.appReducer.shipmentDetailsForm.sender,
     receiver: state.appReducer.shipmentDetailsForm.receiver,
+    content: state.appReducer.shipmentDetailsForm.content,
 
     submitting: state.appReducer.bookingDetailsForm.submitting,
   }

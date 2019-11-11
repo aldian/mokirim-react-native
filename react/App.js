@@ -45,6 +45,8 @@ import { BookingCreatedScreen } from './screens/public-nav/BookingCreatedScreen'
 import { ShipmentsScreen } from './screens/public-nav/ShipmentsScreen';
 import { ShipmentStatusScreen } from './screens/public-nav/ShipmentStatusScreen';
 import { MoneyTransferConfirmationScreen } from './screens/public-nav/MoneyTransferConfirmationScreen';
+import { CheckInScreen } from './screens/public-nav/CheckInScreen';
+import { CheckOutScreen } from './screens/public-nav/CheckOutScreen';
 
 console.disableYellowBox = true
 
@@ -106,6 +108,8 @@ const ShipmentsNavigator = createStackNavigator({
   BookingCreated: {screen: BookingCreatedScreen, path: 'user/bookingCreated/:id'},
   ShipmentStatus: {screen: ShipmentStatusScreen, path: 'user/shipmentStatus/:id'},
   MoneyTransferConfirmation: {screen: MoneyTransferConfirmationScreen, path: 'user/moneyTransferConfirmation/:id'},
+  CheckIn: {screen: CheckInScreen, path: 'user/checkIn/:id'},
+  CheckOut: {screen: CheckOutScreen, path: 'user/checkOut/:id'},
 }, {
   defaultNavigationOptions: {
     header: props => <NavigationHeader {...props}/>,

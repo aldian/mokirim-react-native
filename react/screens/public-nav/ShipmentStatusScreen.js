@@ -371,6 +371,8 @@ class _ShipmentStatusScreen extends React.Component {
   }
 
   renderPaid(booking) {
+    const {navigate} = this.props.navigation;
+
     return <React.Fragment>
       <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 16, paddingBottom: 16, borderBottomWidth: 1, borderColor: '#DFE3E8'}}>
         <Button
@@ -378,16 +380,23 @@ class _ShipmentStatusScreen extends React.Component {
             flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
             backgroundColor: themeVars.toolbarDefaultBg, borderRadius: 4, marginLeft: 16, marginRight: 8
           }}
+          onPress={() => {
+            navigate('CheckIn', {id: booking.id})
+          }}
         >
           <Text style={{color: 'white', textAlign: 'center'}}>{translate("buttonCheckInCode")}</Text>
         </Button>
         <Button
           style={{
             flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
-            backgroundColor: '#DFE3E8', borderRadius: 4, marginLeft: 8, marginRight: 16
-          }} disabled
+            backgroundColor: booking.checkout_code ? themeVars.toolbarDefaultBg : '#DFE3E8', borderRadius: 4, marginLeft: 8, marginRight: 16
+          }}
+          disabled={booking.checkout_code ? false: true}
+          onPress={() => {
+            navigate('CheckOut', {id: booking.id});
+          }}
         >
-          <Text style={{color: '#919EAB', textAlign: 'center'}}>{translate("buttonCheckOutCode")}</Text>
+          <Text style={{color: booking.checkout_code ? 'white': '#919EAB', textAlign: 'center'}}>{translate("buttonCheckOutCode")}</Text>
         </Button>
       </View>
       {this.renderAccordion(booking)}

@@ -69,6 +69,8 @@ export default {
   headerReceivingBankAccount: "Rekening Tujuan",
   headerTotalCosts: "Total Biaya",
   headerMoneyTransferConfirmation: "Konfirmasi Pembayaran",
+  headerCheckIn: "Check-In",
+  headerCheckOut: "Check-Out",
 
   instructionActivate: {counting: {
     one: "Silahkan ketik {{count}} angka/huruf kode aktivasi yang telah dikirimkan ke alamat email %{email}.",
