@@ -462,12 +462,21 @@ const postBooking = (
     config = DEFAULT_CONFIG;
   }
 
-  let colli = (booking.colli || []).map(collo => ({
+  let colli = (booking.colli || []).map((collo, i) => ({
     weight_kg: collo.weight || 0,
-    length_cm: collo.length || 0, width_cm: collo.width || 0, height_cm: collo.height || 0
+    length_cm: collo.length || 0, width_cm: collo.width || 0, height_cm: collo.height || 0,
+    code: String(i+1),
   }));
-  let serverBooking = {...booking, colli};
+  let fromPerson = {...booking.from_person}
+  let toPerson = {...booking.to_person}
+  let serverBooking = {...booking, colli, from_person: fromPerson, to_person: toPerson};
   delete(serverBooking.id);
+  if (serverBooking.from_person && serverBooking.from_person.errors) {
+    delete(serverBooking.from_person.errors);
+  }
+  if (serverBooking.to_person && serverBooking.to_person.errors) {
+    delete(serverBooking.to_person.errors);
+  }
 
   const requestOptions = {
     method: booking.id ? 'PATCH' : 'POST',

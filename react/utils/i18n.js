@@ -48,7 +48,7 @@ export const getDateDisplayString = (isoDateTime, deltaMinutes) => {
 };
 
 export const getTimeDisplayString = (isoDateTime, deltaMinutes) => {
-  return moment(isoDateTime).add(deltaMinutes, 'minutes').format('HH:mm');
+  return moment(isoDateTime).add(deltaMinutes, 'minutes').format('HH:mm') + " WIB";
 };
 
 export const getStartingDayDate = () => {

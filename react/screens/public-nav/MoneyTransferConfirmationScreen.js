@@ -43,7 +43,7 @@ class _MoneyTransferConfirmationScreen extends React.Component {
       const options = {
         noData: true,
       }
-      ImagePicker.launchImageLibrary(options, response => {
+      ImagePicker.launchCamera(options, response => {
         if (response.uri) {
           this.setState({photo: {
             name: response.fileName,
@@ -121,7 +121,7 @@ class _MoneyTransferConfirmationScreen extends React.Component {
                     booking: booking.id,
                     confirming_person_name: this.state.name,
                     confirming_person_email: this.state.email,
-                    ...(this.state.proof ? {proof: this.state.photo} : {}),
+                    ...(this.state.photo ? {proof: this.state.photo} : {}),
                   }).then(() => {
                     Toast.show({
                       text: translate("messageWeWillSendCheckInCodeShortly"),

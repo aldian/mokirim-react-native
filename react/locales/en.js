@@ -69,6 +69,8 @@ export default {
   headerReceivingBankAccount: "Receiving Bank Account",
   headerTotalCosts: "Total Costs",
   headerMoneyTransferConfirmation: "Money Transfer Confirmation",
+  headerCheckIn: "Check-In",
+  headerCheckOut: "Check-Out",
 
   instructionActivate: {counting: {
     one: "Please type {{count}} digit/letter activation code sent to email address %{email}.",
