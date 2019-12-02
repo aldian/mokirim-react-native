@@ -35,6 +35,7 @@ const SEARCH_STATIONS_PATH = "/api/station/";
 const SEARCH_SUBDISTRICTS_PATH = "/api/subdistrict/";
 
 const GET_SCHEDULE_PATH = "/api/schedule/";
+const GET_BANK_PATH = "/api/bank/";
 const GET_BOOKING_PATH = "/api/booking/";
 const POST_BOOKING_PATH = "/api/booking/";
 
@@ -451,6 +452,29 @@ const getSchedule = (
   return fetch(config.baseUrl + languageCode + GET_SCHEDULE_PATH + '?' + queryString, requestOptions);
 };
 
+const getBank = (languageCode, accessToken, config = null) => {
+  if (config) {
+    config = {...DEFAULT_CONFIG, ...config};
+  } else {
+    config = DEFAULT_CONFIG;
+  }
+
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Referer: config.baseUrl,
+      Authorization: 'Token ' + accessToken,
+    },
+  };
+
+  const queryString = qs.stringify({
+     limit: config.limit, offset: config.offset,
+     v: config.v || '',
+  });
+
+  return fetch(config.baseUrl + languageCode + GET_BANK_PATH + '?' + queryString, requestOptions);
+};
+
 const postBooking = (
   languageCode, accessToken,
   booking,
@@ -585,6 +609,7 @@ export default {
   searchSubdistricts,
 
   getSchedule,
+  getBank,
 
   postBooking,
   getBooking,

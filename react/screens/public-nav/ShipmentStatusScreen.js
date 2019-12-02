@@ -192,9 +192,11 @@ class _PaymentForm extends React.Component {
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', borderBottomWidth: 1, borderColor: '#DFE3E8'}}>
           <View style={{padding: 16, flexDirection: 'column', alignItems: 'flex-start'}}>
             <Text style={{color: '#919EAB'}}>{translate("headerReceivingBankAccount")}</Text>
-            <Text>Bank BRI</Text>
-            <Text>1234567890</Text>
-            <Text>Mokirim Indonesia</Text>
+            <Text>{booking.payment_receiving_account.bank.name}</Text>
+            {booking.payment_receiving_account.number ?
+              <Text>{booking.payment_receiving_account.number}</Text> :
+              <Spinner style={{alignSelf: 'center'}}/>
+            }
           </View>
 
           <View style={{padding: 16, flexDirection: 'column', alignItems: 'flex-end'}}>
@@ -336,6 +338,7 @@ class _ShipmentStatusScreen extends React.Component {
      if (!booking) {
        return;
      }
+     this.checkPaymentReceivingAccount(booking);
 
      const paidAmountInt = currency(booking.paid_amount).intValue;
      const priceInt = currency(booking.price).intValue;
@@ -441,6 +444,26 @@ class _ShipmentStatusScreen extends React.Component {
         </RoundedCornerPanel>
       </ContentContainer>
     );
+  }
+
+  checkPaymentReceivingAccount(currentBooking) {
+     if (currentBooking.payment_receiving_account.number) {
+       return;
+     }
+     setTimeout(() => {
+         this.props.updateAPIVValue();
+         this.props.loadBookings(
+            this.props.currentLanguage, this.props.accessToken,
+             {ordering: '-created_at', v: uuid.v4()}
+         ).then(obj => {
+           const bookings = obj.results;
+           const booking = bookings.find(booking => booking.id === currentBooking.id);
+           if (booking) {
+             this.checkPaymentReceivingAccount(booking);
+           }
+           this.props.setBookings(bookings);
+         });
+     }, 2000);
   }
 }
 

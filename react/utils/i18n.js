@@ -51,6 +51,10 @@ export const getTimeDisplayString = (isoDateTime, deltaMinutes) => {
   return moment(isoDateTime).add(deltaMinutes, 'minutes').format('HH:mm') + " WIB";
 };
 
+export const getFormattedTime = (isoDateTime, deltaMinutes, fmt) => {
+  return moment(isoDateTime).add(deltaMinutes, 'minutes').format(fmt);
+};
+
 export const getStartingDayDate = () => {
   let m = moment(new Date());
   m = m.subtract(m.milliseconds(), 'milliseconds');

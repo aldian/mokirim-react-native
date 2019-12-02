@@ -7,7 +7,7 @@ import {
   Button, DatePicker, Form, Icon, IconNB, Input, Item, Label, Spinner, Text, Toast,
 } from 'native-base';
 import themeVars from '../../theme/variables/material';
-import {translate, getDateDisplayString, getTimeDisplayString, moneyStr, numberStr} from "../../utils/i18n";
+import {translate, getDateDisplayString, getTimeDisplayString, getFormattedTime, moneyStr, numberStr} from "../../utils/i18n";
 import Error from '../../utils/error';
 import constants from '../../constants';
 import Actions from '../../state/Actions';
@@ -49,12 +49,17 @@ class _BookingDetailsScreen extends React.Component {
       <ContentContainer navigate={navigate} hasFooter={false}>
         <RoundedCornerPanel style={{flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch'}}>
           <View>
-            <Text>{translate("headerShipmentSchedule")}</Text>
-            <View style={{borderColor: '#DFE3E8', borderWidth: 1, borderRadius: 4, padding: 8}}>
+            <Text style={{fontWeight: 'bold'}}>{translate("headerShipmentSchedule")}</Text>
+            <View style={{borderColor: '#DFE3E8', borderWidth: 1, borderRadius: 4, padding: 8, marginTop: 16, marginBottom: 16}}>
+              <View style={{borderColor: '#DFE3E8', borderBottomWidth: 1, paddingBottom: 8}}>
+                <Text style={{color: '#637381', fontWeight: 'bold'}}>
+                  {this.props.originatingStation.code}{this.props.destinationStation.code}{getFormattedTime(schedule.datetime, 0, 'D')}-{getFormattedTime(schedule.datetime, 0, 'H')}
+                </Text>
+              </View>
               <View style={{borderColor: '#DFE3E8', borderBottomWidth: 1}}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-                  <Text>{translate("titleOrigin")}</Text>
-                  <Text>{translate("titleDestination")}</Text>
+                  <Text style={{color: '#637381'}}>{translate("titleOrigin")}</Text>
+                  <Text style={{color: '#637381'}}>{translate("titleDestination")}</Text>
                 </View>
 
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start'}}>
@@ -72,42 +77,42 @@ class _BookingDetailsScreen extends React.Component {
 
               <View style={{borderColor: '#DFE3E8', borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                 <View style={{flexDirection: 'column'}}>
-                  <Text>{translate("titleDeparture")}</Text>
+                  <Text style={{color: '#637381'}}>{translate("titleDeparture")}</Text>
                   <Text>{getDateDisplayString(schedule.datetime, 0)}</Text>
                   <Text>{translate("labelAtTime")} {getTimeDisplayString(schedule.datetime, 0)}</Text>
                 </View>
 
                 <View style={{flexDirection: 'column', alignItems: 'flex-end'}}>
-                  <Text>{translate("titleArrival")}</Text>
+                  <Text style={{color: '#637381'}}>{translate("titleArrival")}</Text>
                   <Text>{getDateDisplayString(schedule.datetime, schedule.duration_minutes)}</Text>
                   <Text>{translate("labelAtTime")} {getTimeDisplayString(schedule.datetime, schedule.duration_minutes)}</Text>
                 </View>
               </View>
 
               <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                <Text>{translate("labelCheckInDeadline")}</Text>
+                <Text style={{color: '#FF5A00'}}>{translate("labelCheckInDeadline")}</Text>
 
                 <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end'}}>
-                  <Text>{getDateDisplayString(checkinTime, 0)}</Text>
-                  <Text>{getTimeDisplayString(checkinTime, 0)}</Text>
+                  <Text style={{color: '#FF5A00'}}>{getDateDisplayString(checkinTime, 0)}</Text>
+                  <Text style={{color: '#FF5A00'}}>{getTimeDisplayString(checkinTime, 0)}</Text>
                 </View>
               </View>
             </View>
           </View>
 
           <View>
-            <Text>{translate("headerShipmentDetails")}</Text>
-            <View style={{borderColor: '#DFE3E8', borderWidth: 1, borderRadius: 4, padding: 8}}>
+            <Text style={{fontWeight: 'bold'}}>{translate("headerShipmentDetails")}</Text>
+            <View style={{borderColor: '#DFE3E8', borderWidth: 1, borderRadius: 4, padding: 8, marginTop: 16, marginBottom: 16}}>
               <View style={{borderColor: '#DFE3E8', borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                 <View>
-                  <Text>{translate("headerStationToStation")}</Text>
-                  <Text>{translate("labelWeight")}</Text>
+                  <Text style={{color: '#FF5A00'}}>{translate("headerStationToStation")}</Text>
+                  <Text style={{color: '#637381'}}>{translate("labelWeight")}</Text>
                   <Text>{numberStr(this.props.currentLanguage, this.props.totalWeight)} kg</Text>
                 </View>
 
                 <View style={{flexDirection: 'column', alignItems: 'flex-end'}}>
-                  <Text>{translate("labelColli.counting", {count: this.props.colli.length})}</Text>
-                  <Text>{translate("labelDimension")}</Text>
+                  <Text style={{color: '#FF5A00'}}>{translate("labelColli.counting", {count: this.props.colli.length})}</Text>
+                  <Text style={{color: '#637381'}}>{translate("labelDimension")}</Text>
                   <Text>{numberStr(this.props.currentLanguage, this.props.totalVolume)} cm³</Text>
                 </View>
               </View>
@@ -141,7 +146,7 @@ class _BookingDetailsScreen extends React.Component {
 
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start'}}>
               <Text>{translate("labelTotal")}</Text>
-              <Text>{moneyStr(this.props.currentLanguage, schedule.price)}</Text>
+              <Text style={{color: '#FF5A00'}}>{moneyStr(this.props.currentLanguage, schedule.price)}</Text>
             </View>
           </View>
 
@@ -150,44 +155,10 @@ class _BookingDetailsScreen extends React.Component {
             <Button
               style={{backgroundColor: themeVars.toolbarDefaultBg, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}
               onPress={() => {
-                this.props.setBookingDetailsForm({submitting: true});
-                this.props.submitCreateBookingForm(this.props.currentLanguage, this.props.accessToken, {
-                  schedule: this.props.schedule.id,
-                  colli: this.props.colli,
-                  from_person: this.props.sender,
-                  to_person: this.props.receiver,
-                  content_description: this.props.content.description || '',
-                  content_value_estimate: this.props.content.valueIDR || '0.00',
-                }).then(booking => {
-                  this.props.setBookingDetailsForm({submitting: true});
-                  this.props.loadBookings(
-                     this.props.currentLanguage, this.props.accessToken,
-                     {ordering: '-created_at', v: uuid.v4()}
-                  ).then(obj => {
-                    this.props.setBookings(obj.results);
-                    navigate("BookingCreated", {id: booking.id});
-                  }).catch(error => {
-                    Toast.show({
-                      text: error,
-                      buttonText: "OK",
-                      duration: 5000,
-                    });
-                  }).finally(() => {
-                    this.props.setBookingDetailsForm({submitting: false});
-                  });
-                }).catch(error => {
-                  Toast.show({
-                    text: error,
-                    buttonText: "OK",
-                    duration: 5000,
-                  });
-                }).finally(() => {
-                  this.props.updateAPIVValue();
-                  this.props.setBookingDetailsForm({submitting: false});
-                });
+                navigate('BankSelection');
               }}
             >
-              <Text>{translate("buttonBookNow")}</Text>
+              <Text>{translate("buttonContinueToPayment")}</Text>
             </Button>
 
           }
@@ -196,17 +167,6 @@ class _BookingDetailsScreen extends React.Component {
     );
   }
 }
-
-/*
-          <Button
-            style={{backgroundColor: themeVars.toolbarDefaultBg, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}
-            onPress={() => {
-              navigate("Payment");
-            }}
-          >
-            <Text>{translate("buttonContinueToPayment")}</Text>
-          </Button>
-*/
 
 const mapStateToProps = state => {
   return {

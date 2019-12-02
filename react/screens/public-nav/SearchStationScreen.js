@@ -81,7 +81,9 @@ class _SearchStationScreen extends React.Component {
           {Object.keys(this.state.listData).length > 0 ?
             <FlatList
               data={
-                Object.keys(this.state.listData).map(key => ({id: key, text: this.state.listData[key]}))
+                Object.keys(this.state.listData).map(key => ({
+                  id: key, code: this.state.listData[key].code, text: this.state.listData[key].text
+                }))
               }
               keyExtractor={(item, index) => String(item.id)}
               renderItem={({item, index}) =>
@@ -160,7 +162,7 @@ class _SearchStationScreen extends React.Component {
           place.district_name + ", " + place.city_name + ", " + place.state_name +
           (place.postal_code ? " " + place.postal_code : "")
        );
-       this.setState({listData: {...this.state.listData, [place.id]: text}});
+       this.setState({listData: {...this.state.listData, [place.id]: {text, code: place.code}}});
        this.props.downloadStationDetails(false);
      });
   }

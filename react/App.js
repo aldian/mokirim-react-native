@@ -34,6 +34,7 @@ import { SearchScheduleScreen } from './screens/public-nav/SearchScheduleScreen'
 import { ChooseScheduleScreen } from './screens/public-nav/ChooseScheduleScreen';
 import { ShipmentDetailsScreen } from './screens/public-nav/ShipmentDetailsScreen';
 import { BookingDetailsScreen } from './screens/public-nav/BookingDetailsScreen';
+import { BankSelectionScreen } from './screens/public-nav/BankSelectionScreen';
 import { PaymentScreen } from './screens/public-nav/PaymentScreen';
 import { AskLoginScreen } from './screens/public-nav/AskLoginScreen';
 
@@ -95,6 +96,7 @@ const UserNavigator = createStackNavigator({
   ChooseSchedule: {screen: ChooseScheduleScreen, path: 'user/chooseSchedule'},
   ShipmentDetails: {screen: ShipmentDetailsScreen, path: 'user/shipmentDetails'},
   BookingDetails: {screen: BookingDetailsScreen, path: 'user/bookingDetails'},
+  BankSelection: {screen: BankSelectionScreen, path: 'user/bankSelection'},
   Payment: {screen: PaymentScreen, path: 'user/payment'},
   AskLogin: {screen: AskLoginScreen, path: 'user/askLogin'},
 }, {
